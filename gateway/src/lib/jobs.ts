@@ -7,6 +7,12 @@ import type { EnqueueInput, JobMessage } from "@/lib/types";
 
 const VENDOR_ID = "specbooks";
 
+function toInputJsonValue(
+  payload: Record<string, unknown> | undefined
+): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
+  return payload ? (payload as Prisma.InputJsonValue) : Prisma.JsonNull;
+}
+
 async function sendQueueMessage(messageBody: JobMessage): Promise<void> {
   const startedAt = Date.now();
   await getQueueSender().sendMessages({
@@ -35,7 +41,7 @@ export async function enqueueJob(input: EnqueueInput): Promise<{ jobId: string }
       type: input.type,
       status: "queued",
       entityKey: input.customerId ?? input.opportunityId ?? null,
-      payload: input.payload ?? null
+      payload: toInputJsonValue(input.payload)
     }
   });
 
@@ -101,7 +107,7 @@ export async function enqueueCreateWithIdempotency(payload: Record<string, unkno
           vendorId: VENDOR_ID,
           type: "CREATE_OPPORTUNITY",
           status: "queued",
-          payload
+          payload: toInputJsonValue(payload)
         }
       }),
       prisma.idempotencyKey.create({
@@ -189,7 +195,7 @@ export async function enqueueCoalescedOpportunityUpdate(
       await tx.opportunityUpdateBuffer.update({
         where: { opportunityId },
         data: {
-          latestPayload: payload
+          latestPayload: toInputJsonValue(payload)
         }
       });
       return;
@@ -206,7 +212,7 @@ export async function enqueueCoalescedOpportunityUpdate(
       await tx.opportunityUpdateBuffer.update({
         where: { opportunityId },
         data: {
-          latestPayload: payload,
+          latestPayload: toInputJsonValue(payload),
           pending: true,
           lastJobId: jobId
         }
@@ -215,7 +221,7 @@ export async function enqueueCoalescedOpportunityUpdate(
       await tx.opportunityUpdateBuffer.create({
         data: {
           opportunityId,
-          latestPayload: payload,
+          latestPayload: toInputJsonValue(payload),
           pending: true,
           lastJobId: jobId
         }
