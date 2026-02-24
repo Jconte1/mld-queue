@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+**/node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -16,9 +17,13 @@
 # next.js
 /.next/
 /out/
+**/.next/
+**/out/
 
 # production
 /build
+**/build/
+**/dist/
 
 # misc
 .DS_Store
@@ -32,10 +37,18 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+**/.env
+**/.env.local
+**/.env.*.local
 
 # vercel
 .vercel
+**/.vercel/
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma generated artifacts
+prisma/generated/
+**/query_engine-*.tmp*

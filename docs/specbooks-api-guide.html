@@ -1,0 +1,278 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Partner Gateway API Guide - SpecBooks Namespace</title>
+  <style>
+    :root { --ink:#111; --muted:#555; --line:#e5e7eb; --bg:#fff; --accent:#0b57d0; }
+    html,body { background:var(--bg); color:var(--ink); font-family: "Segoe UI", Arial, sans-serif; font-size:12px; line-height:1.45; }
+    .page { max-width: 920px; margin: 24px auto; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    .sub { color: var(--muted); margin-bottom: 18px; }
+    h2 { font-size: 16px; border-bottom:1px solid var(--line); padding-bottom:4px; margin-top:18px; }
+    h3 { font-size: 13px; margin-top: 12px; margin-bottom: 6px; }
+    ul,ol { margin-top: 4px; margin-bottom: 8px; }
+    code { background:#f4f6f8; padding:1px 4px; border-radius:3px; font-family: Consolas, monospace; }
+    pre { background:#0f172a; color:#e5e7eb; padding:10px; border-radius:6px; overflow:auto; }
+    .card { border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin:10px 0; }
+    .note { color: var(--muted); }
+    table { width:100%; border-collapse: collapse; margin: 8px 0; }
+    th,td { border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top; }
+    th { background:#f8fafc; }
+    .mono { font-family: Consolas, monospace; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Partner Gateway API Guide (SpecBooks)</h1>
+    <div class="sub">Version 1.1 | Namespace: <code>/api/specbooks</code></div>
+
+    <h2>1) Overview</h2>
+    <ul>
+      <li>SpecBooks integrates only with this Gateway API.</li>
+      <li>All command endpoints are asynchronous: <code>202 + jobId</code> then poll job status.</li>
+      <li>Direct Acumatica access is deprecated effective <code>TODO: INSERT DATE</code>.</li>
+    </ul>
+
+    <h2>2) Base URL, Versioning, Auth</h2>
+    <ul>
+      <li>Base URL: <code>https://&lt;gateway-host&gt;</code></li>
+      <li>Versioning: current contract namespace is <code>/api/specbooks</code>. Breaking changes will move to a new namespace (for example, <code>/api/specbooks/v2</code>).</li>
+      <li>Required header on every request: <code>X-SPECBOOKS-API-KEY: &lt;api-key&gt;</code></li>
+      <li>POST/PATCH require <code>Content-Type: application/json</code></li>
+    </ul>
+
+    <h3>Required headers summary</h3>
+    <table>
+      <thead><tr><th>Header</th><th>Required for</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">X-SPECBOOKS-API-KEY</td><td>All endpoints</td><td>Shared partner key</td></tr>
+        <tr><td class="mono">Content-Type: application/json</td><td>POST, PATCH</td><td>JSON body required</td></tr>
+        <tr><td class="mono">Idempotency-Key</td><td>POST /opportunities</td><td>Required; dedupes creates</td></tr>
+      </tbody>
+    </table>
+
+    <h2>3) Supported Endpoints (Only 5)</h2>
+    <table>
+      <thead><tr><th>Method</th><th>Path</th><th>Purpose</th><th>Immediate response</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">GET</td><td class="mono">/api/specbooks/customers/{customerId}</td><td>Queue customer fetch from Acumatica</td><td><code>202 { \"jobId\": \"...\" }</code></td></tr>
+        <tr><td class="mono">GET</td><td class="mono">/api/specbooks/opportunities/{opportunityId}</td><td>Queue opportunity fetch from Acumatica (expanded products)</td><td><code>202 { \"jobId\": \"...\" }</code></td></tr>
+        <tr><td class="mono">POST</td><td class="mono">/api/specbooks/opportunities</td><td>Queue create opportunity</td><td><code>202 { \"jobId\": \"...\" }</code></td></tr>
+        <tr><td class="mono">PATCH</td><td class="mono">/api/specbooks/opportunities/{opportunityId}</td><td>Queue update opportunity (coalesced)</td><td><code>202 { \"jobId\": \"...\" }</code></td></tr>
+        <tr><td class="mono">GET</td><td class="mono">/api/specbooks/jobs/{jobId}</td><td>Read job status/result/error</td><td><code>200</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2>4) Async Job Lifecycle</h2>
+    <ul>
+      <li>Statuses: <code>queued -> processing -> succeeded | failed</code></li>
+      <li>All command endpoints return: <code>{ "jobId": "..." }</code></li>
+      <li>Poll endpoint: <code>GET /api/specbooks/jobs/{jobId}</code></li>
+      <li>Job retention: jobs are retained for a minimum of <code>30 days</code>, then may be purged.</li>
+      <li>After purge, polling a removed job returns <code>404</code>.</li>
+    </ul>
+
+    <h3>Recommended polling strategy</h3>
+    <ul>
+      <li>Attempt 1..5: every 1 second</li>
+      <li>Attempt 6..20: every 2 seconds</li>
+      <li>Then every 5 seconds up to a client timeout of 2 minutes</li>
+      <li>If timeout is reached, surface "pending" to user and allow manual refresh</li>
+    </ul>
+
+    <h2>5) Idempotency Rules</h2>
+    <ul>
+      <li>Applies to <code>POST /opportunities</code>.</li>
+      <li>Required header: <code>Idempotency-Key</code> (recommend UUID).</li>
+      <li>Scope: unique per vendor (<code>specbooks</code>), per key string.</li>
+      <li>Current behavior: if key already exists, gateway returns the existing <code>jobId</code> and does not enqueue a duplicate.</li>
+      <li>Current retention: keys are retained for a minimum of <code>90 days</code> (may be retained longer).</li>
+      <li>Failed-job behavior: same key returns the same prior jobId; client should use a new key for a new create attempt.</li>
+    </ul>
+
+    <h2>6) Request Field Allowlist</h2>
+
+    <h3>POST /opportunities (create)</h3>
+    <ul>
+      <li>Top-level: <code>Subject, ClassID, BusinessAccount, Location, Owner, Products, ContactInformation, Address, Hold</code></li>
+      <li><code>Products[]</code> create fields: <code>InventoryID</code> (required), <code>Quantity</code>, <code>UOM</code></li>
+      <li>Canonical quantity field for create is <code>Quantity</code> (not <code>Qty</code>).</li>
+      <li>Unknown fields are rejected with 400 (strict recursively for top-level and nested objects).</li>
+    </ul>
+
+    <h3>PATCH /opportunities/{opportunityId}</h3>
+    <ul>
+      <li>Top-level allowed: <code>Subject, ClassID, BusinessAccount, Location, Owner, Products, ContactInformation, Address, Hold</code></li>
+      <li><strong>Forbidden:</strong> top-level <code>OpportunityID</code> (URL path is authoritative)</li>
+      <li><code>Products[]</code> update fields: <code>id</code>, <code>OpportunityProductID</code>, <code>InventoryID</code>, <code>Qty</code>, <code>Quantity</code>, <code>UOM</code>, <code>Warehouse</code>, <code>delete</code></li>
+      <li>Canonical quantity field for patch is <code>Qty</code>; <code>Quantity</code> is accepted as alias. Do not send both in the same line item.</li>
+      <li>Unknown fields are rejected with 400 (strict recursively for top-level and nested objects).</li>
+    </ul>
+
+    <h3>Product line semantics for PATCH</h3>
+    <table>
+      <thead><tr><th>Action</th><th>How to send</th></tr></thead>
+      <tbody>
+        <tr><td>Add line</td><td>Line without <code>id</code>, with <code>InventoryID</code></td></tr>
+        <tr><td>Update line</td><td>Line with <code>id</code> from GET opportunity result</td></tr>
+        <tr><td>Delete line</td><td>Line with <code>id</code> and <code>"delete": true</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2>7) Endpoint Examples</h2>
+
+    <h3>GET customer command response</h3>
+    <pre>{ "jobId": "eb605359-6789-44cf-b3d2-020a4c11bf6f" }</pre>
+
+    <h3>GET opportunity command response</h3>
+    <pre>{ "jobId": "757080cb-1be8-4ef3-9812-f7da2258a8cd" }</pre>
+
+    <h3>POST create request example</h3>
+    <pre>{
+  "Subject": { "value": "New Project" },
+  "Products": [
+    { "InventoryID": { "value": "SKU-100" }, "Quantity": { "value": 1 } }
+  ]
+}</pre>
+
+    <h3>PATCH update + add example</h3>
+    <pre>{
+  "Products": [
+    {
+      "id": "aa252933-2909-f111-9fbe-6045bda28239",
+      "Qty": { "value": 2 },
+      "Warehouse": { "value": "SALT LAKE APPLIANCES" }
+    },
+    {
+      "InventoryID": { "value": "ROOM" },
+      "Qty": { "value": 1 },
+      "Warehouse": { "value": "SALT LAKE APPLIANCES" }
+    }
+  ]
+}</pre>
+
+    <h3>PATCH delete line example</h3>
+    <pre>{
+  "Products": [
+    {
+      "id": "88898d89-2909-f111-9fbe-6045bda28239",
+      "delete": true
+    }
+  ]
+}</pre>
+
+    <h2>8) Job Result Shape Examples</h2>
+    <p class="note">Result shape is passthrough JSON from Acumatica. In current GET customer/opportunity usage it is typically an array. Create/update may return an object. Clients should treat <code>result</code> as generic JSON.</p>
+
+    <h3>GET /jobs/{jobId} (succeeded customer)</h3>
+    <pre>{
+  "jobId": "...",
+  "vendorId": "specbooks",
+  "type": "GET_CUSTOMER",
+  "status": "succeeded",
+  "result": [ { "CustomerID": { "value": "BA0001318" }, "CustomerName": { "value": "..." } } ],
+  "error": null,
+  "createdAt": "...",
+  "updatedAt": "..."
+}</pre>
+
+    <h3>GET /jobs/{jobId} (succeeded opportunity)</h3>
+    <pre>{
+  "jobId": "...",
+  "vendorId": "specbooks",
+  "type": "GET_OPPORTUNITY",
+  "status": "succeeded",
+  "result": [ {
+    "OpportunityID": { "value": "OP11995" },
+    "Products": [
+      {
+        "id": "aa252933-2909-f111-9fbe-6045bda28239",
+        "OpportunityProductID": { "value": 4 },
+        "InventoryID": { "value": "DF48650G/S/P" },
+        "Qty": { "value": 1 },
+        "UOM": { "value": "EACH" },
+        "Warehouse": { "value": "SALT LAKE APPLIANCES" }
+      },
+      {
+        "id": "88898d89-2909-f111-9fbe-6045bda28239",
+        "OpportunityProductID": { "value": 7 },
+        "InventoryID": { "value": "822113" },
+        "Qty": { "value": 1 },
+        "UOM": { "value": "EACH" },
+        "Warehouse": { "value": "SALT LAKE APPLIANCES" }
+      }
+    ]
+  } ],
+  "error": null,
+  "createdAt": "...",
+  "updatedAt": "..."
+}</pre>
+
+    <h3>GET /jobs/{jobId} (succeeded create/update)</h3>
+    <pre>{
+  "jobId": "...",
+  "vendorId": "specbooks",
+  "type": "CREATE_OPPORTUNITY or UPDATE_OPPORTUNITY",
+  "status": "succeeded",
+  "result": { "...": "Acumatica response payload" },
+  "error": null,
+  "createdAt": "...",
+  "updatedAt": "..."
+}</pre>
+
+    <h3>GET /jobs/{jobId} (failed)</h3>
+    <pre>{
+  "jobId": "...",
+  "vendorId": "specbooks",
+  "type": "UPDATE_OPPORTUNITY",
+  "status": "failed",
+  "result": null,
+  "error": "Acumatica request failed: 400 ...",
+  "createdAt": "...",
+  "updatedAt": "..."
+}</pre>
+
+    <h2>9) Error Envelope and Status Codes</h2>
+
+    <h3>Standard error envelope</h3>
+    <pre>{
+  "error": "Validation failed | Unauthorized | ...",
+  "issues": [
+    { "path": "Products.0.InventoryID", "message": "Required" }
+  ]
+}</pre>
+
+    <table>
+      <thead><tr><th>Status</th><th>Meaning</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>400</td><td>Validation error</td><td>Fix payload/headers, retry after fix</td></tr>
+        <tr><td>401</td><td>Invalid API key</td><td>Fix auth key</td></tr>
+        <tr><td>404</td><td>Unknown jobId</td><td>Verify jobId or retention window</td></tr>
+        <tr><td>413</td><td>Payload too large</td><td>Reduce body size</td></tr>
+        <tr><td>429</td><td>Rate limit exceeded</td><td>Use <code>Retry-After</code>, exponential backoff + jitter</td></tr>
+        <tr><td>500/503</td><td>Server/upstream issue</td><td>Retry with backoff</td></tr>
+      </tbody>
+    </table>
+
+    <h2>10) Throughput Protection</h2>
+    <ul>
+      <li>Gateway route limits (defaults): GET 30 rpm, write 20 rpm.</li>
+      <li>Worker limits (defaults): vendor 8 concurrency / 90 rpm; global 12 concurrency / 200 rpm.</li>
+      <li>PATCH coalescing: per <code>opportunityId</code>, latest update wins inside debounce window (default 5000ms).</li>
+      <li>If a PATCH is already pending for an opportunity, gateway returns the existing pending <code>jobId</code> and updates buffered payload to the newest request.</li>
+    </ul>
+
+    <h2>11) Partner Integration Checklist</h2>
+    <ul>
+      <li>Implement async job polling pattern.</li>
+      <li>Store line <code>id</code> values from GET opportunity for future line updates/deletes.</li>
+      <li>Use idempotency key for create retries.</li>
+      <li>Implement retry policy for <code>429/5xx</code>.</li>
+      <li>Handle validation errors using <code>issues[]</code> paths.</li>
+    </ul>
+
+  </div>
+</body>
+</html>

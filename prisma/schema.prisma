@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JobType {
+  GET_CUSTOMER
+  GET_OPPORTUNITY
+  CREATE_OPPORTUNITY
+  UPDATE_OPPORTUNITY
+}
+
+enum JobStatus {
+  queued
+  processing
+  succeeded
+  failed
+}
+
+model Job {
+  id         String    @id
+  vendorId   String
+  type       JobType
+  status     JobStatus @default(queued)
+  entityKey  String?
+  payload    Json?
+  result     Json?
+  error      String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  idempotencyKeys IdempotencyKey[]
+
+  @@index([vendorId, createdAt])
+  @@index([status, createdAt])
+  @@map("jobs")
+}
+
+model IdempotencyKey {
+  vendorId  String
+  key       String
+  jobId     String
+  createdAt DateTime @default(now())
+
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@id([vendorId, key])
+  @@index([createdAt])
+  @@map("idempotency_keys")
+}
+
+model RateLimitWindow {
+  id          String   @id @default(cuid())
+  vendorId    String
+  routeKey    String
+  windowStart DateTime
+  count       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([vendorId, routeKey, windowStart])
+  @@index([windowStart])
+  @@map("rate_limit_windows")
+}
+
+model OpportunityUpdateBuffer {
+  opportunityId String   @id
+  latestPayload Json
+  pending       Boolean  @default(true)
+  lastJobId     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([pending, updatedAt])
+  @@map("opportunity_update_buffer")
+}
