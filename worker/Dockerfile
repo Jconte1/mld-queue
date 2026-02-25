@@ -20,6 +20,7 @@ ENV NODE_ENV=production
 COPY --from=build /app/worker/node_modules ./node_modules
 COPY --from=build /app/worker/dist ./dist
 COPY worker/package.json ./package.json
+COPY --from=build /app/prisma/generated/client /app/prisma/generated/client
 
 EXPOSE 8080
 CMD ["node", "dist/index.js"]
