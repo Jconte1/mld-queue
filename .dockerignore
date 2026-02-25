@@ -1,0 +1,14 @@
+node_modules
+**/node_modules
+.next
+**/.next
+dist
+**/dist
+.git
+.gitignore
+.env
+.env.*
+*.log
+docs
+README.md
+README.specbooks-mvp.md
