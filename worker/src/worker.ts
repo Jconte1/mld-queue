@@ -1,6 +1,6 @@
 import { ServiceBusClient, ServiceBusReceivedMessage, ProcessErrorArgs } from "@azure/service-bus";
 import { randomUUID } from "node:crypto";
-import { Prisma } from "../../../prisma/generated/client";
+import { Prisma } from "../../prisma/generated/client";
 import { prisma } from "./lib/prisma";
 import { env } from "./lib/env";
 import { log } from "./lib/logger";
