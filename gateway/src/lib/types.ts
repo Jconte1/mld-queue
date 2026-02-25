@@ -4,7 +4,10 @@ export type JobType =
   | "GET_CUSTOMER"
   | "GET_OPPORTUNITY"
   | "CREATE_OPPORTUNITY"
-  | "UPDATE_OPPORTUNITY";
+  | "UPDATE_OPPORTUNITY"
+  | "ERP_GET_ORDER_HEADER"
+  | "ERP_GET_PAYMENT_INFO"
+  | "ERP_GET_INVENTORY_DETAILS";
 
 export type JobStatus = "queued" | "processing" | "succeeded" | "failed";
 

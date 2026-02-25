@@ -198,6 +198,35 @@ async function processJob(message: JobMessage): Promise<unknown> {
       if (!message.opportunityId) throw new Error("opportunityId is required");
       return processCoalescedOpportunityUpdate(message.opportunityId, message.payload);
 
+    case "ERP_GET_ORDER_HEADER": {
+      const orderNbr = String(message.payload?.orderNbr || "").trim().toUpperCase();
+      if (!orderNbr) throw new Error("orderNbr is required");
+      const row = await acumaticaClient.fetchOrderHeaderByOrderNbr(orderNbr);
+      return { found: Boolean(row), row };
+    }
+
+    case "ERP_GET_PAYMENT_INFO": {
+      const baid = String(message.payload?.baid || "").trim().toUpperCase();
+      const orderNbrs = Array.isArray(message.payload?.orderNbrs)
+        ? (message.payload?.orderNbrs as unknown[])
+            .map((v) => String(v || "").trim().toUpperCase())
+            .filter(Boolean)
+        : [];
+      if (!baid) throw new Error("baid is required");
+      return { rows: await acumaticaClient.fetchPaymentInfoRows(baid, orderNbrs) };
+    }
+
+    case "ERP_GET_INVENTORY_DETAILS": {
+      const baid = String(message.payload?.baid || "").trim().toUpperCase();
+      const orderNbrs = Array.isArray(message.payload?.orderNbrs)
+        ? (message.payload?.orderNbrs as unknown[])
+            .map((v) => String(v || "").trim().toUpperCase())
+            .filter(Boolean)
+        : [];
+      if (!baid) throw new Error("baid is required");
+      return { rows: await acumaticaClient.fetchInventoryDetailsRows(baid, orderNbrs) };
+    }
+
     default:
       throw new Error(`Unsupported job type: ${(message as { type?: string }).type ?? "unknown"}`);
   }
