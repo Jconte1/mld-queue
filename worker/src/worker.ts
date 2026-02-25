@@ -1,5 +1,6 @@
 import { ServiceBusClient, ServiceBusReceivedMessage, ProcessErrorArgs } from "@azure/service-bus";
 import { randomUUID } from "node:crypto";
+import { Prisma } from "../../../prisma/generated/client";
 import { prisma } from "./lib/prisma";
 import { env } from "./lib/env";
 import { log } from "./lib/logger";
@@ -18,6 +19,11 @@ const globalSemaphore = new Semaphore(env.globalMaxConcurrency);
 const vendorBucket = new TokenBucket(env.vendorMaxRpm);
 const globalBucket = new TokenBucket(env.globalMaxRpm);
 
+function toPrismaJsonValue(value: unknown): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
+  if (value === null || value === undefined) return Prisma.JsonNull;
+  return value as Prisma.InputJsonValue;
+}
+
 async function markProcessing(jobId: string) {
   await prisma.job.update({
     where: { id: jobId },
@@ -32,7 +38,7 @@ async function markSuccess(jobId: string, result: unknown) {
     where: { id: jobId },
     data: {
       status: "succeeded",
-      result,
+      result: toPrismaJsonValue(result),
       error: null
     }
   });
