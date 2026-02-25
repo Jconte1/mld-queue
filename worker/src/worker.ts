@@ -227,6 +227,59 @@ async function processJob(message: JobMessage): Promise<unknown> {
       return { rows: await acumaticaClient.fetchInventoryDetailsRows(baid, orderNbrs) };
     }
 
+    case "ERP_GET_ORDER_SUMMARIES": {
+      const baid = String(message.payload?.baid || "").trim().toUpperCase();
+      const pageSize = Number(message.payload?.pageSize ?? 250);
+      const maxPages = Number(message.payload?.maxPages ?? 50);
+      const useOrderBy = Boolean(message.payload?.useOrderBy);
+      if (!baid) throw new Error("baid is required");
+      return { rows: await acumaticaClient.fetchOrderSummariesRows(baid, pageSize, maxPages, useOrderBy) };
+    }
+
+    case "ERP_GET_ORDER_SUMMARIES_DELTA": {
+      const baid = String(message.payload?.baid || "").trim().toUpperCase();
+      const since = String(message.payload?.since || "").trim();
+      const pageSize = Number(message.payload?.pageSize ?? 250);
+      const maxPages = Number(message.payload?.maxPages ?? 50);
+      const useOrderBy = Boolean(message.payload?.useOrderBy);
+      if (!baid || !since) throw new Error("baid and since are required");
+      return { rows: await acumaticaClient.fetchOrderSummariesDeltaRows(baid, since, pageSize, maxPages, useOrderBy) };
+    }
+
+    case "ERP_GET_ADDRESS_CONTACT": {
+      const baid = String(message.payload?.baid || "").trim().toUpperCase();
+      const orderNbrs = Array.isArray(message.payload?.orderNbrs)
+        ? (message.payload?.orderNbrs as unknown[])
+            .map((v) => String(v || "").trim().toUpperCase())
+            .filter(Boolean)
+        : [];
+      const cutoffLiteral = message.payload?.cutoffLiteral ? String(message.payload.cutoffLiteral) : null;
+      const useOrderBy = Boolean(message.payload?.useOrderBy);
+      const pageSize = Number(message.payload?.pageSize ?? 500);
+      if (!baid) throw new Error("baid is required");
+      return { rows: await acumaticaClient.fetchAddressContactRows(baid, orderNbrs, cutoffLiteral, useOrderBy, pageSize) };
+    }
+
+    case "ERP_GET_ORDER_LAST_MODIFIED": {
+      const baid = String(message.payload?.baid || "").trim().toUpperCase();
+      const orderNbr = String(message.payload?.orderNbr || "").trim().toUpperCase();
+      if (!baid || !orderNbr) throw new Error("baid and orderNbr are required");
+      const lastModified = await acumaticaClient.fetchOrderLastModifiedRaw(baid, orderNbr);
+      return { lastModified };
+    }
+
+    case "ERP_GET_ORDER_READY_REPORT": {
+      return { rows: await acumaticaClient.fetchOrderReadyReportRows() };
+    }
+
+    case "ERP_VERIFY_CUSTOMER": {
+      const customerId = String(message.payload?.customerId || "").trim().toUpperCase();
+      const zip5 = String(message.payload?.zip5 || "").replace(/\D/g, "").slice(0, 5);
+      if (!customerId || zip5.length !== 5) throw new Error("customerId and zip5 are required");
+      const matched = await acumaticaClient.verifyCustomerByZip(customerId, zip5);
+      return { ok: true, matched };
+    }
+
     default:
       throw new Error(`Unsupported job type: ${(message as { type?: string }).type ?? "unknown"}`);
   }

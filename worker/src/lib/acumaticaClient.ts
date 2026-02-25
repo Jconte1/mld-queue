@@ -131,6 +131,156 @@ export class AcumaticaClient {
     return rows[0] || null;
   }
 
+  async verifyCustomerByZip(customerId: string, zip5: string): Promise<boolean> {
+    const params = new URLSearchParams();
+    params.set("$top", "1");
+    params.set(
+      "$filter",
+      `CustomerID eq '${quoteForOData(customerId)}' and Zip5 eq '${quoteForOData(zip5)}'`
+    );
+    const url = `${this.readEntityBase}/Customer?${params.toString()}`;
+    const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+    return rows.length > 0;
+  }
+
+  async fetchOrderReadyReportRows(): Promise<Record<string, unknown>[]> {
+    const url =
+      process.env.ACUMATICA_ORDER_READY_ODATA_URL?.trim() ||
+      "https://acumatica.mld.com/OData/MLD/Ready%20for%20Willcall";
+    const authHeader = `Basic ${Buffer.from(`${env.acumaticaUsername}:${env.acumaticaPassword}`).toString("base64")}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: authHeader,
+        Accept: "application/json",
+      },
+      cache: "no-store",
+    });
+
+    const text = await response.text();
+    if (!response.ok) {
+      const err = new Error(`Order-ready OData request failed: ${response.status} ${response.statusText} ${text}`);
+      (err as Error & { status?: number }).status = response.status;
+      throw err;
+    }
+
+    return toRows(text ? JSON.parse(text) : []);
+  }
+
+  async fetchOrderSummariesRows(
+    baid: string,
+    pageSize: number,
+    maxPages: number,
+    useOrderBy: boolean
+  ): Promise<Record<string, unknown>[]> {
+    const select = [
+      "OrderNbr",
+      "Status",
+      "LocationID",
+      "RequestedOn",
+      "ShipVia",
+      "JobName",
+      "CustomerName",
+      "DefaultSalesperson",
+      "NoteID",
+    ].join(",");
+    const custom = "Document.AttributeBUYERGROUP";
+
+    const now = new Date();
+    now.setFullYear(now.getFullYear() - 1);
+    const cutoff = now.toISOString();
+
+    const excludedShipVia = [
+      "DELIVERY SLC","DELIVERY SW","DIRECT SHIP","GROUND","MLD DROP SHIP","NEXT DAY AIR","RED LABEL",
+      "2ND DAY AIR","3RD DAY AIR","COMMON CARRIER","BEST WAY","DEL ST GEORGE","DELIVERY","DELIVERY BOISE",
+      "DELIVERY PROVO","DELIVERY JACKSO","DELIVERY KETCHU","DELIVERY LAYTON","DELIVERY PLUMBI","RUSH",
+      "TRANS BOISE","TRANS JACKSON","TRANS PROVO","TRANS SLC","WAIVER PROVO","WAIVER SLC",
+    ];
+
+    const all: Record<string, unknown>[] = [];
+    for (let page = 0; page < maxPages; page++) {
+      const params = new URLSearchParams();
+      params.set(
+        "$filter",
+        [
+          `CustomerID eq '${quoteForOData(baid)}'`,
+          `RequestedOn ge datetimeoffset'${cutoff}'`,
+          "Status ne 'Canceled'",
+          "Status ne 'On Hold'",
+          "Status ne 'Pending Approval'",
+          "Status ne 'Rejected'",
+          "Status ne 'Pending Processing'",
+          "Status ne 'Awaiting Payment'",
+          "Status ne 'Credit Hold'",
+          "Status ne 'Completed'",
+          "Status ne 'Invoiced'",
+          "Status ne 'Expired'",
+          "Status ne 'Purchase Hold'",
+          "Status ne 'Not Approved'",
+          "Status ne 'Risk Hold'",
+          ...excludedShipVia.map((v) => `ShipVia ne '${v}'`),
+        ].join(" and ")
+      );
+      params.set("$select", select);
+      params.set("$custom", custom);
+      if (useOrderBy) params.set("$orderby", "RequestedOn desc");
+      params.set("$top", String(pageSize));
+      params.set("$skip", String(page * pageSize));
+
+      const url = `${this.readEntityBase}/SalesOrder?${params.toString()}`;
+      const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+      all.push(...rows);
+      if (rows.length < pageSize) break;
+    }
+
+    return all;
+  }
+
+  async fetchOrderSummariesDeltaRows(
+    baid: string,
+    since: string,
+    pageSize: number,
+    maxPages: number,
+    useOrderBy: boolean
+  ): Promise<Record<string, unknown>[]> {
+    const select = [
+      "OrderNbr",
+      "Status",
+      "LocationID",
+      "RequestedOn",
+      "ShipVia",
+      "JobName",
+      "CustomerName",
+      "DefaultSalesperson",
+      "NoteID",
+      "LastModified",
+    ].join(",");
+    const custom = "Document.AttributeBUYERGROUP";
+    const normalizedSince = since.startsWith("datetimeoffset'") ? since : `datetimeoffset'${since}'`;
+
+    const all: Record<string, unknown>[] = [];
+    for (let page = 0; page < maxPages; page++) {
+      const params = new URLSearchParams();
+      params.set(
+        "$filter",
+        [`CustomerID eq '${quoteForOData(baid)}'`, `LastModified ge ${normalizedSince}`].join(" and ")
+      );
+      params.set("$select", select);
+      params.set("$custom", custom);
+      if (useOrderBy) params.set("$orderby", "LastModified desc");
+      params.set("$top", String(pageSize));
+      params.set("$skip", String(page * pageSize));
+
+      const url = `${this.readEntityBase}/SalesOrder?${params.toString()}`;
+      const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+      all.push(...rows);
+      if (rows.length < pageSize) break;
+    }
+
+    return all;
+  }
+
   async fetchPaymentInfoRows(baid: string, orderNbrs: string[]): Promise<Record<string, unknown>[]> {
     if (!orderNbrs.length) return [];
     const select = ["OrderNbr", "OrderTotal", "UnpaidBalance", "Terms", "Status"].join(",");
@@ -193,6 +343,66 @@ export class AcumaticaClient {
     params.set("$top", "500");
     const url = `${this.readEntityBase}/SalesOrder?${params.toString()}`;
     return toRows(await this.request<unknown>(url, { method: "GET" }));
+  }
+
+  async fetchAddressContactRows(
+    baid: string,
+    orderNbrs: string[],
+    cutoffLiteral?: string | null,
+    useOrderBy = false,
+    pageSize = 500
+  ): Promise<Record<string, unknown>[]> {
+    const select = [
+      "OrderNbr",
+      "AddressLine1",
+      "AddressLine2",
+      "City",
+      "State",
+      "PostalCode",
+      "DeliveryEmail",
+      "JobName",
+      "ShipVia",
+    ].join(",");
+    const custom =
+      "Document.AttributeSITENUMBER, Document.AttributeOSCONTACT, Document.AttributeCONFIRMVIA, Document.AttributeCONFIRMWTH";
+
+    const baseParts = [`CustomerID eq '${quoteForOData(baid)}'`];
+    if (cutoffLiteral) baseParts.push(`RequestedOn ge ${cutoffLiteral}`);
+    if (orderNbrs.length) {
+      const ors = orderNbrs.map((n) => `OrderNbr eq '${quoteForOData(n)}'`).join(" or ");
+      baseParts.push(`(${ors})`);
+    }
+
+    const params = new URLSearchParams();
+    params.set("$filter", baseParts.join(" and "));
+    params.set("$select", select);
+    params.set("$custom", custom);
+    if (useOrderBy) params.set("$orderby", "OrderNbr desc");
+    params.set("$top", String(pageSize));
+
+    const url = `${this.readEntityBase}/SalesOrder?${params.toString()}`;
+    return toRows(await this.request<unknown>(url, { method: "GET" }));
+  }
+
+  async fetchOrderLastModifiedRaw(baid: string, orderNbr: string): Promise<string | null> {
+    const params = new URLSearchParams();
+    params.set(
+      "$filter",
+      [`OrderNbr eq '${quoteForOData(orderNbr)}'`, `CustomerID eq '${quoteForOData(baid)}'`].join(" and ")
+    );
+    params.set("$select", "OrderNbr,LastModified");
+    params.set("$top", "1");
+
+    const url = `${this.readEntityBase}/SalesOrder?${params.toString()}`;
+    const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+    const row = rows[0] || null;
+    return (
+      row?.LastModified?.value ??
+      row?.lastModified?.value ??
+      row?.LastModified ??
+      row?.lastModified ??
+      null
+    );
   }
 }
 
