@@ -179,6 +179,33 @@ export class AcumaticaClient {
     return toRows(text ? JSON.parse(text) : []);
   }
 
+  async fetchCloseoutInventoryReportRows(): Promise<Record<string, unknown>[]> {
+    const url =
+      process.env.ACUMATICA_CLOSEOUT_ODATA_URL?.trim() ||
+      "https://acumatica.mld.com/OData/MLD/Closeout%20Inventory%20Counts";
+    const authHeader = `Basic ${Buffer.from(`${env.acumaticaUsername}:${env.acumaticaPassword}`).toString("base64")}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: authHeader,
+        Accept: "application/json",
+      },
+      cache: "no-store",
+    });
+
+    const text = await response.text();
+    if (!response.ok) {
+      const err = new Error(
+        `Closeout OData request failed: ${response.status} ${response.statusText} ${text}`
+      );
+      (err as Error & { status?: number }).status = response.status;
+      throw err;
+    }
+
+    return toRows(text ? JSON.parse(text) : []);
+  }
+
   async fetchOrderSummariesRows(
     baid: string,
     pageSize: number,
