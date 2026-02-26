@@ -12,6 +12,17 @@ function quoteForOData(value: string): string {
   return value.replace(/'/g, "''");
 }
 
+function getAcumaticaFieldValue(row: Record<string, unknown> | null, key: string): string | null {
+  if (!row) return null;
+  const raw = row[key];
+  if (raw == null) return null;
+  if (typeof raw === "object" && raw !== null && "value" in raw) {
+    const nested = (raw as { value?: unknown }).value;
+    return nested == null ? null : String(nested);
+  }
+  return String(raw);
+}
+
 export class AcumaticaClient {
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
@@ -397,11 +408,8 @@ export class AcumaticaClient {
     const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
     const row = rows[0] || null;
     return (
-      row?.LastModified?.value ??
-      row?.lastModified?.value ??
-      row?.LastModified ??
-      row?.lastModified ??
-      null
+      getAcumaticaFieldValue(row, "LastModified") ??
+      getAcumaticaFieldValue(row, "lastModified")
     );
   }
 }
