@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { assertSpecbooksApiKey } from "@/lib/auth";
+import { env } from "@/lib/env";
 import { assertRouteWithinRateLimit } from "@/lib/rateLimit";
 import { enqueueCoalescedOpportunityUpdate, enqueueJob } from "@/lib/jobs";
-import { parseJsonBodyWithLimit, updateOpportunitySchema } from "@/lib/validation";
+import {
+  parseJsonBodyWithLimit,
+  parseJsonObjectBodyWithLimit,
+  updateOpportunitySchema,
+} from "@/lib/validation";
 
 export async function GET(req: Request, { params }: { params: Promise<{ opportunityId: string }> }) {
   try {
@@ -39,13 +44,20 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ opport
       return NextResponse.json({ error: "opportunityId is required" }, { status: 400 });
     }
 
-    const { parsed } = await parseJsonBodyWithLimit(req, updateOpportunitySchema);
+    const { parsed } = env.specbooksOpportunityPassthrough
+      ? await parseJsonObjectBodyWithLimit(req, { requireNonEmpty: true })
+      : await parseJsonBodyWithLimit(req, updateOpportunitySchema);
 
     await assertRouteWithinRateLimit("specbooks", "UPDATE_OPPORTUNITY");
+    const payload = parsed as Record<string, unknown>;
+    // Path param is authoritative; ignore body-supplied OpportunityID in passthrough mode.
+    if ("OpportunityID" in payload) {
+      delete payload.OpportunityID;
+    }
 
     const { jobId } = await enqueueCoalescedOpportunityUpdate(
       opportunityId,
-      parsed as Record<string, unknown>
+      payload
     );
 
     return NextResponse.json({ jobId }, { status: 202 });

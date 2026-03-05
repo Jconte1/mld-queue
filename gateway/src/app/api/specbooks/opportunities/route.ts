@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { assertSpecbooksApiKey } from "@/lib/auth";
+import { env } from "@/lib/env";
 import { assertRouteWithinRateLimit } from "@/lib/rateLimit";
 import { enqueueCreateWithIdempotency } from "@/lib/jobs";
-import { createOpportunitySchema, parseJsonBodyWithLimit } from "@/lib/validation";
+import {
+  createOpportunitySchema,
+  parseJsonBodyWithLimit,
+  parseJsonObjectBodyWithLimit,
+} from "@/lib/validation";
 
 export async function POST(req: Request) {
   try {
@@ -13,7 +18,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Idempotency-Key header is required" }, { status: 400 });
     }
 
-    const { parsed } = await parseJsonBodyWithLimit(req, createOpportunitySchema);
+    const { parsed } = env.specbooksOpportunityPassthrough
+      ? await parseJsonObjectBodyWithLimit(req, { requireNonEmpty: true })
+      : await parseJsonBodyWithLimit(req, createOpportunitySchema);
 
     await assertRouteWithinRateLimit("specbooks", "CREATE_OPPORTUNITY");
 

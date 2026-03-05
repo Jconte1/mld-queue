@@ -46,6 +46,8 @@ const createOpportunitySchema = z
   .object({
     Subject: wrappedString.optional(),
     ClassID: wrappedString.optional(),
+    Amount: wrappedNumber.optional(),
+    Branch: wrappedString.optional(),
     BusinessAccount: wrappedString.optional(),
     Location: wrappedString.optional(),
     Owner: wrappedString.optional(),
@@ -67,7 +69,8 @@ const createOpportunitySchema = z
         City: wrappedString.optional(),
         State: wrappedString.optional(),
         PostalCode: wrappedString.optional(),
-        Country: wrappedString.optional()
+        Country: wrappedString.optional(),
+        Validated: wrappedBoolean.optional()
       })
       .strict()
       .optional(),
@@ -119,6 +122,48 @@ export async function parseJsonBodyWithLimit<T>(req: Request, schema: z.Schema<T
   }
 
   return { parsed: result.data, raw };
+}
+
+export async function parseJsonObjectBodyWithLimit(
+  req: Request,
+  options?: { requireNonEmpty?: boolean }
+): Promise<BodyResult<Record<string, unknown>>> {
+  const raw = await req.text();
+  const bytes = Buffer.byteLength(raw, "utf8");
+
+  if (bytes > env.maxRequestBytes) {
+    throw new Response(JSON.stringify({ error: "Payload too large" }), {
+      status: 413,
+      headers: { "content-type": "application/json" }
+    });
+  }
+
+  let json: unknown;
+  try {
+    json = raw ? JSON.parse(raw) : {};
+  } catch {
+    throw new Response(JSON.stringify({ error: "Invalid JSON" }), {
+      status: 400,
+      headers: { "content-type": "application/json" }
+    });
+  }
+
+  if (!json || Array.isArray(json) || typeof json !== "object") {
+    throw new Response(JSON.stringify({ error: "Validation failed", issues: [{ path: "", message: "Body must be a JSON object" }] }), {
+      status: 400,
+      headers: { "content-type": "application/json" }
+    });
+  }
+
+  const parsed = json as Record<string, unknown>;
+  if (options?.requireNonEmpty && Object.keys(parsed).length === 0) {
+    throw new Response(JSON.stringify({ error: "Validation failed", issues: [{ path: "", message: "At least one field is required" }] }), {
+      status: 400,
+      headers: { "content-type": "application/json" }
+    });
+  }
+
+  return { parsed, raw };
 }
 
 export { createOpportunitySchema, updateOpportunitySchema };

@@ -85,12 +85,14 @@ Body allowlist (unknown fields rejected):
 
 - `Subject: { value: string }`
 - `ClassID: { value: string }`
+- `Amount: { value: number }`
+- `Branch: { value: string }`
 - `BusinessAccount: { value: string }`
 - `Location: { value: string }`
 - `Owner: { value: string }`
 - `Products: [{ InventoryID: { value: string }, Quantity?: { value: number }, UOM?: { value: string } }]` (min 1)
 - `ContactInformation?: { FirstName?: { value: string }, LastName?: { value: string }, CompanyName?: { value: string }, Email?: { value: string }, Phone1?: { value: string } }`
-- `Address?: { AddressLine1?: { value: string }, AddressLine2?: { value: string }, City?: { value: string }, State?: { value: string }, PostalCode?: { value: string }, Country?: { value: string } }`
+- `Address?: { AddressLine1?: { value: string }, AddressLine2?: { value: string }, City?: { value: string }, State?: { value: string }, PostalCode?: { value: string }, Country?: { value: string }, Validated?: { value: boolean } }`
 - `Hold?: { value: boolean }`
 
 String constraints:
@@ -112,7 +114,7 @@ Response:
 - Body is partial update (at least one allowed field required).
 - Unknown fields rejected.
 - Allowed top-level fields:
-  - `Subject`, `ClassID`, `BusinessAccount`, `Location`, `Owner`, `ContactInformation`, `Address`, `Hold`, `Products`
+  - `Subject`, `ClassID`, `Amount`, `Branch`, `BusinessAccount`, `Location`, `Owner`, `ContactInformation`, `Address`, `Hold`, `Products`
 - `OpportunityID` in body is not allowed (use URL path only).
 - `Products` line mutation fields:
   - `id?: string` (detail line identifier from `GET /opportunities` result; use this to update/delete existing lines)

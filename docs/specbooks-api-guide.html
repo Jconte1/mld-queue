@@ -58,7 +58,7 @@
       <thead><tr><th>Method</th><th>Path</th><th>Purpose</th><th>Immediate response</th></tr></thead>
       <tbody>
         <tr><td class="mono">GET</td><td class="mono">/api/specbooks/customers/{customerId}</td><td>Queue customer fetch from Acumatica</td><td><code>202 { \"jobId\": \"...\" }</code></td></tr>
-        <tr><td class="mono">GET</td><td class="mono">/api/specbooks/opportunities/{opportunityId}</td><td>Queue opportunity fetch from Acumatica (expanded products)</td><td><code>202 { \"jobId\": \"...\" }</code></td></tr>
+        <tr><td class="mono">GET</td><td class="mono">/api/specbooks/opportunities/{opportunityId}</td><td>Queue opportunity fetch from Acumatica (expanded products + address)</td><td><code>202 { \"jobId\": \"...\" }</code></td></tr>
         <tr><td class="mono">POST</td><td class="mono">/api/specbooks/opportunities</td><td>Queue create opportunity</td><td><code>202 { \"jobId\": \"...\" }</code></td></tr>
         <tr><td class="mono">PATCH</td><td class="mono">/api/specbooks/opportunities/{opportunityId}</td><td>Queue update opportunity (coalesced)</td><td><code>202 { \"jobId\": \"...\" }</code></td></tr>
         <tr><td class="mono">GET</td><td class="mono">/api/specbooks/jobs/{jobId}</td><td>Read job status/result/error</td><td><code>200</code></td></tr>
@@ -96,7 +96,7 @@
 
     <h3>POST /opportunities (create)</h3>
     <ul>
-      <li>Top-level: <code>Subject, ClassID, BusinessAccount, Location, Owner, Products, ContactInformation, Address, Hold</code></li>
+      <li>Top-level: <code>Subject, ClassID, Amount, Branch, BusinessAccount, Location, Owner, Products, ContactInformation, Address, Hold</code></li>
       <li><code>Products[]</code> create fields: <code>InventoryID</code> (required), <code>Quantity</code>, <code>UOM</code></li>
       <li>Canonical quantity field for create is <code>Quantity</code> (not <code>Qty</code>).</li>
       <li>Unknown fields are rejected with 400 (strict recursively for top-level and nested objects).</li>
@@ -104,7 +104,7 @@
 
     <h3>PATCH /opportunities/{opportunityId}</h3>
     <ul>
-      <li>Top-level allowed: <code>Subject, ClassID, BusinessAccount, Location, Owner, Products, ContactInformation, Address, Hold</code></li>
+      <li>Top-level allowed: <code>Subject, ClassID, Amount, Branch, BusinessAccount, Location, Owner, Products, ContactInformation, Address, Hold</code></li>
       <li><strong>Forbidden:</strong> top-level <code>OpportunityID</code> (URL path is authoritative)</li>
       <li><code>Products[]</code> update fields: <code>id</code>, <code>OpportunityProductID</code>, <code>InventoryID</code>, <code>Qty</code>, <code>Quantity</code>, <code>UOM</code>, <code>Warehouse</code>, <code>delete</code></li>
       <li>Canonical quantity field for patch is <code>Qty</code>; <code>Quantity</code> is accepted as alias. Do not send both in the same line item.</li>
