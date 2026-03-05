@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SpecBooks Partner Integration Guide</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --line: #dbe3ef;
+      --brand: #0b57d0;
+      --brand-soft: #e8f0ff;
+      --ok: #0f766e;
+      --ok-soft: #e6f7f5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", Arial, sans-serif;
+      line-height: 1.45;
+    }
+    .page {
+      max-width: 980px;
+      margin: 24px auto;
+      padding: 0 16px 24px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #0b57d0, #1d4ed8);
+      color: #fff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(11, 87, 208, 0.22);
+    }
+    .hero h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 14px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 10px 0;
+      box-shadow: 0 2px 8px rgba(2, 6, 23, 0.04);
+    }
+    h2 {
+      margin: 4px 0 10px;
+      font-size: 18px;
+      color: #0b3b91;
+    }
+    h3 {
+      margin: 10px 0 8px;
+      font-size: 15px;
+      color: #0f172a;
+    }
+    p { margin: 6px 0; }
+    ul { margin: 8px 0 8px 18px; }
+    li { margin: 4px 0; }
+    .pill {
+      display: inline-block;
+      background: var(--brand-soft);
+      border: 1px solid #c8d8ff;
+      color: #103f97;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #eef3fb;
+      color: #0f2f70;
+      font-weight: 600;
+    }
+    code {
+      background: #eef2ff;
+      color: #1e3a8a;
+      border: 1px solid #dbe4ff;
+      border-radius: 6px;
+      padding: 1px 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+    }
+    pre {
+      margin: 8px 0;
+      padding: 12px;
+      background: #0b1220;
+      color: #dbe7ff;
+      border-radius: 10px;
+      border: 1px solid #1f2b42;
+      overflow: auto;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .json-wrap {
+      position: relative;
+      margin: 8px 0 2px;
+    }
+    .json-wrap.collapsed pre {
+      max-height: 260px;
+      overflow: hidden;
+    }
+    .json-wrap.collapsed::after {
+      content: "";
+      position: absolute;
+      left: 1px;
+      right: 1px;
+      bottom: 1px;
+      height: 64px;
+      border-radius: 0 0 10px 10px;
+      background: linear-gradient(to bottom, rgba(11, 18, 32, 0), rgba(11, 18, 32, 0.96));
+      pointer-events: none;
+    }
+    .toggle-json {
+      margin-top: 8px;
+      background: var(--brand-soft);
+      color: #103f97;
+      border: 1px solid #c8d8ff;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .toggle-json:hover {
+      background: #dce8ff;
+    }
+    .note {
+      background: var(--ok-soft);
+      border: 1px solid #b7ede8;
+      color: var(--ok);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>SpecBooks Integration Guide</h1>
+      <p>Queue Gateway contract for partner-facing requests</p>
+    </section>
+
+    <section class="card">
+      <h2>Authentication</h2>
+      <p>All SpecBooks requests must include:</p>
+      <p><code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></p>
+    </section>
+
+    <section class="card">
+      <h2>Available Endpoints (5)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Endpoint</th>
+            <th>Method + Path</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Get Customer</td>
+            <td><code>GET /api/specbooks/customers/{customerId}</code></td>
+            <td>Fetch customer account details, including address/contact fields.</td>
+          </tr>
+          <tr>
+            <td>Get Opportunity</td>
+            <td><code>GET /api/specbooks/opportunities/{opportunityId}</code></td>
+            <td>Fetch an opportunity and its line items.</td>
+          </tr>
+          <tr>
+            <td>Create Opportunity</td>
+            <td><code>POST /api/specbooks/opportunities</code></td>
+            <td>Create a new opportunity with provided payload.</td>
+          </tr>
+          <tr>
+            <td>Update Opportunity</td>
+            <td><code>PATCH /api/specbooks/opportunities/{opportunityId}</code></td>
+            <td>Apply partial updates to an existing opportunity, including product line changes.</td>
+          </tr>
+          <tr>
+            <td>Poll Job</td>
+            <td><code>GET /api/specbooks/jobs/{jobId}</code></td>
+            <td>Check async job status/result (<code>queued</code>, <code>processing</code>, <code>succeeded</code>, <code>failed</code>).</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 1: Get Customer <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Fetch customer details from Acumatica through the queue gateway.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>GET</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/customers/{{customerId}}</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+      </ul>
+
+      <h3>Example JSON Response</h3>
+      <pre>{
+    "jobId": "641e2822-d230-40af-9b1f-96bc53cb9e84",
+    "vendorId": "specbooks",
+    "type": "GET_CUSTOMER",
+    "status": "succeeded",
+    "result": [
+        {
+            "id": "ec5d75df-265f-eb11-a814-00155d640503",
+            "City": {
+                "value": "Murray"
+            },
+            "Zip5": {
+                "value": "84107"
+            },
+            "note": {
+                "value": ""
+            },
+            "Email": {
+                "value": "Ben"
+            },
+            "State": {
+                "value": "UTAH"
+            },
+            "Terms": {
+                "value": "N30NODEP"
+            },
+            "NoteID": {
+                "value": "ec5d75df-265f-eb11-a814-00155d640503"
+            },
+            "Status": {
+                "value": "Active"
+            },
+            "_links": {
+                "self": "/entity/CustomEndpoint/24.200.001/Customer/ec5d75df-265f-eb11-a814-00155d640503",
+                "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.AR.CustomerMaint/BAccount/ec5d75df-265f-eb11-a814-00155d640503/{filename}"
+            },
+            "custom": {},
+            "Country": {
+                "value": "US"
+            },
+            "ShipVia": {
+                "value": "DELIVERY SLC"
+            },
+            "TaxZone": {
+                "value": "SALT LAKE"
+            },
+            "ZipCode": {
+                "value": "84107"
+            },
+            "FOBPoint": {},
+            "rowNumber": 1,
+            "AccountRef": {},
+            "BAccountID": {
+                "value": 13619
+            },
+            "CurrencyID": {
+                "value": "USD"
+            },
+            "CustomerID": {
+                "value": "BA0001318"
+            },
+            "CreditLimit": {
+                "value": 0
+            },
+            "WarehouseID": {
+                "value": "SALT LAKE APPLIANCES"
+            },
+            "AddressLine1": {
+                "value": "6227 Longview Drive"
+            },
+            "AddressLine2": {},
+            "CustomerName": {
+                "value": "Ben Devenport Construction"
+            },
+            "LeadTimedays": {},
+            "LocationName": {
+                "value": "Primary Location"
+            },
+            "ParentRecord": {},
+            "PriceClassID": {},
+            "PrimaryEmail": {
+                "value": "capt0474@hotmail.com"
+            },
+            "ShippingRule": {
+                "value": "Back Order Allowed"
+            },
+            "CustomerClass": {
+                "value": "BUILDER"
+            },
+            "OrderPriority": {
+                "value": 0
+            },
+            "PrimaryEmail2": {
+                "value": "bendevenport@gmail.com"
+            },
+            "PrimaryPhone1": {
+                "value": "8014151605"
+            },
+            "PrimaryPhone2": {},
+            "PrintInvoices": {
+                "value": false
+            },
+            "ShippingTerms": {},
+            "StatementType": {
+                "value": "Open Item"
+            },
+            "WriteOffLimit": {
+                "value": 25
+            },
+            "BusinessPhone1": {
+                "value": "8017504098"
+            },
+            "BusinessPhone2": {},
+            "ShippingBranch": {},
+            "ShippingZoneID": {},
+            "CreatedDateTime": {
+                "value": "2021-01-25T10:09:02.917-06:00"
+            },
+            "EnableWriteOffs": {
+                "value": true
+            },
+            "IsGuestCustomer": {
+                "value": false
+            },
+            "PrintStatements": {
+                "value": false
+            },
+            "CurrencyRateType": {},
+            "CustomerCategory": {
+                "value": "Individual"
+            },
+            "PrimaryContactID": {
+                "value": 156581
+            },
+            "SaturdayDelivery": {
+                "value": false
+            },
+            "StatementCycleID": {
+                "value": "EOM"
+            },
+            "AutoApplyPayments": {
+                "value": false
+            },
+            "TaxRegistrationID": {},
+            "EnableRateOverride": {
+                "value": false
+            },
+            "ApplyOverdueCharges": {
+                "value": true
+            },
+            "PrintDunningLetters": {
+                "value": true
+            },
+            "ResidentialDelivery": {
+                "value": false
+            },
+            "SendInvoicesbyEmail": {
+                "value": false
+            },
+            "LastModifiedDateTime": {
+                "value": "2026-01-22T09:39:43.293-06:00"
+            },
+            "RestrictVisibilityTo": {},
+            "SendStatementsbyEmail": {
+                "value": false
+            },
+            "BillingAddressOverride": {
+                "value": false
+            },
+            "BillingContactOverride": {
+                "value": false
+            },
+            "EnableCurrencyOverride": {
+                "value": false
+            },
+            "MultiCurrencyStatements": {
+                "value": false
+            },
+            "ShippingAddressOverride": {},
+            "ShippingContactOverride": {},
+            "SendDunningLettersbyEmail": {
+                "value": true
+            }
+        }
+    ],
+    "error": null,
+    "createdAt": "2026-03-05T17:44:34.267Z",
+    "updatedAt": "2026-03-05T17:44:35.372Z"
+}</pre>
+
+      <div class="note">
+        Request/response examples will be expanded endpoint-by-endpoint as we validate the remaining 3 requests.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 2: Get Opportunity <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Fetch a specific opportunity and its line items from Acumatica through the queue gateway.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>GET</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/opportunities/{{opportunityId}}</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+      </ul>
+
+      <h3>Example JSON Response</h3>
+      <pre>{
+    "jobId": "befdf800-ffe0-453d-8a5c-a47b7b1ccc1b",
+    "vendorId": "specbooks",
+    "type": "GET_OPPORTUNITY",
+    "status": "succeeded",
+    "result": [
+        {
+            "id": "310f1aec-b418-f111-9fc0-6045bda28239",
+            "note": {
+                "value": ""
+            },
+            "Owner": {
+                "value": "106552"
+            },
+            "Stage": {
+                "value": "Prospect"
+            },
+            "Total": {
+                "value": 3142.3
+            },
+            "Amount": {
+                "value": 2919
+            },
+            "Branch": {
+                "value": "BA0016568"
+            },
+            "NoteID": {
+                "value": "310f1aec-b418-f111-9fc0-6045bda28239"
+            },
+            "Reason": {
+                "value": "Created"
+            },
+            "Source": {},
+            "Status": {
+                "value": "New"
+            },
+            "_links": {
+                "self": "/entity/CustomEndpoint/24.200.001/Opportunity/310f1aec-b418-f111-9fc0-6045bda28239",
+                "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Opportunity/310f1aec-b418-f111-9fc0-6045bda28239/{filename}"
+            },
+            "custom": {},
+            "ClassID": {
+                "value": "APP"
+            },
+            "Details": {},
+            "Project": {
+                "value": "X"
+            },
+            "Subject": {
+                "value": "SpecBooks Create Passthrough Test"
+            },
+            "TaxZone": {
+                "value": "SALT LAKE"
+            },
+            "Discount": {
+                "value": 0
+            },
+            "Location": {
+                "value": "MAIN"
+            },
+            "Override": {
+                "value": false
+            },
+            "Products": [
+                {
+                    "id": "01074feb-b518-f111-9fc0-6045bda28239",
+                    "Qty": {
+                        "value": 1
+                    },
+                    "UOM": {
+                        "value": "EACH"
+                    },
+                    "note": {
+                        "value": ""
+                    },
+                    "Amount": {
+                        "value": 2919
+                    },
+                    "_links": {
+                        "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Products/01074feb-b518-f111-9fc0-6045bda28239/{filename}"
+                    },
+                    "custom": {},
+                    "Category": {},
+                    "Discount": {
+                        "value": 0
+                    },
+                    "FreeItem": {
+                        "value": false
+                    },
+                    "UnitPrice": {
+                        "value": 2919
+                    },
+                    "Warehouse": {
+                        "value": "SALT LAKE APPLIANCES"
+                    },
+                    "rowNumber": 1,
+                    "InventoryID": {
+                        "value": "DW2451"
+                    },
+                    "ProjectTask": {},
+                    "TaxCategory": {
+                        "value": "TAXABLE"
+                    },
+                    "DiscountCode": {},
+                    "ExternalPrice": {
+                        "value": 2919
+                    },
+                    "DiscountAmount": {
+                        "value": 0
+                    },
+                    "ManualDiscount": {
+                        "value": false
+                    },
+                    "DiscountSequence": {},
+                    "SkipLineDiscounts": {
+                        "value": false
+                    },
+                    "OpportunityProductID": {
+                        "value": 2
+                    },
+                    "TransactionDescription": {
+                        "value": "Cove Built-In Dishwasher 24\",  Panel Ready"
+                    }
+                }
+            ],
+            "ContactID": {
+                "value": 156581
+            },
+            "rowNumber": 1,
+            "CurrencyID": {
+                "value": "USD"
+            },
+            "Estimation": {
+                "value": "2026-03-05T00:00:00-06:00"
+            },
+            "WeightTotal": {},
+            "WorkgroupID": {},
+            "ManualAmount": {
+                "value": false
+            },
+            "OpportunityID": {
+                "value": "OP12326"
+            },
+            "ParentAccount": {},
+            "SourceCampaign": {},
+            "BusinessAccount": {
+                "value": "BA0001318"
+            },
+            "ConvertedLeadID": {},
+            "CurrencyViewState": {
+                "value": false
+            },
+            "OwnerEmployeeName": {
+                "value": "James Conte"
+            },
+            "ContactDisplayName": {
+                "value": "Ben Devenport"
+            },
+            "LastModifiedDateTime": {
+                "value": "2026-03-05T11:08:28.363-06:00"
+            },
+            "WorkgroupDescription": {},
+            "ConvertedLeadDisplayName": {}
+        }
+    ],
+    "error": null,
+    "createdAt": "2026-03-05T18:00:07.977Z",
+    "updatedAt": "2026-03-05T18:00:13.694Z"
+}</pre>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 3: Create Opportunity <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Create a new opportunity through the queue gateway.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>POST</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/opportunities</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+        <li>Required Header: <code>Idempotency-Key: {{$guid}}</code></li>
+      </ul>
+
+      <h3>Request Body</h3>
+      <pre>{
+  "Subject": { "value": "SpecBooks Create Passthrough Test" },
+  "ClassID": { "value": "APP" },
+  "Branch": { "value": "BA0016568" },
+  "BusinessAccount": { "value": "BA0001318" },
+  "Location": { "value": "MAIN" },
+  "Owner": { "value": "106552" },
+  "Address": {
+    "AddressLine1": { "value": "123 Test St" },
+    "City": { "value": "Murray" },
+    "State": { "value": "UT" },
+    "PostalCode": { "value": "84107" },
+    "Country": { "value": "US" }
+  },
+  "Products": [
+    {
+      "InventoryID": { "value": "ROOM" },
+      "Quantity": { "value": 1 },
+      "UOM": { "value": "EACH" },
+      "Amount": { "value": 1000 }
+    }
+  ]
+}</pre>
+
+      <h3>Example JSON Response</h3>
+      <pre>{
+    "jobId": "70c34fc4-7ba4-4088-8629-0043831c6a54",
+    "vendorId": "specbooks",
+    "type": "CREATE_OPPORTUNITY",
+    "status": "succeeded",
+    "result": {
+        "id": "310f1aec-b418-f111-9fc0-6045bda28239",
+        "note": null,
+        "Owner": {
+            "value": "106552"
+        },
+        "Stage": {
+            "value": "Prospect"
+        },
+        "Total": {
+            "value": 0
+        },
+        "Amount": {
+            "value": 0
+        },
+        "Branch": {
+            "value": "BA0016568"
+        },
+        "NoteID": {
+            "value": "310f1aec-b418-f111-9fc0-6045bda28239"
+        },
+        "Reason": {
+            "value": "Created"
+        },
+        "Source": {},
+        "Status": {
+            "value": "New"
+        },
+        "_links": {
+            "self": "/entity/Default/24.200.001/Opportunity/310f1aec-b418-f111-9fc0-6045bda28239",
+            "files:put": "/entity/Default/24.200.001/files/PX.Objects.CR.OpportunityMaint/Opportunity/310f1aec-b418-f111-9fc0-6045bda28239/{filename}"
+        },
+        "custom": {},
+        "Address": null,
+        "ClassID": {
+            "value": "APP"
+        },
+        "Details": {},
+        "Project": {
+            "value": "X"
+        },
+        "Subject": {
+            "value": "SpecBooks Create Passthrough Test"
+        },
+        "TaxZone": {
+            "value": "SALT LAKE"
+        },
+        "Discount": {
+            "value": 0
+        },
+        "Location": {
+            "value": "MAIN"
+        },
+        "Override": {
+            "value": false
+        },
+        "Products": [],
+        "ContactID": {
+            "value": 156581
+        },
+        "rowNumber": 1,
+        "CurrencyID": {
+            "value": "USD"
+        },
+        "Estimation": {
+            "value": "2026-03-05T00:00:00-06:00"
+        },
+        "WeightTotal": {
+            "value": 0
+        },
+        "WorkgroupID": {},
+        "ManualAmount": {
+            "value": false
+        },
+        "OpportunityID": {
+            "value": "OP12326"
+        },
+        "ParentAccount": {},
+        "SourceCampaign": {},
+        "BusinessAccount": {
+            "value": "BA0001318"
+        },
+        "ConvertedLeadID": {},
+        "CurrencyViewState": {
+            "value": false
+        },
+        "OwnerEmployeeName": {
+            "value": "James Conte"
+        },
+        "ContactDisplayName": {
+            "value": "Ben Devenport"
+        },
+        "LastModifiedDateTime": {
+            "value": "2026-03-05T11:01:33.677-06:00"
+        },
+        "WorkgroupDescription": {},
+        "ConvertedLeadDisplayName": {}
+    },
+    "error": null,
+    "createdAt": "2026-03-05T17:01:21.241Z",
+    "updatedAt": "2026-03-05T17:01:36.062Z"
+}</pre>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 4: Update Opportunity <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Update an existing opportunity through the queue gateway, including product line add/delete changes.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>PATCH</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/opportunities/{{opportunityId}}</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+      </ul>
+
+      <h3>Request Body</h3>
+      <pre>{
+  "Products": [
+    {
+      "InventoryID": { "value": "ROOM" },
+      "Qty": { "value": 1 },
+      "UOM": { "value": "EACH" }
+    },
+    {
+      "id": "01074feb-b518-f111-9fc0-6045bda28239",
+      "OpportunityProductID": { "value": 2 },
+      "delete": true
+    }
+  ]
+}</pre>
+
+      <h3>Example JSON Response</h3>
+      <pre>{
+    "jobId": "658c7aad-aa33-495e-9625-a388549fbec7",
+    "vendorId": "specbooks",
+    "type": "UPDATE_OPPORTUNITY",
+    "status": "succeeded",
+    "result": {
+        "id": "310f1aec-b418-f111-9fc0-6045bda28239",
+        "note": null,
+        "Owner": {
+            "value": "106552"
+        },
+        "Stage": {
+            "value": "Prospect"
+        },
+        "Total": {
+            "value": 0
+        },
+        "Amount": {
+            "value": 0
+        },
+        "Branch": {
+            "value": "BA0016568"
+        },
+        "NoteID": {
+            "value": "310f1aec-b418-f111-9fc0-6045bda28239"
+        },
+        "Reason": {
+            "value": "Created"
+        },
+        "Source": {},
+        "Status": {
+            "value": "New"
+        },
+        "_links": {
+            "self": "/entity/CustomEndpoint/24.200.001/Opportunity/310f1aec-b418-f111-9fc0-6045bda28239",
+            "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Opportunity/310f1aec-b418-f111-9fc0-6045bda28239/{filename}"
+        },
+        "custom": {},
+        "ClassID": {
+            "value": "APP"
+        },
+        "Details": {},
+        "Project": {
+            "value": "X"
+        },
+        "Subject": {
+            "value": "SpecBooks Create Passthrough Test"
+        },
+        "TaxZone": {
+            "value": "SALT LAKE"
+        },
+        "Discount": {
+            "value": 0
+        },
+        "Location": {
+            "value": "MAIN"
+        },
+        "Override": {
+            "value": false
+        },
+        "Products": [],
+        "ContactID": {
+            "value": 156581
+        },
+        "rowNumber": 1,
+        "CurrencyID": {
+            "value": "USD"
+        },
+        "Estimation": {
+            "value": "2026-03-05T00:00:00-06:00"
+        },
+        "WeightTotal": {
+            "value": 0
+        },
+        "WorkgroupID": {},
+        "ManualAmount": {
+            "value": false
+        },
+        "OpportunityID": {
+            "value": "OP12326"
+        },
+        "ParentAccount": {},
+        "SourceCampaign": {},
+        "BusinessAccount": {
+            "value": "BA0001318"
+        },
+        "ConvertedLeadID": {},
+        "CurrencyViewState": {
+            "value": false
+        },
+        "OwnerEmployeeName": {
+            "value": "James Conte"
+        },
+        "ContactDisplayName": {
+            "value": "Ben Devenport"
+        },
+        "LastModifiedDateTime": {
+            "value": "2026-03-05T12:15:14.653-06:00"
+        },
+        "WorkgroupDescription": {},
+        "ConvertedLeadDisplayName": {}
+    },
+    "error": null,
+    "createdAt": "2026-03-05T18:15:08.126Z",
+    "updatedAt": "2026-03-05T18:15:15.106Z"
+}</pre>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 5: Poll Job <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Poll a queued job by <code>jobId</code> to check whether it is still processing or completed.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>GET</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/jobs/{{jobId}}</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+      </ul>
+
+      <h3>Job Status Values</h3>
+      <ul>
+        <li><code>queued</code></li>
+        <li><code>processing</code></li>
+        <li><code>succeeded</code></li>
+        <li><code>failed</code></li>
+      </ul>
+
+      <h3>Response Note</h3>
+      <div class="note">
+        The response payload is based on which endpoint the <code>jobId</code> came from (for example, Get Customer vs Get Opportunity vs Create/Update Opportunity).
+      </div>
+    </section>
+  </div>
+  <script>
+    (function () {
+      const headers = Array.from(document.querySelectorAll("h3"));
+      headers.forEach((h3) => {
+        if (!/Example JSON Response/i.test(h3.textContent || "")) return;
+        const pre = h3.nextElementSibling;
+        if (!pre || pre.tagName !== "PRE") return;
+
+        const wrap = document.createElement("div");
+        wrap.className = "json-wrap collapsed";
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "toggle-json";
+        btn.textContent = "View more";
+        wrap.insertAdjacentElement("afterend", btn);
+
+        btn.addEventListener("click", () => {
+          const collapsed = wrap.classList.toggle("collapsed");
+          btn.textContent = collapsed ? "View more" : "View less";
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
