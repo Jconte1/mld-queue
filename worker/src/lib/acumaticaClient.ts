@@ -38,6 +38,10 @@ export class AcumaticaClient {
     return `${env.acumaticaBaseUrl}/entity/${endpointName}/${endpointVersion}`;
   }
 
+  private get stockItemEntityBase(): string {
+    return `${env.acumaticaBaseUrl}/entity/${env.acumaticaStockItemEndpointName}/${env.acumaticaStockItemEndpointVersion}`;
+  }
+
   async getToken(): Promise<string> {
     if (this.accessToken && this.tokenExpiry && this.tokenExpiry > Date.now()) {
       return this.accessToken;
@@ -118,7 +122,10 @@ export class AcumaticaClient {
   }
 
   async getStockItem(inventoryId: string): Promise<unknown> {
-    return this.getStockItems([inventoryId]);
+    const id = String(inventoryId || "").trim().toUpperCase();
+    if (!id) return [];
+    const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}/${encodeURIComponent(id)}`;
+    return this.request<unknown>(url, { method: "GET" });
   }
 
   async getStockItems(inventoryIds: string[]): Promise<unknown> {
@@ -140,7 +147,7 @@ export class AcumaticaClient {
         .map((id) => `(InventoryID eq '${quoteForOData(id)}')`)
         .join(" or ");
       const filter = encodeURIComponent(orFilter);
-      const url = `${this.entityBase}/${env.acumaticaStockItemEntity}?$filter=${filter}`;
+      const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}?$filter=${filter}`;
       const payload = await this.request<unknown>(url, { method: "GET" });
       allRows.push(...toRows(payload));
     }

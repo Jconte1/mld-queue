@@ -36,6 +36,8 @@ export const env = {
   acumaticaContactEntity: process.env.ACUMATICA_CONTACT_ENTITY ?? "Contact",
   acumaticaStockItemEntity: process.env.ACUMATICA_STOCK_ITEM_ENTITY ?? "StockItem",
   acumaticaItemClassEntity: process.env.ACUMATICA_ITEM_CLASS_ENTITY ?? "ItemClass",
+  acumaticaStockItemEndpointName: process.env.ACUMATICA_STOCK_ITEM_ENDPOINT_NAME ?? "Default",
+  acumaticaStockItemEndpointVersion: process.env.ACUMATICA_STOCK_ITEM_ENDPOINT_VERSION ?? "24.200.001",
   acumaticaOpportunityExpand: process.env.ACUMATICA_OPPORTUNITY_EXPAND ?? "Products,Address",
   vendorMaxConcurrency: Number(process.env.VENDOR_MAX_CONCURRENCY ?? 8),
   vendorMaxRpm: Number(process.env.VENDOR_MAX_RPM ?? 90),
