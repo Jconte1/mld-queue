@@ -175,7 +175,7 @@
     </section>
 
     <section class="card">
-      <h2>Available Endpoints (5)</h2>
+      <h2>Available Endpoints (7)</h2>
       <table>
         <thead>
           <tr>
@@ -209,6 +209,16 @@
             <td>Poll Job</td>
             <td><code>GET /api/specbooks/jobs/{jobId}</code></td>
             <td>Check async job status/result (<code>queued</code>, <code>processing</code>, <code>succeeded</code>, <code>failed</code>).</td>
+          </tr>
+          <tr>
+            <td>Get Stock Item (Single)</td>
+            <td><code>GET /api/specbooks/stock-items/{inventoryId}</code></td>
+            <td>Fetch a single stock item by Inventory ID (case-insensitive).</td>
+          </tr>
+          <tr>
+            <td>Get Stock Items (Multiple)</td>
+            <td><code>GET /api/specbooks/stock-items/{placeholder}?inventoryIds={id1},{id2}</code></td>
+            <td>Fetch multiple stock items by passing comma-separated Inventory IDs in <code>inventoryIds</code>.</td>
           </tr>
         </tbody>
       </table>
@@ -920,6 +930,673 @@
       <div class="note">
         The response payload is based on which endpoint the <code>jobId</code> came from (for example, Get Customer vs Get Opportunity vs Create/Update Opportunity).
       </div>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 6: Get Stock Item (Single) <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Fetch one stock item from Acumatica by Inventory ID through the queue gateway.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>GET</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/stock-items/dw2451</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+      </ul>
+
+      <h3>Example JSON Response</h3>
+      <pre>{
+    "jobId": "68b26c7d-d3ce-467c-a2dd-dfcc02100584",
+    "vendorId": "specbooks",
+    "type": "GET_STOCK_ITEM",
+    "status": "succeeded",
+    "result": [
+        {
+            "id": "4fc82803-13fa-ef11-9fa5-6045bda28239",
+            "MSRP": {
+                "value": 2919
+            },
+            "note": {
+                "value": ""
+            },
+            "IsAKit": {
+                "value": false
+            },
+            "Markup": {
+                "value": 0
+            },
+            "NoteID": {
+                "value": "4fc82803-13fa-ef11-9fa5-6045bda28239"
+            },
+            "_links": {
+                "self": "/entity/Default/24.200.001/StockItem/4fc82803-13fa-ef11-9fa5-6045bda28239",
+                "files:put": "/entity/Default/24.200.001/files/PX.Objects.IN.InventoryItemMaint/Item/4fc82803-13fa-ef11-9fa5-6045bda28239/{filename}"
+            },
+            "custom": {},
+            "ABCCode": {},
+            "BaseUOM": {
+                "value": "EACH"
+            },
+            "Content": {},
+            "MaxCost": {
+                "value": 1977.5
+            },
+            "MinCost": {
+                "value": 975
+            },
+            "ImageUrl": {},
+            "ItemType": {
+                "value": "Finished Good"
+            },
+            "LastCost": {
+                "value": 1889.02
+            },
+            "SalesUOM": {
+                "value": "EACH"
+            },
+            "CustomURL": {},
+            "ItemClass": {
+                "value": "APLS-RCVD"
+            },
+            "MinMarkup": {
+                "value": 25
+            },
+            "PageTitle": {},
+            "VolumeUOM": {},
+            "WeightUOM": {},
+            "rowNumber": 1,
+            "ItemStatus": {
+                "value": "Active"
+            },
+            "PriceClass": {
+                "value": "A002"
+            },
+            "TariffCode": {},
+            "Visibility": {
+                "value": "Store Default"
+            },
+            "AverageCost": {
+                "value": 1853.401176471
+            },
+            "COGSAccount": {
+                "value": "5000"
+            },
+            "Description": {
+                "value": "Cove Built-In Dishwasher 24\",  Panel Ready"
+            },
+            "InventoryID": {
+                "value": "DW2451"
+            },
+            "LastStdCost": {
+                "value": 0
+            },
+            "PurchaseUOM": {
+                "value": "EACH"
+            },
+            "TaxCategory": {
+                "value": "TAXABLE"
+            },
+            "Availability": {
+                "value": "Store Default"
+            },
+            "DefaultPrice": {
+                "value": 2919
+            },
+            "LastModified": {
+                "value": "2026-03-03T10:17:21.703-06:00"
+            },
+            "MetaKeywords": {},
+            "NotAvailable": {
+                "value": "Store Default"
+            },
+            "PostingClass": {
+                "value": "APPLIANCE"
+            },
+            "PriceManager": {},
+            "SalesAccount": {
+                "value": "4000"
+            },
+            "COGSSubaccount": {
+                "value": "0010"
+            },
+            "CurrentStdCost": {
+                "value": 0
+            },
+            "LotSerialClass": {
+                "value": "SERIALRCVD"
+            },
+            "PackSeparately": {
+                "value": false
+            },
+            "PendingStdCost": {
+                "value": 0
+            },
+            "PriceWorkgroup": {},
+            "ProductManager": {
+                "value": "106558"
+            },
+            "SearchKeywords": {},
+            "TemplateItemID": {},
+            "CountryOfOrigin": {},
+            "DimensionVolume": {
+                "value": 0
+            },
+            "DimensionWeight": {
+                "value": 0
+            },
+            "DiscountAccount": {},
+            "MetaDescription": {},
+            "PackagingOption": {
+                "value": "Manual"
+            },
+            "SalesSubaccount": {
+                "value": "0010"
+            },
+            "ValuationMethod": {
+                "value": "Specific"
+            },
+            "CurySpecificMSRP": {
+                "value": 2919
+            },
+            "ExportToExternal": {
+                "value": true
+            },
+            "InventoryAccount": {
+                "value": "1400"
+            },
+            "POAccrualAccount": {
+                "value": "2110"
+            },
+            "ProductWorkgroup": {},
+            "CurySpecificPrice": {
+                "value": 2919
+            },
+            "DefaultWarehouseID": {},
+            "DiscountSubaccount": {},
+            "InventorySubaccount": {
+                "value": "0010"
+            },
+            "POAccrualSubaccount": {
+                "value": "0010"
+            },
+            "SubjectToCommission": {
+                "value": false
+            },
+            "AutoIncrementalValue": {
+                "value": "000000"
+            },
+            "LastModifiedDateTime": {
+                "value": "2026-03-03T10:17:21.703-06:00"
+            },
+            "ReasonCodeSubaccount": {
+                "value": "0010"
+            },
+            "DefaultIssueLocationID": {},
+            "DefaultReceiptLocationID": {},
+            "LandedCostVarianceAccount": {},
+            "StandardCostVarianceAccount": {
+                "value": "5000"
+            },
+            "LandedCostVarianceSubaccount": {},
+            "PurchasePriceVarianceAccount": {
+                "value": "5999"
+            },
+            "StandardCostRevaluationAccount": {
+                "value": "5000"
+            },
+            "StandardCostVarianceSubaccount": {
+                "value": "0010"
+            },
+            "PurchasePriceVarianceSubaccount": {
+                "value": "0010"
+            },
+            "StandardCostRevaluationSubaccount": {
+                "value": "0010"
+            }
+        }
+    ],
+    "error": null,
+    "createdAt": "2026-03-06T17:57:49.189Z",
+    "updatedAt": "2026-03-06T17:57:51.343Z"
+}</pre>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 7: Get Stock Items (Multiple) <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Fetch multiple stock items from Acumatica through the queue gateway in one request.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>GET</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/stock-items/ignored?inventoryIds=DW2451,DEC1850FI/L</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+      </ul>
+
+      <h3>Example JSON Response</h3>
+      <pre>{
+    "jobId": "09c6e5d2-a195-49ac-91db-e93e802af2f8",
+    "vendorId": "specbooks",
+    "type": "GET_STOCK_ITEM",
+    "status": "succeeded",
+    "result": [
+        {
+            "id": "0f031133-4485-ec11-a82b-00155d111f04",
+            "MSRP": {
+                "value": 8909
+            },
+            "note": {
+                "value": ""
+            },
+            "IsAKit": {
+                "value": false
+            },
+            "Markup": {
+                "value": 0
+            },
+            "NoteID": {
+                "value": "0f031133-4485-ec11-a82b-00155d111f04"
+            },
+            "_links": {
+                "self": "/entity/Default/24.200.001/StockItem/0f031133-4485-ec11-a82b-00155d111f04",
+                "files:put": "/entity/Default/24.200.001/files/PX.Objects.IN.InventoryItemMaint/Item/0f031133-4485-ec11-a82b-00155d111f04/{filename}"
+            },
+            "custom": {},
+            "ABCCode": {},
+            "BaseUOM": {
+                "value": "EACH"
+            },
+            "Content": {},
+            "MaxCost": {
+                "value": 7032
+            },
+            "MinCost": {
+                "value": 6350
+            },
+            "ImageUrl": {
+                "value": "Stock Items (DEC1850FI/L                   )\\download.jpg"
+            },
+            "ItemType": {
+                "value": "Finished Good"
+            },
+            "LastCost": {
+                "value": 7032
+            },
+            "SalesUOM": {
+                "value": "EACH"
+            },
+            "CustomURL": {},
+            "ItemClass": {
+                "value": "APLS-RCVD"
+            },
+            "MinMarkup": {
+                "value": 25
+            },
+            "PageTitle": {},
+            "VolumeUOM": {},
+            "WeightUOM": {},
+            "rowNumber": 1,
+            "ItemStatus": {
+                "value": "Active"
+            },
+            "PriceClass": {
+                "value": "A005"
+            },
+            "TariffCode": {},
+            "Visibility": {
+                "value": "Visible"
+            },
+            "AverageCost": {
+                "value": 7032
+            },
+            "COGSAccount": {
+                "value": "5000"
+            },
+            "Description": {
+                "value": "Sub Zero 18\" Designer Column Freezer w/Ice, Panel Ready, Left Hinge"
+            },
+            "InventoryID": {
+                "value": "DEC1850FI/L"
+            },
+            "LastStdCost": {
+                "value": 7032
+            },
+            "PurchaseUOM": {
+                "value": "EACH"
+            },
+            "TaxCategory": {
+                "value": "TAXABLE"
+            },
+            "Availability": {
+                "value": "Store Default"
+            },
+            "DefaultPrice": {
+                "value": 8909
+            },
+            "LastModified": {
+                "value": "2026-03-03T10:16:38.647-06:00"
+            },
+            "MetaKeywords": {},
+            "NotAvailable": {
+                "value": "Store Default"
+            },
+            "PostingClass": {
+                "value": "APPLIANCE"
+            },
+            "PriceManager": {
+                "value": "106558"
+            },
+            "SalesAccount": {
+                "value": "4000"
+            },
+            "COGSSubaccount": {
+                "value": "0010"
+            },
+            "CurrentStdCost": {
+                "value": 7032
+            },
+            "LotSerialClass": {
+                "value": "SERIALRCVD"
+            },
+            "PackSeparately": {
+                "value": false
+            },
+            "PendingStdCost": {
+                "value": 0
+            },
+            "PriceWorkgroup": {},
+            "ProductManager": {
+                "value": "106558"
+            },
+            "SearchKeywords": {},
+            "TemplateItemID": {},
+            "CountryOfOrigin": {},
+            "DimensionVolume": {
+                "value": 0
+            },
+            "DimensionWeight": {
+                "value": 0
+            },
+            "DiscountAccount": {},
+            "MetaDescription": {},
+            "PackagingOption": {
+                "value": "Manual"
+            },
+            "SalesSubaccount": {
+                "value": "0010"
+            },
+            "ValuationMethod": {
+                "value": "Standard"
+            },
+            "CurySpecificMSRP": {
+                "value": 8909
+            },
+            "ExportToExternal": {
+                "value": true
+            },
+            "InventoryAccount": {
+                "value": "1400"
+            },
+            "POAccrualAccount": {
+                "value": "2110"
+            },
+            "ProductWorkgroup": {},
+            "CurySpecificPrice": {
+                "value": 8909
+            },
+            "DefaultWarehouseID": {},
+            "DiscountSubaccount": {},
+            "InventorySubaccount": {
+                "value": "0010"
+            },
+            "POAccrualSubaccount": {
+                "value": "0010"
+            },
+            "SubjectToCommission": {
+                "value": false
+            },
+            "AutoIncrementalValue": {
+                "value": "000000"
+            },
+            "LastModifiedDateTime": {
+                "value": "2026-03-03T10:16:38.647-06:00"
+            },
+            "ReasonCodeSubaccount": {
+                "value": "0010"
+            },
+            "DefaultIssueLocationID": {},
+            "DefaultReceiptLocationID": {},
+            "LandedCostVarianceAccount": {},
+            "StandardCostVarianceAccount": {
+                "value": "5000"
+            },
+            "LandedCostVarianceSubaccount": {},
+            "PurchasePriceVarianceAccount": {
+                "value": "5999"
+            },
+            "StandardCostRevaluationAccount": {
+                "value": "5000"
+            },
+            "StandardCostVarianceSubaccount": {
+                "value": "0010"
+            },
+            "PurchasePriceVarianceSubaccount": {
+                "value": "0010"
+            },
+            "StandardCostRevaluationSubaccount": {
+                "value": "0010"
+            }
+        },
+        {
+            "id": "4fc82803-13fa-ef11-9fa5-6045bda28239",
+            "MSRP": {
+                "value": 2919
+            },
+            "note": {
+                "value": ""
+            },
+            "IsAKit": {
+                "value": false
+            },
+            "Markup": {
+                "value": 0
+            },
+            "NoteID": {
+                "value": "4fc82803-13fa-ef11-9fa5-6045bda28239"
+            },
+            "_links": {
+                "self": "/entity/Default/24.200.001/StockItem/4fc82803-13fa-ef11-9fa5-6045bda28239",
+                "files:put": "/entity/Default/24.200.001/files/PX.Objects.IN.InventoryItemMaint/Item/4fc82803-13fa-ef11-9fa5-6045bda28239/{filename}"
+            },
+            "custom": {},
+            "ABCCode": {},
+            "BaseUOM": {
+                "value": "EACH"
+            },
+            "Content": {},
+            "MaxCost": {
+                "value": 1977.5
+            },
+            "MinCost": {
+                "value": 975
+            },
+            "ImageUrl": {},
+            "ItemType": {
+                "value": "Finished Good"
+            },
+            "LastCost": {
+                "value": 1889.02
+            },
+            "SalesUOM": {
+                "value": "EACH"
+            },
+            "CustomURL": {},
+            "ItemClass": {
+                "value": "APLS-RCVD"
+            },
+            "MinMarkup": {
+                "value": 25
+            },
+            "PageTitle": {},
+            "VolumeUOM": {},
+            "WeightUOM": {},
+            "rowNumber": 2,
+            "ItemStatus": {
+                "value": "Active"
+            },
+            "PriceClass": {
+                "value": "A002"
+            },
+            "TariffCode": {},
+            "Visibility": {
+                "value": "Store Default"
+            },
+            "AverageCost": {
+                "value": 1853.401176471
+            },
+            "COGSAccount": {
+                "value": "5000"
+            },
+            "Description": {
+                "value": "Cove Built-In Dishwasher 24\",  Panel Ready"
+            },
+            "InventoryID": {
+                "value": "DW2451"
+            },
+            "LastStdCost": {
+                "value": 0
+            },
+            "PurchaseUOM": {
+                "value": "EACH"
+            },
+            "TaxCategory": {
+                "value": "TAXABLE"
+            },
+            "Availability": {
+                "value": "Store Default"
+            },
+            "DefaultPrice": {
+                "value": 2919
+            },
+            "LastModified": {
+                "value": "2026-03-03T10:17:21.703-06:00"
+            },
+            "MetaKeywords": {},
+            "NotAvailable": {
+                "value": "Store Default"
+            },
+            "PostingClass": {
+                "value": "APPLIANCE"
+            },
+            "PriceManager": {},
+            "SalesAccount": {
+                "value": "4000"
+            },
+            "COGSSubaccount": {
+                "value": "0010"
+            },
+            "CurrentStdCost": {
+                "value": 0
+            },
+            "LotSerialClass": {
+                "value": "SERIALRCVD"
+            },
+            "PackSeparately": {
+                "value": false
+            },
+            "PendingStdCost": {
+                "value": 0
+            },
+            "PriceWorkgroup": {},
+            "ProductManager": {
+                "value": "106558"
+            },
+            "SearchKeywords": {},
+            "TemplateItemID": {},
+            "CountryOfOrigin": {},
+            "DimensionVolume": {
+                "value": 0
+            },
+            "DimensionWeight": {
+                "value": 0
+            },
+            "DiscountAccount": {},
+            "MetaDescription": {},
+            "PackagingOption": {
+                "value": "Manual"
+            },
+            "SalesSubaccount": {
+                "value": "0010"
+            },
+            "ValuationMethod": {
+                "value": "Specific"
+            },
+            "CurySpecificMSRP": {
+                "value": 2919
+            },
+            "ExportToExternal": {
+                "value": true
+            },
+            "InventoryAccount": {
+                "value": "1400"
+            },
+            "POAccrualAccount": {
+                "value": "2110"
+            },
+            "ProductWorkgroup": {},
+            "CurySpecificPrice": {
+                "value": 2919
+            },
+            "DefaultWarehouseID": {},
+            "DiscountSubaccount": {},
+            "InventorySubaccount": {
+                "value": "0010"
+            },
+            "POAccrualSubaccount": {
+                "value": "0010"
+            },
+            "SubjectToCommission": {
+                "value": false
+            },
+            "AutoIncrementalValue": {
+                "value": "000000"
+            },
+            "LastModifiedDateTime": {
+                "value": "2026-03-03T10:17:21.703-06:00"
+            },
+            "ReasonCodeSubaccount": {
+                "value": "0010"
+            },
+            "DefaultIssueLocationID": {},
+            "DefaultReceiptLocationID": {},
+            "LandedCostVarianceAccount": {},
+            "StandardCostVarianceAccount": {
+                "value": "5000"
+            },
+            "LandedCostVarianceSubaccount": {},
+            "PurchasePriceVarianceAccount": {
+                "value": "5999"
+            },
+            "StandardCostRevaluationAccount": {
+                "value": "5000"
+            },
+            "StandardCostVarianceSubaccount": {
+                "value": "0010"
+            },
+            "PurchasePriceVarianceSubaccount": {
+                "value": "0010"
+            },
+            "StandardCostRevaluationSubaccount": {
+                "value": "0010"
+            }
+        }
+    ],
+    "error": null,
+    "createdAt": "2026-03-06T18:04:29.089Z",
+    "updatedAt": "2026-03-06T18:04:30.257Z"
+}</pre>
     </section>
   </div>
   <script>

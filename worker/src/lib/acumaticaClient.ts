@@ -137,28 +137,57 @@ export class AcumaticaClient {
       )
     );
     if (!ids.length) return [];
-
-    const chunkSize = 50;
     const allRows: Record<string, unknown>[] = [];
+    const seen = new Set<string>();
 
-    for (let i = 0; i < ids.length; i += chunkSize) {
-      const chunk = ids.slice(i, i + chunkSize);
-      const orFilter = chunk
-        .map((id) => `(InventoryID eq '${quoteForOData(id)}')`)
-        .join(" or ");
-      const filter = encodeURIComponent(orFilter);
-      const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}?$filter=${filter}`;
-      const payload = await this.request<unknown>(url, { method: "GET" });
-      allRows.push(...toRows(payload));
+    // Use per-item direct key lookup to avoid endpoint-specific filter field naming issues.
+    for (const id of ids) {
+      const payload = await this.getStockItem(id);
+      const rows = toRows(payload);
+      for (const row of rows) {
+        const rowId =
+          getAcumaticaFieldValue(row, "InventoryID") ??
+          getAcumaticaFieldValue(row, "InventoryCD") ??
+          getAcumaticaFieldValue(row, "id") ??
+          JSON.stringify(row);
+        if (!seen.has(rowId)) {
+          seen.add(rowId);
+          allRows.push(row);
+        }
+      }
     }
 
     return allRows;
   }
 
   async getItemClass(itemClassId: string): Promise<unknown> {
-    const filter = encodeURIComponent(`ItemClassID eq '${quoteForOData(itemClassId)}'`);
-    const url = `${this.entityBase}/${env.acumaticaItemClassEntity}?$filter=${filter}`;
-    return this.request<unknown>(url, { method: "GET" });
+    const id = String(itemClassId || "").trim();
+    if (!id) return [];
+
+    // Some Acumatica endpoints expose ItemClass by direct key path, while others
+    // require a filter and differ on key field names. Try both patterns.
+    const directUrl = `${this.entityBase}/${env.acumaticaItemClassEntity}/${encodeURIComponent(id)}`;
+    try {
+      return await this.request<unknown>(directUrl, { method: "GET" });
+    } catch {
+      // Fall through to filter-based lookup variants.
+    }
+
+    const filterFields = ["ClassID", "ItemClassID", "ItemClassCD", "ItemClass"];
+    for (const field of filterFields) {
+      const filter = encodeURIComponent(`${field} eq '${quoteForOData(id)}'`);
+      const url = `${this.entityBase}/${env.acumaticaItemClassEntity}?$filter=${filter}`;
+      try {
+        return await this.request<unknown>(url, { method: "GET" });
+      } catch {
+        // Try next candidate.
+      }
+    }
+
+    // Bubble a clear error after all compatible query patterns fail.
+    throw new Error(
+      `Acumatica item-class lookup failed for '${id}' (tried direct key and filters: ClassID, ItemClassID, ItemClassCD, ItemClass)`
+    );
   }
 
   async createOpportunity(payload: Record<string, unknown>): Promise<unknown> {
