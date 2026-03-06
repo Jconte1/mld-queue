@@ -190,6 +190,24 @@ async function processJob(message: JobMessage): Promise<unknown> {
       if (!message.opportunityId) throw new Error("opportunityId is required");
       return acumaticaClient.getOpportunity(message.opportunityId);
 
+    case "GET_CONTACT": {
+      const contactId = String(message.payload?.contactId || "").trim();
+      if (!contactId) throw new Error("contactId is required");
+      return acumaticaClient.getContact(contactId);
+    }
+
+    case "GET_STOCK_ITEM": {
+      const inventoryId = String(message.payload?.inventoryId || "").trim();
+      if (!inventoryId) throw new Error("inventoryId is required");
+      return acumaticaClient.getStockItem(inventoryId);
+    }
+
+    case "GET_ITEM_CLASS": {
+      const itemClassId = String(message.payload?.itemClassId || "").trim();
+      if (!itemClassId) throw new Error("itemClassId is required");
+      return acumaticaClient.getItemClass(itemClassId);
+    }
+
     case "CREATE_OPPORTUNITY":
       if (!message.payload) throw new Error("payload is required");
       return acumaticaClient.createOpportunity(message.payload);

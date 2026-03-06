@@ -29,6 +29,9 @@ export const env = {
   rateLimitByRoute: {
     GET_CUSTOMER: Number(process.env.RATE_LIMIT_GET_CUSTOMER ?? 30),
     GET_OPPORTUNITY: Number(process.env.RATE_LIMIT_GET_OPPORTUNITY ?? 30),
+    GET_CONTACT: Number(process.env.RATE_LIMIT_GET_CONTACT ?? 30),
+    GET_STOCK_ITEM: Number(process.env.RATE_LIMIT_GET_STOCK_ITEM ?? 30),
+    GET_ITEM_CLASS: Number(process.env.RATE_LIMIT_GET_ITEM_CLASS ?? 30),
     CREATE_OPPORTUNITY: Number(process.env.RATE_LIMIT_CREATE_OPPORTUNITY ?? 20),
     UPDATE_OPPORTUNITY: Number(process.env.RATE_LIMIT_UPDATE_OPPORTUNITY ?? 20)
   }

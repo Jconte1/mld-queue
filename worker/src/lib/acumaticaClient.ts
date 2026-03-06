@@ -111,6 +111,24 @@ export class AcumaticaClient {
     return this.request<unknown>(url, { method: "GET" });
   }
 
+  async getContact(contactId: string): Promise<unknown> {
+    const filter = encodeURIComponent(`ContactID eq '${quoteForOData(contactId)}'`);
+    const url = `${this.entityBase}/${env.acumaticaContactEntity}?$filter=${filter}`;
+    return this.request<unknown>(url, { method: "GET" });
+  }
+
+  async getStockItem(inventoryId: string): Promise<unknown> {
+    const filter = encodeURIComponent(`InventoryID eq '${quoteForOData(inventoryId)}'`);
+    const url = `${this.entityBase}/${env.acumaticaStockItemEntity}?$filter=${filter}`;
+    return this.request<unknown>(url, { method: "GET" });
+  }
+
+  async getItemClass(itemClassId: string): Promise<unknown> {
+    const filter = encodeURIComponent(`ItemClassID eq '${quoteForOData(itemClassId)}'`);
+    const url = `${this.entityBase}/${env.acumaticaItemClassEntity}?$filter=${filter}`;
+    return this.request<unknown>(url, { method: "GET" });
+  }
+
   async createOpportunity(payload: Record<string, unknown>): Promise<unknown> {
     const url = `${this.entityBase}/${env.acumaticaOpportunityEntity}`;
     return this.request<unknown>(url, {
