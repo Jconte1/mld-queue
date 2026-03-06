@@ -175,7 +175,7 @@
     </section>
 
     <section class="card">
-      <h2>Available Endpoints (8)</h2>
+      <h2>Available Endpoints (9)</h2>
       <table>
         <thead>
           <tr>
@@ -224,6 +224,11 @@
             <td>Get Item Class</td>
             <td><code>GET /api/specbooks/item-classes/{itemClassId}</code></td>
             <td>Fetch item class metadata by class identifier.</td>
+          </tr>
+          <tr>
+            <td>Get Contact</td>
+            <td><code>GET /api/specbooks/contacts/{contactId}</code></td>
+            <td>Fetch a contact by contact identifier.</td>
           </tr>
         </tbody>
       </table>
@@ -1681,6 +1686,153 @@
     "error": null,
     "createdAt": "2026-03-06T18:31:26.235Z",
     "updatedAt": "2026-03-06T18:31:29.058Z"
+}</pre>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 9: Get Contact <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Fetch contact details from Acumatica through the queue gateway.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>GET</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/contacts/156581</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+      </ul>
+
+      <h3>Example JSON Response</h3>
+      <pre>{
+    "jobId": "d8565343-9526-4daa-bef6-416381f2dd7e",
+    "vendorId": "specbooks",
+    "type": "GET_CONTACT",
+    "status": "succeeded",
+    "result": {
+        "id": "850172fa-8fee-ed11-9f7c-6045bda28239",
+        "Fax": {},
+        "Type": {
+            "value": "Contact"
+        },
+        "note": {
+            "value": ""
+        },
+        "Email": {
+            "value": "capt0474@hotmail.com"
+        },
+        "Image": {},
+        "Owner": {},
+        "Title": {},
+        "Active": {
+            "value": true
+        },
+        "Gender": {},
+        "NoteID": {
+            "value": "850172fa-8fee-ed11-9f7c-6045bda28239"
+        },
+        "Phone1": {
+            "value": "8014151605"
+        },
+        "Phone2": {},
+        "Phone3": {},
+        "Reason": {},
+        "Source": {},
+        "Status": {
+            "value": "Active"
+        },
+        "_links": {
+            "self": "/entity/CustomEndpoint/24.200.001/Contact/850172fa-8fee-ed11-9f7c-6045bda28239",
+            "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.ContactMaint/Contact/850172fa-8fee-ed11-9f7c-6045bda28239/{filename}"
+        },
+        "custom": {},
+        "FaxType": {
+            "value": "Fax"
+        },
+        "WebSite": {},
+        "DoNotFax": {
+            "value": false
+        },
+        "JobTitle": {},
+        "LastName": {
+            "value": "Devenport"
+        },
+        "Attention": {},
+        "ContactID": {
+            "value": 156581
+        },
+        "DoNotCall": {
+            "value": false
+        },
+        "DoNotMail": {
+            "value": false
+        },
+        "Duplicate": {
+            "value": "Validated"
+        },
+        "ExtRefNbr": {},
+        "FirstName": {
+            "value": "Ben"
+        },
+        "Workgroup": {},
+        "rowNumber": 1,
+        "DoNotEmail": {
+            "value": false
+        },
+        "MiddleName": {},
+        "NoMassMail": {
+            "value": false
+        },
+        "Phone1Type": {
+            "value": "Business 1"
+        },
+        "Phone2Type": {
+            "value": "Cell"
+        },
+        "Phone3Type": {
+            "value": "Home"
+        },
+        "CompanyName": {
+            "value": "Ben Devenport Construction"
+        },
+        "DateOfBirth": {},
+        "DisplayName": {
+            "value": "Ben Devenport"
+        },
+        "NoMarketing": {
+            "value": false
+        },
+        "Synchronize": {
+            "value": true
+        },
+        "ContactClass": {},
+        "ContactMethod": {
+            "value": "Any"
+        },
+        "MaritalStatus": {},
+        "ParentAccount": {},
+        "DuplicateFound": {
+            "value": false
+        },
+        "SourceCampaign": {},
+        "BusinessAccount": {
+            "value": "BA0001318"
+        },
+        "LanguageOrLocale": {},
+        "OwnerEmployeeName": {},
+        "SpouseOrPartnerName": {},
+        "LastIncomingActivity": {},
+        "LastModifiedDateTime": {
+            "value": "2024-12-02T08:52:57.27-06:00"
+        },
+        "LastOutgoingActivity": {},
+        "WorkgroupDescription": {},
+        "OverrideAccountAddress": {
+            "value": true
+        }
+    },
+    "error": null,
+    "createdAt": "2026-03-06T18:43:02.312Z",
+    "updatedAt": "2026-03-06T18:43:07.294Z"
 }</pre>
     </section>
   </div>
