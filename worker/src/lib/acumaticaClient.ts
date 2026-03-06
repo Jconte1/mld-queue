@@ -118,9 +118,34 @@ export class AcumaticaClient {
   }
 
   async getStockItem(inventoryId: string): Promise<unknown> {
-    const filter = encodeURIComponent(`InventoryID eq '${quoteForOData(inventoryId)}'`);
-    const url = `${this.entityBase}/${env.acumaticaStockItemEntity}?$filter=${filter}`;
-    return this.request<unknown>(url, { method: "GET" });
+    return this.getStockItems([inventoryId]);
+  }
+
+  async getStockItems(inventoryIds: string[]): Promise<unknown> {
+    const ids = Array.from(
+      new Set(
+        inventoryIds
+          .map((v) => String(v || "").trim().toUpperCase())
+          .filter(Boolean)
+      )
+    );
+    if (!ids.length) return [];
+
+    const chunkSize = 50;
+    const allRows: Record<string, unknown>[] = [];
+
+    for (let i = 0; i < ids.length; i += chunkSize) {
+      const chunk = ids.slice(i, i + chunkSize);
+      const orFilter = chunk
+        .map((id) => `(InventoryID eq '${quoteForOData(id)}')`)
+        .join(" or ");
+      const filter = encodeURIComponent(orFilter);
+      const url = `${this.entityBase}/${env.acumaticaStockItemEntity}?$filter=${filter}`;
+      const payload = await this.request<unknown>(url, { method: "GET" });
+      allRows.push(...toRows(payload));
+    }
+
+    return allRows;
   }
 
   async getItemClass(itemClassId: string): Promise<unknown> {

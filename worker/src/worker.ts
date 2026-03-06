@@ -197,9 +197,13 @@ async function processJob(message: JobMessage): Promise<unknown> {
     }
 
     case "GET_STOCK_ITEM": {
-      const inventoryId = String(message.payload?.inventoryId || "").trim();
-      if (!inventoryId) throw new Error("inventoryId is required");
-      return acumaticaClient.getStockItem(inventoryId);
+      const inventoryIds = Array.isArray(message.payload?.inventoryIds)
+        ? (message.payload?.inventoryIds as unknown[])
+            .map((v) => String(v || "").trim().toUpperCase())
+            .filter(Boolean)
+        : [String(message.payload?.inventoryId || "").trim().toUpperCase()].filter(Boolean);
+      if (!inventoryIds.length) throw new Error("inventoryId is required");
+      return acumaticaClient.getStockItems(inventoryIds);
     }
 
     case "GET_ITEM_CLASS": {
