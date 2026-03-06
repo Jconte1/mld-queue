@@ -175,7 +175,7 @@
     </section>
 
     <section class="card">
-      <h2>Available Endpoints (7)</h2>
+      <h2>Available Endpoints (8)</h2>
       <table>
         <thead>
           <tr>
@@ -219,6 +219,11 @@
             <td>Get Stock Items (Multiple)</td>
             <td><code>GET /api/specbooks/stock-items/{placeholder}?inventoryIds={id1},{id2}</code></td>
             <td>Fetch multiple stock items by passing comma-separated Inventory IDs in <code>inventoryIds</code>.</td>
+          </tr>
+          <tr>
+            <td>Get Item Class</td>
+            <td><code>GET /api/specbooks/item-classes/{itemClassId}</code></td>
+            <td>Fetch item class metadata by class identifier.</td>
           </tr>
         </tbody>
       </table>
@@ -1596,6 +1601,86 @@
     "error": null,
     "createdAt": "2026-03-06T18:04:29.089Z",
     "updatedAt": "2026-03-06T18:04:30.257Z"
+}</pre>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 8: Get Item Class <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Fetch item class details from Acumatica through the queue gateway.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>GET</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/item-classes/APLS-RCVD</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+      </ul>
+
+      <h3>Example JSON Response</h3>
+      <pre>{
+    "jobId": "bb757bf5-6538-4118-87bb-3c6fc33741db",
+    "vendorId": "specbooks",
+    "type": "GET_ITEM_CLASS",
+    "status": "succeeded",
+    "result": {
+        "id": "0691275a-9c44-eb11-8188-0276c812300c",
+        "note": {
+            "value": ""
+        },
+        "_links": {
+            "self": "/entity/CustomEndpoint/24.200.001/ItemClass/0691275a-9c44-eb11-8188-0276c812300c",
+            "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.IN.INItemClassMaint/itemclass/0691275a-9c44-eb11-8188-0276c812300c/{filename}"
+        },
+        "custom": {},
+        "BaseUOM": {
+            "value": "EACH"
+        },
+        "ClassID": {
+            "value": "APLS-RCVD"
+        },
+        "ItemType": {
+            "value": "Finished Good"
+        },
+        "SalesUOM": {
+            "value": "EACH"
+        },
+        "StockItem": {
+            "value": true
+        },
+        "rowNumber": 1,
+        "PriceClass": {},
+        "TariffCode": {},
+        "Description": {
+            "value": "Appliances Serialized when received"
+        },
+        "PurchaseUOM": {
+            "value": "EACH"
+        },
+        "PostingClass": {
+            "value": "APPLIANCE"
+        },
+        "TaxCategoryID": {
+            "value": "TAXABLE"
+        },
+        "LotSerialClass": {
+            "value": "SERIALRCVD"
+        },
+        "CountryOfOrigin": {},
+        "ValuationMethod": {
+            "value": "Specific"
+        },
+        "DefaultWarehouseID": {},
+        "LastModifiedDateTime": {
+            "value": "2026-03-06T10:43:24.193-06:00"
+        },
+        "AvailabilityCalculationRule": {
+            "value": "DEFAULT"
+        }
+    },
+    "error": null,
+    "createdAt": "2026-03-06T18:31:26.235Z",
+    "updatedAt": "2026-03-06T18:31:29.058Z"
 }</pre>
     </section>
   </div>

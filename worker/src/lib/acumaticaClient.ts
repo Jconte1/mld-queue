@@ -116,9 +116,32 @@ export class AcumaticaClient {
   }
 
   async getContact(contactId: string): Promise<unknown> {
-    const filter = encodeURIComponent(`ContactID eq '${quoteForOData(contactId)}'`);
-    const url = `${this.entityBase}/${env.acumaticaContactEntity}?$filter=${filter}`;
-    return this.request<unknown>(url, { method: "GET" });
+    const id = String(contactId || "").trim();
+    if (!id) return [];
+
+    // Preferred path: direct key lookup (matches known-good Acumatica behavior).
+    const directUrl = `${this.entityBase}/${env.acumaticaContactEntity}/${encodeURIComponent(id)}`;
+    try {
+      return await this.request<unknown>(directUrl, { method: "GET" });
+    } catch {
+      // Fall through to filter-based variants.
+    }
+
+    // ContactID is commonly numeric; try numeric first, then quoted fallback.
+    const numeric = Number(id);
+    if (Number.isFinite(numeric)) {
+      const numericFilter = encodeURIComponent(`ContactID eq ${Math.trunc(numeric)}`);
+      const numericUrl = `${this.entityBase}/${env.acumaticaContactEntity}?$filter=${numericFilter}`;
+      try {
+        return await this.request<unknown>(numericUrl, { method: "GET" });
+      } catch {
+        // Try next fallback.
+      }
+    }
+
+    const quotedFilter = encodeURIComponent(`ContactID eq '${quoteForOData(id)}'`);
+    const quotedUrl = `${this.entityBase}/${env.acumaticaContactEntity}?$filter=${quotedFilter}`;
+    return this.request<unknown>(quotedUrl, { method: "GET" });
   }
 
   async getStockItem(inventoryId: string): Promise<unknown> {
