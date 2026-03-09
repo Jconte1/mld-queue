@@ -298,6 +298,10 @@ async function processJob(message: JobMessage): Promise<unknown> {
       return { rows: await acumaticaClient.fetchCloseoutInventoryReportRows() };
     }
 
+    case "ERP_GET_THANK_YOU_REPORT": {
+      return { rows: await acumaticaClient.fetchThankYouReportRows() };
+    }
+
     case "ERP_VERIFY_CUSTOMER": {
       const customerId = String(message.payload?.customerId || "").trim().toUpperCase();
       const zip5 = String(message.payload?.zip5 || "").replace(/\D/g, "").slice(0, 5);
