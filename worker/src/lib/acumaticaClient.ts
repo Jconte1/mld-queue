@@ -335,6 +335,52 @@ export class AcumaticaClient {
     return toRows(text ? JSON.parse(text) : []);
   }
 
+  async markThankYouSent(orderNbr: string, orderType?: string | null): Promise<Record<string, unknown>> {
+    const token = await this.getToken();
+    const endpointName = process.env.ACUMATICA_THANK_YOU_WRITE_ENDPOINT_NAME?.trim() || "Default";
+    const endpointVersion =
+      process.env.ACUMATICA_THANK_YOU_WRITE_ENDPOINT_VERSION?.trim() || "24.200.001";
+    const url = `${env.acumaticaBaseUrl}/entity/${endpointName}/${endpointVersion}/SalesOrder`;
+
+    const payload: Record<string, unknown> = {
+      OrderNbr: { value: orderNbr },
+      custom: {
+        Document: {
+          AttributeTHANKYOU: { type: "CustomBooleanField", value: true },
+        },
+      },
+    };
+    if (orderType) {
+      payload.OrderType = { value: orderType };
+    }
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const text = await response.text();
+    if (!response.ok) {
+      const err = new Error(
+        `Thank-you mark-sent failed: ${response.status} ${response.statusText} ${text}`
+      );
+      (err as Error & { status?: number }).status = response.status;
+      throw err;
+    }
+
+    try {
+      return (text ? JSON.parse(text) : {}) as Record<string, unknown>;
+    } catch {
+      return {};
+    }
+  }
+
   async fetchOrderSummariesRows(
     baid: string,
     pageSize: number,

@@ -302,6 +302,15 @@ async function processJob(message: JobMessage): Promise<unknown> {
       return { rows: await acumaticaClient.fetchThankYouReportRows() };
     }
 
+    case "ERP_MARK_THANK_YOU_SENT": {
+      const orderNbr = String(message.payload?.orderNbr || "").trim().toUpperCase();
+      const orderTypeRaw = String(message.payload?.orderType || "").trim().toUpperCase();
+      const orderType = orderTypeRaw || null;
+      if (!orderNbr) throw new Error("orderNbr is required");
+      const result = await acumaticaClient.markThankYouSent(orderNbr, orderType);
+      return { ok: true, orderNbr, orderType, result };
+    }
+
     case "ERP_VERIFY_CUSTOMER": {
       const customerId = String(message.payload?.customerId || "").trim().toUpperCase();
       const zip5 = String(message.payload?.zip5 || "").replace(/\D/g, "").slice(0, 5);

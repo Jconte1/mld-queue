@@ -18,6 +18,7 @@ export type JobType =
   | "ERP_GET_ORDER_READY_REPORT"
   | "ERP_GET_CLOSEOUT_INVENTORY_REPORT"
   | "ERP_GET_THANK_YOU_REPORT"
+  | "ERP_MARK_THANK_YOU_SENT"
   | "ERP_VERIFY_CUSTOMER";
 
 export type JobStatus = "queued" | "processing" | "succeeded" | "failed";
