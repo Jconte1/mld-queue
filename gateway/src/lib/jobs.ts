@@ -3,9 +3,9 @@ import { Prisma } from "../../../prisma/generated/client";
 import { log } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { getQueueSender } from "@/lib/serviceBus";
-import type { EnqueueInput, JobMessage } from "@/lib/types";
+import type { EnqueueInput, JobMessage, VendorId } from "@/lib/types";
 
-const VENDOR_ID = "specbooks";
+const VENDOR_ID: VendorId = "specbooks";
 
 function toInputJsonValue(
   payload: Record<string, unknown> | undefined
@@ -19,7 +19,7 @@ async function sendQueueMessage(messageBody: JobMessage): Promise<void> {
     messageId: messageBody.jobId,
     body: messageBody,
     applicationProperties: {
-      vendorId: VENDOR_ID,
+      vendorId: messageBody.vendorId,
       type: messageBody.type
     }
   });
@@ -33,11 +33,12 @@ async function sendQueueMessage(messageBody: JobMessage): Promise<void> {
 
 export async function enqueueJob(input: EnqueueInput): Promise<{ jobId: string }> {
   const jobId = randomUUID();
+  const vendorId = input.vendorId ?? VENDOR_ID;
 
   await prisma.job.create({
     data: {
       id: jobId,
-      vendorId: VENDOR_ID,
+      vendorId,
       type: input.type,
       status: "queued",
       entityKey: input.customerId ?? input.opportunityId ?? null,
@@ -47,7 +48,7 @@ export async function enqueueJob(input: EnqueueInput): Promise<{ jobId: string }
 
   const messageBody: JobMessage = {
     jobId,
-    vendorId: VENDOR_ID,
+    vendorId,
     type: input.type,
     customerId: input.customerId,
     opportunityId: input.opportunityId,

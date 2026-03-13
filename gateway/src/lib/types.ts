@@ -1,4 +1,4 @@
-﻿export type VendorId = "specbooks";
+export type VendorId = "specbooks" | "service_fusion";
 
 export type JobType =
   | "GET_CUSTOMER"
@@ -19,7 +19,8 @@ export type JobType =
   | "ERP_GET_CLOSEOUT_INVENTORY_REPORT"
   | "ERP_GET_THANK_YOU_REPORT"
   | "ERP_MARK_THANK_YOU_SENT"
-  | "ERP_VERIFY_CUSTOMER";
+  | "ERP_VERIFY_CUSTOMER"
+  | "ERP_PUT_SALES_INVOICE";
 
 export type JobStatus = "queued" | "processing" | "succeeded" | "failed";
 
@@ -35,6 +36,7 @@ export type JobMessage = {
 };
 
 export type EnqueueInput = {
+  vendorId?: VendorId;
   type: JobType;
   customerId?: string;
   opportunityId?: string;

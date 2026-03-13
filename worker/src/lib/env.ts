@@ -36,6 +36,7 @@ export const env = {
   acumaticaContactEntity: process.env.ACUMATICA_CONTACT_ENTITY ?? "Contact",
   acumaticaStockItemEntity: process.env.ACUMATICA_STOCK_ITEM_ENTITY ?? "StockItem",
   acumaticaItemClassEntity: process.env.ACUMATICA_ITEM_CLASS_ENTITY ?? "ItemClass",
+  acumaticaSalesInvoiceEntity: process.env.ACUMATICA_SALES_INVOICE_ENTITY ?? "SalesInvoice",
   acumaticaStockItemEndpointName: process.env.ACUMATICA_STOCK_ITEM_ENDPOINT_NAME ?? "Default",
   acumaticaStockItemEndpointVersion: process.env.ACUMATICA_STOCK_ITEM_ENDPOINT_VERSION ?? "24.200.001",
   acumaticaOpportunityExpand: process.env.ACUMATICA_OPPORTUNITY_EXPAND ?? "Products,Address",

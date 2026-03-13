@@ -234,6 +234,39 @@ export class AcumaticaClient {
     });
   }
 
+  async putSalesInvoice(payload: Record<string, unknown>): Promise<{ status: number; body: unknown }> {
+    const token = await this.getToken();
+    const url = `${this.entityBase}/${env.acumaticaSalesInvoiceEntity}`;
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const raw = await response.text();
+    let parsedBody: unknown = raw;
+    try {
+      parsedBody = raw ? (JSON.parse(raw) as unknown) : null;
+    } catch {
+      parsedBody = raw;
+    }
+
+    if (!response.ok) {
+      const err = new Error(
+        `SalesInvoice PUT failed: ${response.status} ${response.statusText} ${raw || ""}`.trim()
+      );
+      (err as Error & { status?: number }).status = response.status;
+      throw err;
+    }
+
+    return { status: response.status, body: parsedBody };
+  }
+
   async fetchOrderHeaderByOrderNbr(orderNbr: string): Promise<Record<string, unknown> | null> {
     const params = new URLSearchParams();
     params.set("$filter", `OrderNbr eq '${quoteForOData(orderNbr)}'`);

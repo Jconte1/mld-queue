@@ -362,6 +362,20 @@ If missing or invalid:
 { "found": false, "row": null }
 ```
 
+10. `POST /api/erp/jobs/sales-invoices`
+- Request:
+```json
+{ "payload": { "CustomerID": { "value": "BA0001234" } } }
+```
+- Response:
+```json
+{ "jobId": "uuid" }
+```
+
+Poll queued result:
+
+- `GET /api/erp/jobs/{jobId}`
+
 ### Error Model (`/api/erp/*`)
 
 - `400` invalid query/body

@@ -17,11 +17,12 @@ export type JobType =
   | "ERP_GET_CLOSEOUT_INVENTORY_REPORT"
   | "ERP_GET_THANK_YOU_REPORT"
   | "ERP_MARK_THANK_YOU_SENT"
-  | "ERP_VERIFY_CUSTOMER";
+  | "ERP_VERIFY_CUSTOMER"
+  | "ERP_PUT_SALES_INVOICE";
 
 export type JobMessage = {
   jobId: string;
-  vendorId: "specbooks";
+  vendorId: "specbooks" | "service_fusion";
   type: JobType;
   customerId?: string;
   opportunityId?: string;
