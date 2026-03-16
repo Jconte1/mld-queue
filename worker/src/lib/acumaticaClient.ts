@@ -237,6 +237,15 @@ export class AcumaticaClient {
   async putSalesInvoice(payload: Record<string, unknown>): Promise<{ status: number; body: unknown }> {
     const token = await this.getToken();
     const url = `${this.entityBase}/${env.acumaticaSalesInvoiceEntity}`;
+    const locationValue =
+      (payload.LocationID as { value?: unknown } | undefined)?.value ??
+      (payload.locationID as { value?: unknown } | undefined)?.value ??
+      null;
+    console.info("[queue][acumatica][sales-invoice][request]", {
+      url,
+      hasLocationId: Boolean(locationValue),
+      locationId: locationValue,
+    });
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -263,6 +272,14 @@ export class AcumaticaClient {
       (err as Error & { status?: number }).status = response.status;
       throw err;
     }
+
+    const responseLocation =
+      (parsedBody as { LocationID?: { value?: unknown } } | null)?.LocationID?.value ?? null;
+    console.info("[queue][acumatica][sales-invoice][response]", {
+      url,
+      status: response.status,
+      responseLocationId: responseLocation,
+    });
 
     return { status: response.status, body: parsedBody };
   }
@@ -431,7 +448,7 @@ export class AcumaticaClient {
       "DefaultSalesperson",
       "NoteID",
     ].join(",");
-    const custom = "Document.AttributeBUYERGROUP";
+    const custom = "Document.AttributeBUYERGROUP,Document.AttributeSALESNEW";
 
     const now = new Date();
     now.setFullYear(now.getFullYear() - 1);
@@ -502,7 +519,7 @@ export class AcumaticaClient {
       "NoteID",
       "LastModified",
     ].join(",");
-    const custom = "Document.AttributeBUYERGROUP";
+    const custom = "Document.AttributeBUYERGROUP,Document.AttributeSALESNEW";
     const normalizedSince = since.startsWith("datetimeoffset'") ? since : `datetimeoffset'${since}'`;
 
     const all: Record<string, unknown>[] = [];
