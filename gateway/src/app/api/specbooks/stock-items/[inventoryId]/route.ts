@@ -9,14 +9,16 @@ export async function GET(req: Request, { params }: { params: Promise<{ inventor
 
     const { inventoryId } = await params;
     const { searchParams } = new URL(req.url);
+    const idsFromPath = String(inventoryId || "")
+      .split(",")
+      .map((v) => v.trim().toUpperCase())
+      .filter(Boolean);
     const inventoryIdsQuery = String(searchParams.get("inventoryIds") || "");
     const idsFromQuery = inventoryIdsQuery
       .split(",")
       .map((v) => v.trim().toUpperCase())
       .filter(Boolean);
-    const ids = idsFromQuery.length
-      ? Array.from(new Set(idsFromQuery))
-      : [String(inventoryId || "").trim().toUpperCase()].filter(Boolean);
+    const ids = Array.from(new Set([...idsFromPath, ...idsFromQuery]));
     if (!ids.length) {
       return NextResponse.json({ error: "inventoryId is required" }, { status: 400 });
     }
