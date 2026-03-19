@@ -672,6 +672,9 @@ function toRows(payload: unknown): Record<string, unknown>[] {
   if (maybeObj && Array.isArray(maybeObj.value)) {
     return maybeObj.value as Record<string, unknown>[];
   }
+  if (maybeObj && typeof maybeObj === "object") {
+    return [maybeObj as Record<string, unknown>];
+  }
   return [];
 }
 
