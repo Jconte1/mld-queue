@@ -8,6 +8,26 @@ type TokenResponse = {
   error_description?: string;
 };
 
+class StockItemNotFoundError extends Error {
+  status: number;
+  inventoryId: string;
+
+  constructor(inventoryId: string) {
+    super(`Stock item not found: ${inventoryId}`);
+    this.name = "StockItemNotFoundError";
+    this.status = 404;
+    this.inventoryId = inventoryId;
+  }
+}
+
+function isNoEntitySatisfiesConditionError(error: unknown): boolean {
+  const msg = error instanceof Error ? error.message : String(error);
+  return (
+    msg.includes("NoEntitySatisfiesTheConditionException") ||
+    msg.includes("No entity satisfies the condition.")
+  );
+}
+
 function quoteForOData(value: string): string {
   return value.replace(/'/g, "''");
 }
@@ -148,7 +168,14 @@ export class AcumaticaClient {
     const id = String(inventoryId || "").trim().toUpperCase();
     if (!id) return [];
     const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}/${encodeURIComponent(id)}`;
-    return this.request<unknown>(url, { method: "GET" });
+    try {
+      return await this.request<unknown>(url, { method: "GET" });
+    } catch (error) {
+      if (isNoEntitySatisfiesConditionError(error)) {
+        throw new StockItemNotFoundError(id);
+      }
+      throw error;
+    }
   }
 
   async getStockItems(inventoryIds: string[]): Promise<unknown> {
@@ -165,7 +192,17 @@ export class AcumaticaClient {
 
     // Use per-item direct key lookup to avoid endpoint-specific filter field naming issues.
     for (const id of ids) {
-      const payload = await this.getStockItem(id);
+      let payload: unknown;
+      try {
+        payload = await this.getStockItem(id);
+      } catch (error) {
+        // Multi-item lookup is used for existence checks. Missing items should
+        // not fail the entire request; we return only found rows.
+        if (error instanceof StockItemNotFoundError && ids.length > 1) {
+          continue;
+        }
+        throw error;
+      }
       const rows = toRows(payload);
       for (const row of rows) {
         const rowId =

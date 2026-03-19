@@ -9,16 +9,18 @@ export async function GET(req: Request, { params }: { params: Promise<{ inventor
 
     const { inventoryId } = await params;
     const { searchParams } = new URL(req.url);
-    const idsFromPath = String(inventoryId || "")
-      .split(",")
-      .map((v) => v.trim().toUpperCase())
-      .filter(Boolean);
     const inventoryIdsQuery = String(searchParams.get("inventoryIds") || "");
     const idsFromQuery = inventoryIdsQuery
       .split(",")
       .map((v) => v.trim().toUpperCase())
       .filter(Boolean);
-    const ids = Array.from(new Set([...idsFromPath, ...idsFromQuery]));
+    const idsFromPath = String(inventoryId || "")
+      .split(",")
+      .map((v) => v.trim().toUpperCase())
+      .filter(Boolean);
+    // When inventoryIds query is supplied, treat it as authoritative and do not
+    // include the path placeholder token (for example "/ignored?...").
+    const ids = Array.from(new Set(idsFromQuery.length ? idsFromQuery : idsFromPath));
     if (!ids.length) {
       return NextResponse.json({ error: "inventoryId is required" }, { status: 400 });
     }
