@@ -221,6 +221,14 @@ export class AcumaticaClient {
     });
   }
 
+  async createStockItem(payload: Record<string, unknown>): Promise<unknown> {
+    const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}`;
+    return this.request<unknown>(url, {
+      method: "PUT",
+      body: JSON.stringify(payload)
+    });
+  }
+
   async updateOpportunity(opportunityId: string, payload: Record<string, unknown>): Promise<unknown> {
     const withId = {
       OpportunityID: { value: opportunityId },

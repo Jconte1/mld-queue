@@ -174,6 +174,105 @@ export async function enqueueCreateWithIdempotency(payload: Record<string, unkno
   return { jobId, reused: false };
 }
 
+export async function enqueueCreateStockItemWithIdempotency(
+  payload: Record<string, unknown>,
+  idempotencyKey: string
+): Promise<{ jobId: string; reused: boolean }> {
+  const existing = await prisma.idempotencyKey.findUnique({
+    where: {
+      vendorId_key: {
+        vendorId: VENDOR_ID,
+        key: idempotencyKey
+      }
+    },
+    select: { jobId: true }
+  });
+
+  if (existing) {
+    log("info", "gateway_idempotency_reused", {
+      vendorId: VENDOR_ID,
+      idempotencyKey,
+      jobId: existing.jobId
+    });
+    return { jobId: existing.jobId, reused: true };
+  }
+
+  const jobId = randomUUID();
+
+  try {
+    await prisma.$transaction([
+      prisma.job.create({
+        data: {
+          id: jobId,
+          vendorId: VENDOR_ID,
+          type: "CREATE_STOCK_ITEM",
+          status: "queued",
+          payload: toInputJsonValue(payload)
+        }
+      }),
+      prisma.idempotencyKey.create({
+        data: {
+          vendorId: VENDOR_ID,
+          key: idempotencyKey,
+          jobId
+        }
+      })
+    ]);
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      const winner = await prisma.idempotencyKey.findUnique({
+        where: {
+          vendorId_key: {
+            vendorId: VENDOR_ID,
+            key: idempotencyKey
+          }
+        },
+        select: { jobId: true }
+      });
+
+      if (winner) {
+        log("info", "gateway_idempotency_race_reused", {
+          vendorId: VENDOR_ID,
+          idempotencyKey,
+          jobId: winner.jobId
+        });
+        return { jobId: winner.jobId, reused: true };
+      }
+    }
+
+    throw error;
+  }
+
+  const messageBody: JobMessage = {
+    jobId,
+    vendorId: VENDOR_ID,
+    type: "CREATE_STOCK_ITEM",
+    idempotencyKey,
+    payload,
+    requestedAt: new Date().toISOString()
+  };
+
+  try {
+    await sendQueueMessage(messageBody);
+  } catch (error) {
+    log("error", "gateway_job_enqueue_failed", {
+      jobId,
+      type: "CREATE_STOCK_ITEM",
+      error: error instanceof Error ? error.message : String(error)
+    });
+    await prisma.job.update({
+      where: { id: jobId },
+      data: {
+        status: "failed",
+        error: error instanceof Error ? error.message : "Failed to enqueue"
+      }
+    });
+    throw error;
+  }
+
+  return { jobId, reused: false };
+}
+
 export async function enqueueCoalescedOpportunityUpdate(
   opportunityId: string,
   payload: Record<string, unknown>

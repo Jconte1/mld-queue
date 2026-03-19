@@ -216,6 +216,10 @@ async function processJob(message: JobMessage): Promise<unknown> {
       if (!message.payload) throw new Error("payload is required");
       return acumaticaClient.createOpportunity(message.payload);
 
+    case "CREATE_STOCK_ITEM":
+      if (!message.payload) throw new Error("payload is required");
+      return acumaticaClient.createStockItem(message.payload);
+
     case "UPDATE_OPPORTUNITY":
       if (!message.opportunityId) throw new Error("opportunityId is required");
       return processCoalescedOpportunityUpdate(message.opportunityId, message.payload);

@@ -33,6 +33,7 @@ export const env = {
     GET_STOCK_ITEM: Number(process.env.RATE_LIMIT_GET_STOCK_ITEM ?? 30),
     GET_ITEM_CLASS: Number(process.env.RATE_LIMIT_GET_ITEM_CLASS ?? 30),
     CREATE_OPPORTUNITY: Number(process.env.RATE_LIMIT_CREATE_OPPORTUNITY ?? 20),
+    CREATE_STOCK_ITEM: Number(process.env.RATE_LIMIT_CREATE_STOCK_ITEM ?? 20),
     UPDATE_OPPORTUNITY: Number(process.env.RATE_LIMIT_UPDATE_OPPORTUNITY ?? 20)
   }
 };

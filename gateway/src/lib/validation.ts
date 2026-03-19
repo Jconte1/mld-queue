@@ -78,6 +78,16 @@ const createOpportunitySchema = z
   })
   .strict();
 
+const createStockItemSchema = z
+  .object({
+    InventoryID: wrappedString,
+    ItemClass: wrappedString,
+    Description: wrappedString,
+    MSRP: wrappedNumber,
+    DefaultPrice: wrappedNumber
+  })
+  .passthrough();
+
 const updateOpportunitySchema = createOpportunitySchema
   .omit({ Products: true })
   .extend({
@@ -166,4 +176,4 @@ export async function parseJsonObjectBodyWithLimit(
   return { parsed, raw };
 }
 
-export { createOpportunitySchema, updateOpportunitySchema };
+export { createOpportunitySchema, createStockItemSchema, updateOpportunitySchema };
