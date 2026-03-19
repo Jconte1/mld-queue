@@ -175,7 +175,7 @@
     </section>
 
     <section class="card">
-      <h2>Available Endpoints (9)</h2>
+      <h2>Available Endpoints (10)</h2>
       <table>
         <thead>
           <tr>
@@ -199,6 +199,11 @@
             <td>Create Opportunity</td>
             <td><code>POST /api/specbooks/opportunities</code></td>
             <td>Create a new opportunity with provided payload.</td>
+          </tr>
+          <tr>
+            <td>Create Stock Item</td>
+            <td><code>POST /api/specbooks/stock-items</code></td>
+            <td>Create a new stock item with required fields and optional additional stock item fields.</td>
           </tr>
           <tr>
             <td>Update Opportunity</td>
@@ -1830,6 +1835,250 @@
     "error": null,
     "createdAt": "2026-03-06T18:43:02.312Z",
     "updatedAt": "2026-03-06T18:43:07.294Z"
+}</pre>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint 10: Create Stock Item <span class="pill">Implemented</span></h2>
+
+      <h3>Purpose</h3>
+      <p>Create a new stock item in Acumatica through the queue gateway.</p>
+
+      <h3>Request</h3>
+      <ul>
+        <li>Method: <code>POST</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/stock-items</code></li>
+        <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
+        <li>Required Header: <code>Idempotency-Key: {{guid}}</code></li>
+        <li>Required Header: <code>Content-Type: application/json</code></li>
+      </ul>
+
+      <h3>Required Body Fields</h3>
+      <ul>
+        <li><code>InventoryID: { "value": string }</code></li>
+        <li><code>ItemClass: { "value": string }</code></li>
+        <li><code>Description: { "value": string }</code></li>
+        <li><code>MSRP: { "value": number }</code></li>
+        <li><code>DefaultPrice: { "value": number }</code></li>
+      </ul>
+
+      <div class="note">Additional Acumatica StockItem fields are supported in the same payload when needed.</div>
+
+      <h3>Example Request Body</h3>
+      <pre>{
+    "InventoryID": { "value": "JAMES TEST 2" },
+    "ItemClass": { "value": "APLS-LOT" },
+    "Description": { "value": "Item Description" },
+    "MSRP": { "value": 144 },
+    "DefaultPrice": { "value": 146 }
+}</pre>
+
+      <h3>Example JSON Response</h3>
+      <pre>{
+    "jobId": "5504af55-e254-43d9-a008-81e9da70ee0e",
+    "vendorId": "specbooks",
+    "type": "CREATE_STOCK_ITEM",
+    "status": "succeeded",
+    "result": {
+        "id": "567d60c4-b923-f111-9fc2-6045bda28239",
+        "MSRP": {
+            "value": 144
+        },
+        "note": null,
+        "IsAKit": {
+            "value": false
+        },
+        "Markup": {
+            "value": 0
+        },
+        "NoteID": {
+            "value": "567d60c4-b923-f111-9fc2-6045bda28239"
+        },
+        "_links": {
+            "self": "/entity/CustomEndpoint/24.200.001/StockItem/567d60c4-b923-f111-9fc2-6045bda28239",
+            "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.IN.InventoryItemMaint/Item/567d60c4-b923-f111-9fc2-6045bda28239/{filename}"
+        },
+        "custom": {},
+        "ABCCode": {},
+        "BaseUOM": {
+            "value": "EACH"
+        },
+        "Content": {},
+        "MaxCost": {
+            "value": 0
+        },
+        "MinCost": {
+            "value": 0
+        },
+        "ImageUrl": {},
+        "ItemType": {
+            "value": "Finished Good"
+        },
+        "LastCost": {
+            "value": 0
+        },
+        "SalesUOM": {
+            "value": "EACH"
+        },
+        "CustomURL": {},
+        "ItemClass": {
+            "value": "APLS-LOT"
+        },
+        "MinMarkup": {
+            "value": 25
+        },
+        "PageTitle": {},
+        "VolumeUOM": {},
+        "WeightUOM": {},
+        "rowNumber": 1,
+        "ItemStatus": {
+            "value": "Active"
+        },
+        "PriceClass": {},
+        "TariffCode": {},
+        "Visibility": {
+            "value": "Store Default"
+        },
+        "AverageCost": {
+            "value": 0
+        },
+        "COGSAccount": {
+            "value": "5000"
+        },
+        "Description": {
+            "value": "Item Description"
+        },
+        "InventoryID": {
+            "value": "JAMES TEST 2"
+        },
+        "LastStdCost": {
+            "value": 0
+        },
+        "PurchaseUOM": {
+            "value": "EACH"
+        },
+        "TaxCategory": {
+            "value": "TAXABLE"
+        },
+        "Availability": {
+            "value": "Store Default"
+        },
+        "DefaultPrice": {
+            "value": 146
+        },
+        "LastModified": {
+            "value": "2026-03-19T12:33:42.463-05:00"
+        },
+        "MetaKeywords": {},
+        "NotAvailable": {
+            "value": "Store Default"
+        },
+        "PostingClass": {
+            "value": "APPLIANCE"
+        },
+        "PriceManager": {},
+        "SalesAccount": {
+            "value": "4000"
+        },
+        "COGSSubaccount": {
+            "value": "0010"
+        },
+        "CurrentStdCost": {
+            "value": 0
+        },
+        "LotSerialClass": {
+            "value": "LOTNBR"
+        },
+        "PackSeparately": {
+            "value": false
+        },
+        "PendingStdCost": {
+            "value": 0
+        },
+        "PriceWorkgroup": {},
+        "ProductManager": {},
+        "SearchKeywords": {},
+        "TemplateItemID": {},
+        "CountryOfOrigin": {},
+        "DimensionVolume": {
+            "value": 0
+        },
+        "DimensionWeight": {
+            "value": 0
+        },
+        "DiscountAccount": {},
+        "MetaDescription": {},
+        "PackagingOption": {
+            "value": "Manual"
+        },
+        "SalesSubaccount": {
+            "value": "0010"
+        },
+        "ValuationMethod": {
+            "value": "Specific"
+        },
+        "CurySpecificMSRP": {
+            "value": 144
+        },
+        "ExportToExternal": {
+            "value": true
+        },
+        "InventoryAccount": {
+            "value": "1400"
+        },
+        "POAccrualAccount": {
+            "value": "2110"
+        },
+        "ProductWorkgroup": {},
+        "CurySpecificPrice": {
+            "value": 146
+        },
+        "DefaultWarehouseID": {},
+        "DiscountSubaccount": {},
+        "InventorySubaccount": {
+            "value": "0010"
+        },
+        "POAccrualSubaccount": {
+            "value": "0010"
+        },
+        "SubjectToCommission": {
+            "value": false
+        },
+        "AutoIncrementalValue": {
+            "value": "000000"
+        },
+        "LastModifiedDateTime": {
+            "value": "2026-03-19T12:33:42.463-05:00"
+        },
+        "ReasonCodeSubaccount": {
+            "value": "0010"
+        },
+        "DefaultIssueLocationID": {},
+        "DefaultReceiptLocationID": {},
+        "LandedCostVarianceAccount": {},
+        "StandardCostVarianceAccount": {
+            "value": "5000"
+        },
+        "LandedCostVarianceSubaccount": {},
+        "PurchasePriceVarianceAccount": {
+            "value": "5999"
+        },
+        "StandardCostRevaluationAccount": {
+            "value": "5000"
+        },
+        "StandardCostVarianceSubaccount": {
+            "value": "0010"
+        },
+        "PurchasePriceVarianceSubaccount": {
+            "value": "0010"
+        },
+        "StandardCostRevaluationSubaccount": {
+            "value": "0010"
+        }
+    },
+    "error": null,
+    "createdAt": "2026-03-19T17:33:36.271Z",
+    "updatedAt": "2026-03-19T17:33:42.993Z"
 }</pre>
     </section>
   </div>
