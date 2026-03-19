@@ -213,6 +213,11 @@ export class AcumaticaClient {
     );
   }
 
+  async getItemClasses(): Promise<unknown> {
+    const url = `${this.entityBase}/${env.acumaticaItemClassEntity}`;
+    return this.request<unknown>(url, { method: "GET" });
+  }
+
   async createOpportunity(payload: Record<string, unknown>): Promise<unknown> {
     const url = `${this.entityBase}/${env.acumaticaOpportunityEntity}`;
     return this.request<unknown>(url, {

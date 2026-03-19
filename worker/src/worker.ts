@@ -208,7 +208,9 @@ async function processJob(message: JobMessage): Promise<unknown> {
 
     case "GET_ITEM_CLASS": {
       const itemClassId = String(message.payload?.itemClassId || "").trim();
-      if (!itemClassId) throw new Error("itemClassId is required");
+      if (!itemClassId) {
+        return acumaticaClient.getItemClasses();
+      }
       return acumaticaClient.getItemClass(itemClassId);
     }
 

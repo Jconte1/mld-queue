@@ -227,8 +227,8 @@
           </tr>
           <tr>
             <td>Get Item Class</td>
-            <td><code>GET /api/specbooks/item-classes/{itemClassId}</code></td>
-            <td>Fetch item class metadata by class identifier.</td>
+            <td><code>GET /api/specbooks/item-classes</code></td>
+            <td>Fetch all item class metadata.</td>
           </tr>
           <tr>
             <td>Get Contact</td>
@@ -675,7 +675,7 @@
     "vendorId": "specbooks",
     "type": "CREATE_OPPORTUNITY",
     "status": "succeeded",
-    "result": {
+    "result": [
         "id": "310f1aec-b418-f111-9fc0-6045bda28239",
         "note": null,
         "Owner": {
@@ -772,7 +772,7 @@
         },
         "WorkgroupDescription": {},
         "ConvertedLeadDisplayName": {}
-    },
+    }],
     "error": null,
     "createdAt": "2026-03-05T17:01:21.241Z",
     "updatedAt": "2026-03-05T17:01:36.062Z"
@@ -1612,15 +1612,15 @@
     </section>
 
     <section class="card">
-      <h2>Endpoint 8: Get Item Class <span class="pill">Implemented</span></h2>
+      <h2>Endpoint 8: Get Item Classes <span class="pill">Implemented</span></h2>
 
       <h3>Purpose</h3>
-      <p>Fetch item class details from Acumatica through the queue gateway.</p>
+      <p>Fetch all item class details from Acumatica through the queue gateway.</p>
 
       <h3>Request</h3>
       <ul>
         <li>Method: <code>GET</code></li>
-        <li>URL: <code>{{baseUrl}}/api/specbooks/item-classes/APLS-RCVD</code></li>
+        <li>URL: <code>{{baseUrl}}/api/specbooks/item-classes</code></li>
         <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
       </ul>
 
@@ -1630,7 +1630,7 @@
     "vendorId": "specbooks",
     "type": "GET_ITEM_CLASS",
     "status": "succeeded",
-    "result": {
+    "result": [{
         "id": "0691275a-9c44-eb11-8188-0276c812300c",
         "note": {
             "value": ""
@@ -1684,7 +1684,7 @@
         "AvailabilityCalculationRule": {
             "value": "DEFAULT"
         }
-    },
+    }],
     "error": null,
     "createdAt": "2026-03-06T18:31:26.235Z",
     "updatedAt": "2026-03-06T18:31:29.058Z"
