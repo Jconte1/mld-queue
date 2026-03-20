@@ -729,11 +729,18 @@ function toRows(payload: unknown): Record<string, unknown>[] {
 }
 
 export function isTransientError(error: unknown): boolean {
+  const msg = error instanceof Error ? error.message : String(error);
+  if (
+    msg.includes("NoEntitySatisfiesTheConditionException") ||
+    msg.includes("No entity satisfies the condition.")
+  ) {
+    return false;
+  }
+
   const status = (error as { status?: number } | undefined)?.status;
   if (status && (status === 429 || status >= 500)) {
     return true;
   }
 
-  const msg = error instanceof Error ? error.message : String(error);
   return ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "timeout"].some((token) => msg.includes(token));
 }
