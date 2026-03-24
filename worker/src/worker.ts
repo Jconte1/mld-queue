@@ -407,9 +407,10 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
     });
   } catch (error) {
     const transient = isTransientError(error);
+    const allowRetry = transient && message.type !== "ERP_PUT_SALES_INVOICE";
     const errorMessage = error instanceof Error ? error.message : String(error);
 
-    if (transient) {
+    if (allowRetry) {
       log("warn", "job_retry_scheduled", {
         jobId: message.jobId,
         type: message.type,
@@ -443,7 +444,7 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
       type: message.type,
       durationMs: Date.now() - startedAt,
       outcome: "failed",
-      retryable: transient,
+      retryable: allowRetry,
       error: errorMessage
     });
   } finally {
