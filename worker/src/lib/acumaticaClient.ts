@@ -171,10 +171,39 @@ export class AcumaticaClient {
     try {
       return await this.request<unknown>(url, { method: "GET" });
     } catch (error) {
+      // Some inventory IDs (notably with slashes, e.g. DF60650CG/S/P) can fail
+      // via key-path lookup with a 500 from Acumatica. Fall back to filter lookup.
+      const byInventoryId = await this.getStockItemByFilter("InventoryID", id);
+      if (byInventoryId) return byInventoryId;
+
+      // Some endpoints expose the same key as InventoryCD instead of InventoryID.
+      const byInventoryCd = await this.getStockItemByFilter("InventoryCD", id);
+      if (byInventoryCd) return byInventoryCd;
+
       if (isNoEntitySatisfiesConditionError(error)) {
         throw new StockItemNotFoundError(id);
       }
-      throw error;
+
+      // If direct lookup failed and filter lookups returned nothing, treat as not found
+      // so multi-item requests can still return the remaining successful rows.
+      throw new StockItemNotFoundError(id);
+    }
+  }
+
+  private async getStockItemByFilter(field: "InventoryID" | "InventoryCD", id: string): Promise<unknown | null> {
+    const filter = encodeURIComponent(`${field} eq '${quoteForOData(id)}'`);
+    const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}?$filter=${filter}`;
+    try {
+      const payload = await this.request<unknown>(url, { method: "GET" });
+      const rows = toRows(payload);
+      if (!rows.length) return null;
+      return rows;
+    } catch (error) {
+      if (isNoEntitySatisfiesConditionError(error)) {
+        return null;
+      }
+      // Keep fallback resilient: treat unsupported field/lookups as no result.
+      return null;
     }
   }
 
