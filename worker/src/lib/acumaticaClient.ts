@@ -390,7 +390,7 @@ export class AcumaticaClient {
     );
     const url = `${this.readEntityBase}/Customer?${params.toString()}`;
     const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
-    const matched = rows.length > 0;
+    const matchedByZip5Filter = rows.length > 0;
 
     const diagParams = new URLSearchParams();
     diagParams.set("$top", "10");
@@ -415,7 +415,8 @@ export class AcumaticaClient {
       )
     );
 
-    return { matched, candidateZip5 };
+    const matchedByCandidate = candidateZip5.includes(zip5);
+    return { matched: matchedByZip5Filter || matchedByCandidate, candidateZip5 };
   }
 
   async fetchOrderReadyReportRows(): Promise<Record<string, unknown>[]> {
