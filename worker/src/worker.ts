@@ -398,12 +398,22 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
     await markSuccess(message.jobId, result);
     await receiver.completeMessage(received);
 
+    const verifySummary =
+      message.type === "ERP_VERIFY_CUSTOMER"
+        ? {
+            matched: (result as { matched?: unknown } | null)?.matched ?? null,
+            comparedZip5: (result as { comparedZip5?: unknown } | null)?.comparedZip5 ?? null,
+            candidateZip5: (result as { candidateZip5?: unknown } | null)?.candidateZip5 ?? null,
+          }
+        : undefined;
+
     log("info", "job_succeeded", {
       jobId: message.jobId,
       vendorId: message.vendorId,
       type: message.type,
       durationMs: Date.now() - startedAt,
-      outcome: "succeeded"
+      outcome: "succeeded",
+      ...(verifySummary ? { verifySummary } : {})
     });
   } catch (error) {
     const transient = isTransientError(error);
