@@ -374,6 +374,14 @@ export class AcumaticaClient {
   }
 
   async verifyCustomerByZip(customerId: string, zip5: string): Promise<boolean> {
+    const result = await this.verifyCustomerByZipWithDiagnostics(customerId, zip5);
+    return result.matched;
+  }
+
+  async verifyCustomerByZipWithDiagnostics(
+    customerId: string,
+    zip5: string
+  ): Promise<{ matched: boolean; candidateZip5: string[] }> {
     const params = new URLSearchParams();
     params.set("$top", "1");
     params.set(
@@ -382,7 +390,32 @@ export class AcumaticaClient {
     );
     const url = `${this.readEntityBase}/Customer?${params.toString()}`;
     const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
-    return rows.length > 0;
+    const matched = rows.length > 0;
+
+    const diagParams = new URLSearchParams();
+    diagParams.set("$top", "10");
+    diagParams.set("$filter", `CustomerID eq '${quoteForOData(customerId)}'`);
+    diagParams.set("$select", "CustomerID,Zip5,ZipCode,PostalCode");
+    const diagUrl = `${this.readEntityBase}/Customer?${diagParams.toString()}`;
+    const diagRows = toRows(await this.request<unknown>(diagUrl, { method: "GET" }));
+    const candidateZip5 = Array.from(
+      new Set(
+        diagRows
+          .map((row) =>
+            (
+              getAcumaticaFieldValue(row, "Zip5") ??
+              getAcumaticaFieldValue(row, "ZipCode") ??
+              getAcumaticaFieldValue(row, "PostalCode") ??
+              ""
+            )
+              .replace(/\D/g, "")
+              .slice(0, 5)
+          )
+          .filter((value) => value.length === 5)
+      )
+    );
+
+    return { matched, candidateZip5 };
   }
 
   async fetchOrderReadyReportRows(): Promise<Record<string, unknown>[]> {

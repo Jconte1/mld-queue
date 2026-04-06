@@ -321,8 +321,8 @@ async function processJob(message: JobMessage): Promise<unknown> {
       const customerId = String(message.payload?.customerId || "").trim().toUpperCase();
       const zip5 = String(message.payload?.zip5 || "").replace(/\D/g, "").slice(0, 5);
       if (!customerId || zip5.length !== 5) throw new Error("customerId and zip5 are required");
-      const matched = await acumaticaClient.verifyCustomerByZip(customerId, zip5);
-      return { ok: true, matched };
+      const diagnostics = await acumaticaClient.verifyCustomerByZipWithDiagnostics(customerId, zip5);
+      return { ok: true, matched: diagnostics.matched, comparedZip5: zip5, candidateZip5: diagnostics.candidateZip5 };
     }
 
     case "ERP_PUT_SALES_INVOICE": {

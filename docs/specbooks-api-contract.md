@@ -6,7 +6,7 @@ SpecBooks must integrate only with this HTTPS Gateway. Direct access to Azure Se
 
 Migration notice:
 
-- Direct Acumatica access is deprecated effective `TODO: INSERT DATE`.
+- Direct Acumatica access is deprecated.
 - After that date, only the Gateway endpoints in this document are supported.
 
 All operations are asynchronous.
