@@ -395,7 +395,6 @@ export class AcumaticaClient {
     const diagParams = new URLSearchParams();
     diagParams.set("$top", "10");
     diagParams.set("$filter", `CustomerID eq '${quoteForOData(customerId)}'`);
-    diagParams.set("$select", "CustomerID,Zip5,ZipCode,PostalCode");
     const diagUrl = `${this.readEntityBase}/Customer?${diagParams.toString()}`;
     const diagRows = toRows(await this.request<unknown>(diagUrl, { method: "GET" }));
     const candidateZip5 = Array.from(
@@ -406,6 +405,7 @@ export class AcumaticaClient {
               getAcumaticaFieldValue(row, "Zip5") ??
               getAcumaticaFieldValue(row, "ZipCode") ??
               getAcumaticaFieldValue(row, "PostalCode") ??
+              getAcumaticaFieldValue(row, "Zip") ??
               ""
             )
               .replace(/\D/g, "")
