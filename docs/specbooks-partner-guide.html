@@ -541,7 +541,9 @@
                         "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Products/01074feb-b518-f111-9fc0-6045bda28239/{filename}"
                     },
                     "custom": {},
-                    "Category": {},
+                    "Category": {
+                        "value": "Kitchen"
+                    },
                     "Discount": {
                         "value": 0
                     },
@@ -641,7 +643,7 @@
         <li>Method: <code>POST</code></li>
         <li>URL: <code>{{baseUrl}}/api/specbooks/opportunities</code></li>
         <li>Required Header: <code>X-SPECBOOKS-API-KEY: {{specbook-api-key}}</code></li>
-        <li>Required Header: <code>Idempotency-Key: {{$guid}}</code></li>
+        <li>Optional Header: <code>Idempotency-Key: {{$guid}}</code></li>
       </ul>
 
       <h3>Request Body</h3>
@@ -661,22 +663,24 @@
   },
   "Products": [
     {
-      "InventoryID": { "value": "ROOM" },
-      "Quantity": { "value": 1 },
-      "UOM": { "value": "EACH" },
-      "Amount": { "value": 1000 }
+      "InventoryID": { "value": "DF30450/S/P" },
+      "Qty": { "value": 2 },
+      "ManualPrice": { "value": true },
+      "UnitPrice": { "value": 1000 },
+      "Category": { "value": "Kitchen" }
     }
   ]
-}</pre>
+}
+</pre>
 
       <h3>Example JSON Response</h3>
       <pre>{
-    "jobId": "70c34fc4-7ba4-4088-8629-0043831c6a54",
+    "jobId": "bbfab896-055b-4fd2-b4e7-8ce6bc1ca88a",
     "vendorId": "specbooks",
     "type": "CREATE_OPPORTUNITY",
     "status": "succeeded",
-    "result": [
-        "id": "310f1aec-b418-f111-9fc0-6045bda28239",
+    "result": {
+        "id": "2ae3ff5c-8d49-f111-9fc9-6045bda28239",
         "note": null,
         "Owner": {
             "value": "106552"
@@ -685,16 +689,16 @@
             "value": "Prospect"
         },
         "Total": {
-            "value": 0
+            "value": 2153
         },
         "Amount": {
-            "value": 0
+            "value": 2000
         },
         "Branch": {
             "value": "BA0016568"
         },
         "NoteID": {
-            "value": "310f1aec-b418-f111-9fc0-6045bda28239"
+            "value": "2ae3ff5c-8d49-f111-9fc9-6045bda28239"
         },
         "Reason": {
             "value": "Created"
@@ -704,8 +708,8 @@
             "value": "New"
         },
         "_links": {
-            "self": "/entity/Default/24.200.001/Opportunity/310f1aec-b418-f111-9fc0-6045bda28239",
-            "files:put": "/entity/Default/24.200.001/files/PX.Objects.CR.OpportunityMaint/Opportunity/310f1aec-b418-f111-9fc0-6045bda28239/{filename}"
+            "self": "/entity/CustomEndpoint/24.200.001/Opportunity/2ae3ff5c-8d49-f111-9fc9-6045bda28239",
+            "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Opportunity/2ae3ff5c-8d49-f111-9fc9-6045bda28239/{filename}"
         },
         "custom": {},
         "Address": null,
@@ -740,7 +744,7 @@
             "value": "USD"
         },
         "Estimation": {
-            "value": "2026-03-05T00:00:00-06:00"
+            "value": "2026-05-06T00:00:00-05:00"
         },
         "WeightTotal": {
             "value": 0
@@ -750,7 +754,7 @@
             "value": false
         },
         "OpportunityID": {
-            "value": "OP12326"
+            "value": "OP13288"
         },
         "ParentAccount": {},
         "SourceCampaign": {},
@@ -768,14 +772,14 @@
             "value": "Ben Devenport"
         },
         "LastModifiedDateTime": {
-            "value": "2026-03-05T11:01:33.677-06:00"
+            "value": "2026-05-06T15:51:36.44-05:00"
         },
         "WorkgroupDescription": {},
         "ConvertedLeadDisplayName": {}
-    }],
+    },
     "error": null,
-    "createdAt": "2026-03-05T17:01:21.241Z",
-    "updatedAt": "2026-03-05T17:01:36.062Z"
+    "createdAt": "2026-05-06T20:51:34.086Z",
+    "updatedAt": "2026-05-06T20:51:36.763Z"
 }</pre>
     </section>
 
