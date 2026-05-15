@@ -21,7 +21,8 @@ export type JobType =
   | "ERP_GET_THANK_YOU_REPORT"
   | "ERP_MARK_THANK_YOU_SENT"
   | "ERP_VERIFY_CUSTOMER"
-  | "ERP_PUT_SALES_INVOICE";
+  | "ERP_PUT_SALES_INVOICE"
+  | "ERP_PUT_CUSTOMER_LOCATION";
 
 export type JobStatus = "queued" | "processing" | "succeeded" | "failed";
 

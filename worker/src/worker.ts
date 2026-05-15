@@ -333,6 +333,14 @@ async function processJob(message: JobMessage): Promise<unknown> {
       return acumaticaClient.putSalesInvoice(payload);
     }
 
+    case "ERP_PUT_CUSTOMER_LOCATION": {
+      const payload = message.payload?.payload as Record<string, unknown> | undefined;
+      if (!payload || typeof payload !== "object") {
+        throw new Error("payload is required");
+      }
+      return acumaticaClient.putCustomerLocation(payload);
+    }
+
     default:
       throw new Error(`Unsupported job type: ${(message as { type?: string }).type ?? "unknown"}`);
   }

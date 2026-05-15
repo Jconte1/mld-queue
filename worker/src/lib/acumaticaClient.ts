@@ -363,6 +363,57 @@ export class AcumaticaClient {
     return { status: response.status, body: parsedBody };
   }
 
+  async putCustomerLocation(payload: Record<string, unknown>): Promise<{ status: number; body: unknown }> {
+    const token = await this.getToken();
+    const url = `${this.entityBase}/CustomerLocation`;
+    const locationId =
+      (payload.LocationID as { value?: unknown } | undefined)?.value ??
+      (payload.locationID as { value?: unknown } | undefined)?.value ??
+      null;
+
+    console.info("[queue][acumatica][customer-location][request]", {
+      url,
+      locationId,
+    });
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const raw = await response.text();
+    let parsedBody: unknown = raw;
+    try {
+      parsedBody = raw ? (JSON.parse(raw) as unknown) : null;
+    } catch {
+      parsedBody = raw;
+    }
+
+    if (!response.ok) {
+      const err = new Error(
+        `CustomerLocation PUT failed: ${response.status} ${response.statusText} ${raw || ""}`.trim()
+      );
+      (err as Error & { status?: number }).status = response.status;
+      throw err;
+    }
+
+    const responseLocationId =
+      (parsedBody as { LocationID?: { value?: unknown } } | null)?.LocationID?.value ?? null;
+    console.info("[queue][acumatica][customer-location][response]", {
+      url,
+      status: response.status,
+      responseLocationId,
+    });
+
+    return { status: response.status, body: parsedBody };
+  }
+
   async fetchOrderHeaderByOrderNbr(orderNbr: string): Promise<Record<string, unknown> | null> {
     const params = new URLSearchParams();
     params.set("$filter", `OrderNbr eq '${quoteForOData(orderNbr)}'`);
