@@ -101,15 +101,18 @@ export class AcumaticaClient {
 
   private async request<T>(path: string, init: RequestInit): Promise<T> {
     const token = await this.getToken();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), env.acumaticaRequestTimeoutMs);
     const response = await fetch(path, {
       ...init,
+      signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
         ...(init.headers ?? {})
       }
-    });
+    }).finally(() => clearTimeout(timeout));
 
     if (!response.ok) {
       const body = await response.text();
@@ -348,7 +351,14 @@ export class AcumaticaClient {
       const err = new Error(
         `SalesInvoice PUT failed: ${response.status} ${response.statusText} ${raw || ""}`.trim()
       );
-      (err as Error & { status?: number }).status = response.status;
+      const enriched = err as Error & {
+        status?: number;
+        responseBody?: unknown;
+        responseText?: string;
+      };
+      enriched.status = response.status;
+      enriched.responseBody = parsedBody;
+      enriched.responseText = raw;
       throw err;
     }
 
@@ -399,7 +409,14 @@ export class AcumaticaClient {
       const err = new Error(
         `CustomerLocation PUT failed: ${response.status} ${response.statusText} ${raw || ""}`.trim()
       );
-      (err as Error & { status?: number }).status = response.status;
+      const enriched = err as Error & {
+        status?: number;
+        responseBody?: unknown;
+        responseText?: string;
+      };
+      enriched.status = response.status;
+      enriched.responseBody = parsedBody;
+      enriched.responseText = raw;
       throw err;
     }
 

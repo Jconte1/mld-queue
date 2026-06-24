@@ -18,6 +18,13 @@ const vendorSemaphore = new Semaphore(env.vendorMaxConcurrency);
 const globalSemaphore = new Semaphore(env.globalMaxConcurrency);
 const vendorBucket = new TokenBucket(env.vendorMaxRpm);
 const globalBucket = new TokenBucket(env.globalMaxRpm);
+const MAX_STORED_ERROR_CHARS = 60000;
+
+type EnrichedRequestError = Error & {
+  status?: number;
+  responseBody?: unknown;
+  responseText?: string;
+};
 
 function toPrismaJsonValue(value: unknown): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
   if (value === null || value === undefined) return Prisma.JsonNull;
@@ -46,11 +53,30 @@ async function markSuccess(jobId: string, result: unknown) {
 
 async function markFailure(jobId: string, error: unknown) {
   const message = error instanceof Error ? error.message : String(error);
+  const failureDetails: Record<string, unknown> = {
+    error: message,
+  };
+
+  if (error instanceof Error) {
+    const enriched = error as EnrichedRequestError;
+    failureDetails.name = error.name;
+    if (typeof enriched.status === "number") {
+      failureDetails.status = enriched.status;
+    }
+    if ("responseBody" in enriched) {
+      failureDetails.responseBody = enriched.responseBody ?? null;
+    }
+    if (typeof enriched.responseText === "string") {
+      failureDetails.responseText = enriched.responseText;
+    }
+  }
+
   await prisma.job.update({
     where: { id: jobId },
     data: {
       status: "failed",
-      error: message.slice(0, 4000)
+      error: message.slice(0, MAX_STORED_ERROR_CHARS),
+      result: toPrismaJsonValue(failureDetails)
     }
   });
 }
@@ -203,6 +229,11 @@ async function processJob(message: JobMessage): Promise<unknown> {
             .filter(Boolean)
         : [String(message.payload?.inventoryId || "").trim().toUpperCase()].filter(Boolean);
       if (!inventoryIds.length) throw new Error("inventoryId is required");
+      if (inventoryIds.length > env.stockItemMaxBatchSize) {
+        throw new Error(
+          `Too many inventoryIds for GET_STOCK_ITEM (${inventoryIds.length}; max ${env.stockItemMaxBatchSize})`
+        );
+      }
       return acumaticaClient.getStockItems(inventoryIds);
     }
 
@@ -439,7 +470,7 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
         where: { id: message.jobId },
         data: {
           status: "queued",
-          error: errorMessage.slice(0, 4000)
+          error: errorMessage.slice(0, MAX_STORED_ERROR_CHARS)
         }
       });
       await receiver.abandonMessage(received);
