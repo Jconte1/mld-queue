@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { assertSpecbooksApiKey } from "@/lib/auth";
 import { assertRouteWithinRateLimit } from "@/lib/rateLimit";
-import { enqueueJob } from "@/lib/jobs";
+import { enqueueJob, findRecentReusableStockItemJob } from "@/lib/jobs";
 
 const maxStockItemBatchSize = Number(process.env.MAX_STOCK_ITEM_BATCH_SIZE ?? 25);
 
@@ -34,6 +34,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ inventor
     }
 
     await assertRouteWithinRateLimit("specbooks", "GET_STOCK_ITEM");
+
+    const reusable = await findRecentReusableStockItemJob(ids);
+    if (reusable) {
+      return NextResponse.json({ jobId: reusable.jobId }, { status: 202 });
+    }
 
     const { jobId } = await enqueueJob({
       type: "GET_STOCK_ITEM",

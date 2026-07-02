@@ -6,11 +6,39 @@ import { getQueueSender } from "@/lib/serviceBus";
 import type { EnqueueInput, JobMessage, VendorId } from "@/lib/types";
 
 const VENDOR_ID: VendorId = "specbooks";
+const DEFAULT_STOCK_ITEM_DEDUPE_WINDOW_MS = 2 * 60 * 1000;
 
 function toInputJsonValue(
   payload: Record<string, unknown> | undefined
 ): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
   return payload ? (payload as Prisma.InputJsonValue) : Prisma.JsonNull;
+}
+
+function stockItemInventoryIdsKey(inventoryIds: unknown[]): string {
+  return Array.from(
+    new Set(
+      inventoryIds
+        .map((value) => String(value || "").trim().toUpperCase())
+        .filter(Boolean)
+    )
+  )
+    .sort()
+    .join("|");
+}
+
+function stockItemPayloadKey(payload: Prisma.JsonValue): string {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return "";
+  }
+
+  const record = payload as Record<string, unknown>;
+  if (Array.isArray(record.inventoryIds)) {
+    return stockItemInventoryIdsKey(record.inventoryIds);
+  }
+  if (typeof record.inventoryId === "string") {
+    return stockItemInventoryIdsKey([record.inventoryId]);
+  }
+  return "";
 }
 
 async function sendQueueMessage(messageBody: JobMessage): Promise<void> {
@@ -76,6 +104,44 @@ export async function enqueueJob(input: EnqueueInput): Promise<{ jobId: string }
   }
 
   return { jobId };
+}
+
+export async function findRecentReusableStockItemJob(
+  inventoryIds: string[],
+  windowMs = DEFAULT_STOCK_ITEM_DEDUPE_WINDOW_MS
+): Promise<{ jobId: string } | null> {
+  const requestedKey = stockItemInventoryIdsKey(inventoryIds);
+  if (!requestedKey) return null;
+
+  const since = new Date(Date.now() - windowMs);
+  const candidates = await prisma.job.findMany({
+    where: {
+      vendorId: VENDOR_ID,
+      type: "GET_STOCK_ITEM",
+      status: { in: ["queued", "processing", "succeeded"] },
+      createdAt: { gte: since }
+    },
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      status: true,
+      payload: true,
+      createdAt: true
+    }
+  });
+
+  const match = candidates.find((job) => stockItemPayloadKey(job.payload) === requestedKey);
+  if (!match) return null;
+
+  log("info", "gateway_stock_item_job_reused", {
+    jobId: match.id,
+    status: match.status,
+    inventoryIdCount: requestedKey.split("|").length,
+    ageMs: Date.now() - match.createdAt.getTime(),
+    windowMs
+  });
+
+  return { jobId: match.id };
 }
 
 export async function enqueueCreateWithIdempotency(payload: Record<string, unknown>, idempotencyKey: string): Promise<{ jobId: string; reused: boolean }> {
