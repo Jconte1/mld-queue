@@ -3,6 +3,8 @@ import { assertSpecbooksApiKey } from "@/lib/auth";
 import { assertRouteWithinRateLimit } from "@/lib/rateLimit";
 import { enqueueJob } from "@/lib/jobs";
 
+const maxStockItemBatchSize = Number(process.env.MAX_STOCK_ITEM_BATCH_SIZE ?? 25);
+
 export async function GET(req: Request, { params }: { params: Promise<{ inventoryId: string }> }) {
   try {
     assertSpecbooksApiKey(req);
@@ -24,8 +26,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ inventor
     if (!ids.length) {
       return NextResponse.json({ error: "inventoryId is required" }, { status: 400 });
     }
-    if (ids.length > 200) {
-      return NextResponse.json({ error: "Too many inventoryIds (max 200)" }, { status: 400 });
+    if (ids.length > maxStockItemBatchSize) {
+      return NextResponse.json(
+        { error: `Too many inventoryIds (max ${maxStockItemBatchSize})` },
+        { status: 400 }
+      );
     }
 
     await assertRouteWithinRateLimit("specbooks", "GET_STOCK_ITEM");

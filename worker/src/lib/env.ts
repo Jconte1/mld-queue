@@ -45,5 +45,7 @@ export const env = {
   globalMaxConcurrency: Number(process.env.GLOBAL_MAX_CONCURRENCY ?? 12),
   globalMaxRpm: Number(process.env.GLOBAL_MAX_RPM ?? 200),
   updateCoalesceWindowMs: Number(process.env.UPDATE_COALESCE_WINDOW_MS ?? 5000),
+  stockItemMaxBatchSize: Number(process.env.MAX_STOCK_ITEM_BATCH_SIZE ?? 25),
+  acumaticaRequestTimeoutMs: Number(process.env.ACUMATICA_REQUEST_TIMEOUT_MS ?? 30000),
   port: Number(process.env.PORT ?? 8080)
 };
