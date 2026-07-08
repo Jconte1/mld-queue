@@ -23,7 +23,7 @@ for (const name of required) {
 
 export const env = {
   serviceBusConnectionString: getEnv("AZURE_SERVICEBUS_CONNECTION_STRING"),
-  queueName: getEnv("SPECBOOKS_QUEUE_NAME"),
+  queueName: process.env.MLD_QUEUE_WORKER_QUEUE_NAME?.trim() || getEnv("SPECBOOKS_QUEUE_NAME"),
   acumaticaBaseUrl: getEnv("ACUMATICA_BASE_URL"),
   acumaticaClientId: getEnv("ACUMATICA_CLIENT_ID"),
   acumaticaClientSecret: getEnv("ACUMATICA_CLIENT_SECRET"),
@@ -39,6 +39,12 @@ export const env = {
   acumaticaSalesInvoiceEntity: process.env.ACUMATICA_SALES_INVOICE_ENTITY ?? "SalesInvoice",
   acumaticaStockItemEndpointName: process.env.ACUMATICA_STOCK_ITEM_ENDPOINT_NAME ?? "CustomEndpoint",
   acumaticaStockItemEndpointVersion: process.env.ACUMATICA_STOCK_ITEM_ENDPOINT_VERSION ?? "24.200.001",
+  acumaticaDeliveryEndpointName: process.env.ACUMATICA_DELIVERY_ENDPOINT_NAME?.trim() || "Delivery",
+  acumaticaDeliveryEndpointVersion: process.env.ACUMATICA_DELIVERY_ENDPOINT_VERSION?.trim() || "24.200.001",
+  acumaticaDeliverySalesOrderEndpointName:
+    process.env.ACUMATICA_DELIVERY_SALES_ORDER_ENDPOINT_NAME?.trim() || "DeliverySalesOrder",
+  acumaticaDeliverySalesOrderEndpointVersion:
+    process.env.ACUMATICA_DELIVERY_SALES_ORDER_ENDPOINT_VERSION?.trim() || "24.200.001",
   acumaticaOpportunityExpand: process.env.ACUMATICA_OPPORTUNITY_EXPAND ?? "Products,Address",
   vendorMaxConcurrency: Number(process.env.VENDOR_MAX_CONCURRENCY ?? 8),
   vendorMaxRpm: Number(process.env.VENDOR_MAX_RPM ?? 90),

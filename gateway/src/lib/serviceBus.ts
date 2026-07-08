@@ -2,14 +2,19 @@
 import { env } from "@/lib/env";
 
 let client: ServiceBusClient | null = null;
-let sender: ServiceBusSender | null = null;
+const senders = new Map<string, ServiceBusSender>();
 
-export function getQueueSender(): ServiceBusSender {
+export function getQueueSender(queueName = env.queueName): ServiceBusSender {
   if (!client) {
     client = new ServiceBusClient(env.serviceBusConnectionString);
   }
-  if (!sender) {
-    sender = client.createSender(env.queueName);
+
+  const existing = senders.get(queueName);
+  if (existing) {
+    return existing;
   }
+
+  const sender = client.createSender(queueName);
+  senders.set(queueName, sender);
   return sender;
 }

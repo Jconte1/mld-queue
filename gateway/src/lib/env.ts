@@ -21,6 +21,10 @@ export const env = {
   specbooksApiKey: getEnv("SPECBOOKS_API_KEY"),
   serviceBusConnectionString: getEnv("AZURE_SERVICEBUS_CONNECTION_STRING"),
   queueName: getEnv("SPECBOOKS_QUEUE_NAME"),
+  deliveryQueueName:
+    process.env.MLD_QUEUE_DELIVERY_QUEUE_NAME?.trim() ||
+    process.env.DELIVERY_QUEUE_NAME?.trim() ||
+    null,
   specbooksOpportunityPassthrough:
     String(process.env.SPECBOOKS_OPPORTUNITY_PASSTHROUGH ?? "true").toLowerCase() === "true",
   maxRequestBytes: Number(process.env.MAX_REQUEST_BYTES ?? 102_400),

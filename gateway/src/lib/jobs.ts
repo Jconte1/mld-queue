@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Prisma } from "../../../prisma/generated/client";
 import { log } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
+import { env } from "@/lib/env";
 import { getQueueSender } from "@/lib/serviceBus";
 import type { EnqueueInput, JobMessage, VendorId } from "@/lib/types";
 
@@ -41,9 +42,9 @@ function stockItemPayloadKey(payload: Prisma.JsonValue): string {
   return "";
 }
 
-async function sendQueueMessage(messageBody: JobMessage): Promise<void> {
+async function sendQueueMessage(messageBody: JobMessage, queueName: string): Promise<void> {
   const startedAt = Date.now();
-  await getQueueSender().sendMessages({
+  await getQueueSender(queueName).sendMessages({
     messageId: messageBody.jobId,
     body: messageBody,
     applicationProperties: {
@@ -55,6 +56,7 @@ async function sendQueueMessage(messageBody: JobMessage): Promise<void> {
     jobId: messageBody.jobId,
     type: messageBody.type,
     vendorId: messageBody.vendorId,
+    queueName,
     durationMs: Date.now() - startedAt
   });
 }
@@ -62,6 +64,7 @@ async function sendQueueMessage(messageBody: JobMessage): Promise<void> {
 export async function enqueueJob(input: EnqueueInput): Promise<{ jobId: string }> {
   const jobId = randomUUID();
   const vendorId = input.vendorId ?? VENDOR_ID;
+  const queueName = input.queueName ?? env.queueName;
 
   await prisma.job.create({
     data: {
@@ -86,11 +89,12 @@ export async function enqueueJob(input: EnqueueInput): Promise<{ jobId: string }
   };
 
   try {
-    await sendQueueMessage(messageBody);
+    await sendQueueMessage(messageBody, queueName);
   } catch (error) {
     log("error", "gateway_job_enqueue_failed", {
       jobId,
       type: input.type,
+      queueName,
       error: error instanceof Error ? error.message : String(error)
     });
     await prisma.job.update({
@@ -220,7 +224,7 @@ export async function enqueueCreateWithIdempotency(payload: Record<string, unkno
   };
 
   try {
-    await sendQueueMessage(messageBody);
+    await sendQueueMessage(messageBody, env.queueName);
   } catch (error) {
     log("error", "gateway_job_enqueue_failed", {
       jobId,
@@ -319,7 +323,7 @@ export async function enqueueCreateStockItemWithIdempotency(
   };
 
   try {
-    await sendQueueMessage(messageBody);
+    await sendQueueMessage(messageBody, env.queueName);
   } catch (error) {
     log("error", "gateway_job_enqueue_failed", {
       jobId,
@@ -418,7 +422,7 @@ export async function enqueueCoalescedOpportunityUpdate(
   };
 
   try {
-    await sendQueueMessage(messageBody);
+    await sendQueueMessage(messageBody, env.queueName);
   } catch (error) {
     log("error", "gateway_job_enqueue_failed", {
       jobId,

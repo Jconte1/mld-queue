@@ -339,6 +339,28 @@ async function processJob(message: JobMessage): Promise<unknown> {
       return { rows: await acumaticaClient.fetchThankYouReportRows() };
     }
 
+    case "ERP_FIND_DELIVERY_SALES_ORDERS_BY_LINE_REQUESTED_ON": {
+      const requestedOn = String(message.payload?.requestedOn || "").trim();
+      if (!requestedOn) throw new Error("requestedOn is required");
+      return {
+        rows: await acumaticaClient.fetchDeliverySalesOrdersByLineRequestedOn({
+          requestedOn,
+          excludedOrderTypes: message.payload?.excludedOrderTypes,
+          allowedShipVia: message.payload?.allowedShipVia,
+          allowedStatuses: message.payload?.allowedStatuses,
+        }),
+      };
+    }
+
+    case "ERP_GET_DELIVERY_SALES_ORDER_FULL": {
+      const orderNbr = String(message.payload?.orderNbr || "").trim().toUpperCase();
+      const orderType = String(message.payload?.orderType || "").trim().toUpperCase();
+      if (!orderNbr) throw new Error("orderNbr is required");
+      return {
+        rows: await acumaticaClient.fetchDeliverySalesOrderFull(orderNbr, orderType || null),
+      };
+    }
+
     case "ERP_MARK_THANK_YOU_SENT": {
       const orderNbr = String(message.payload?.orderNbr || "").trim().toUpperCase();
       const orderTypeRaw = String(message.payload?.orderType || "").trim().toUpperCase();

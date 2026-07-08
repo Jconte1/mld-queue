@@ -20,6 +20,66 @@ class StockItemNotFoundError extends Error {
   }
 }
 
+const DEFAULT_DELIVERY_EXCLUDED_ORDER_TYPES = [
+  "ED",
+  "GB",
+  "BH",
+  "DS",
+  "NH",
+  "CH",
+  "CM",
+  "CR",
+  "CS",
+  "DR",
+  "HC",
+  "IN",
+  "IS",
+  "IV",
+  "KS",
+  "LU",
+  "MM",
+  "MO",
+  "OA",
+  "PR",
+  "PT",
+  "QT",
+  "R1",
+  "RA",
+  "RC",
+  "RM",
+  "RR",
+  "RY",
+  "TB",
+  "TR",
+  "WB",
+  "WP",
+];
+
+const DEFAULT_DELIVERY_ALLOWED_SHIP_VIA = [
+  "DELIVERY SW",
+  "DELIVERY SLC",
+  "DELIVERY PROVO",
+  "DELIVERY PLUMBI",
+  "DELIVERY LAYTON",
+  "DELIVERY KETCHU",
+  "DELIVERY BOISE",
+  "SE DELIVERY",
+  "DELIVERY JACKSO",
+  "DEL ST GEORGE",
+  "DELIVERY",
+];
+
+const DEFAULT_DELIVERY_ALLOWED_STATUSES = [
+  "Open",
+  "Awaiting Payment",
+  "Back Order",
+  "On Hold but Approved",
+  "Shipping",
+  "Completed",
+];
+
+const DEFAULT_DELIVERY_SALES_ORDER_EXPAND = "Totals,Details/Allocations,ShipToAddress";
+
 function isNoEntitySatisfiesConditionError(error: unknown): boolean {
   const msg = error instanceof Error ? error.message : String(error);
   return (
@@ -30,6 +90,26 @@ function isNoEntitySatisfiesConditionError(error: unknown): boolean {
 
 function quoteForOData(value: string): string {
   return value.replace(/'/g, "''");
+}
+
+function odataString(value: string): string {
+  return `'${quoteForOData(value)}'`;
+}
+
+function toDateTimeOffset(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`Invalid delivery SalesOrder requestedOn date: ${value}`);
+  }
+  return date.toISOString();
+}
+
+function normalizedStringArray(value: unknown, fallback: string[]): string[] {
+  if (!Array.isArray(value)) {
+    return fallback;
+  }
+
+  return value.map((item) => String(item || "").trim()).filter(Boolean);
 }
 
 function getAcumaticaFieldValue(row: Record<string, unknown> | null, key: string): string | null {
@@ -60,6 +140,14 @@ export class AcumaticaClient {
 
   private get stockItemEntityBase(): string {
     return `${env.acumaticaBaseUrl}/entity/${env.acumaticaStockItemEndpointName}/${env.acumaticaStockItemEndpointVersion}`;
+  }
+
+  private get deliveryEntityBase(): string {
+    return `${env.acumaticaBaseUrl}/entity/${env.acumaticaDeliveryEndpointName}/${env.acumaticaDeliveryEndpointVersion}`;
+  }
+
+  private get deliverySalesOrderEntityBase(): string {
+    return `${env.acumaticaBaseUrl}/entity/${env.acumaticaDeliverySalesOrderEndpointName}/${env.acumaticaDeliverySalesOrderEndpointVersion}`;
   }
 
   async getToken(): Promise<string> {
@@ -439,6 +527,66 @@ export class AcumaticaClient {
     const url = `${this.readEntityBase}/SalesOrder?${params.toString()}`;
     const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
     return rows[0] || null;
+  }
+
+  async fetchDeliverySalesOrdersByLineRequestedOn(params: {
+    requestedOn: string;
+    excludedOrderTypes?: unknown;
+    allowedShipVia?: unknown;
+    allowedStatuses?: unknown;
+  }): Promise<Record<string, unknown>[]> {
+    const excludedOrderTypes = normalizedStringArray(
+      params.excludedOrderTypes,
+      DEFAULT_DELIVERY_EXCLUDED_ORDER_TYPES
+    );
+    const allowedShipVia = normalizedStringArray(
+      params.allowedShipVia,
+      DEFAULT_DELIVERY_ALLOWED_SHIP_VIA
+    );
+    const allowedStatuses = normalizedStringArray(
+      params.allowedStatuses,
+      DEFAULT_DELIVERY_ALLOWED_STATUSES
+    );
+
+    const clauses = [
+      `LineRequestedOn eq datetimeoffset'${toDateTimeOffset(params.requestedOn)}'`,
+      ...excludedOrderTypes.map((orderType) => `OrderType ne ${odataString(orderType)}`),
+    ];
+
+    if (allowedShipVia.length > 0) {
+      clauses.push(`(${allowedShipVia.map((shipVia) => `ShipVia eq ${odataString(shipVia)}`).join(" or ")})`);
+    }
+
+    if (allowedStatuses.length > 0) {
+      clauses.push(`(${allowedStatuses.map((status) => `Status eq ${odataString(status)}`).join(" or ")})`);
+    }
+
+    const query = new URLSearchParams({
+      $filter: clauses.join(" and "),
+      $select: "OrderNbr,OrderType,Status,ShipVia,LineRequestedOn",
+    });
+    const url = `${this.deliveryEntityBase}/SalesOrder?${query.toString()}`;
+
+    return toRows(await this.request<unknown>(url, { method: "GET" }));
+  }
+
+  async fetchDeliverySalesOrderFull(
+    orderNbr: string,
+    orderType?: string | null
+  ): Promise<Record<string, unknown>[]> {
+    const clauses = [`OrderNbr eq ${odataString(orderNbr)}`];
+    if (orderType) {
+      clauses.push(`OrderType eq ${odataString(orderType)}`);
+    }
+
+    const query = new URLSearchParams({
+      $filter: clauses.join(" and "),
+      $expand: DEFAULT_DELIVERY_SALES_ORDER_EXPAND,
+      $custom: "Document.AttributeBUYERGROUP",
+    });
+    const url = `${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`;
+
+    return toRows(await this.request<unknown>(url, { method: "GET" }));
   }
 
   async verifyCustomerByZip(customerId: string, zip5: string): Promise<boolean> {
