@@ -361,6 +361,14 @@ async function processJob(message: JobMessage): Promise<unknown> {
       };
     }
 
+    case "ERP_GET_DELIVERY_CONTACT": {
+      const contactId = String(message.payload?.contactId || "").trim();
+      if (!contactId) throw new Error("contactId is required");
+      return {
+        rows: await acumaticaClient.fetchDeliveryContactByContactId(contactId),
+      };
+    }
+
     case "ERP_MARK_THANK_YOU_SENT": {
       const orderNbr = String(message.payload?.orderNbr || "").trim().toUpperCase();
       const orderTypeRaw = String(message.payload?.orderType || "").trim().toUpperCase();

@@ -78,7 +78,7 @@ const DEFAULT_DELIVERY_ALLOWED_STATUSES = [
   "Completed",
 ];
 
-const DEFAULT_DELIVERY_SALES_ORDER_EXPAND = "Totals,Details/Allocations,ShipToAddress";
+const DEFAULT_DELIVERY_SALES_ORDER_EXPAND = "Totals,Details/Allocations,ShipToAddress,TaxDetails";
 
 function isNoEntitySatisfiesConditionError(error: unknown): boolean {
   const msg = error instanceof Error ? error.message : String(error);
@@ -585,6 +585,20 @@ export class AcumaticaClient {
       $custom: "Document.AttributeBUYERGROUP",
     });
     const url = `${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`;
+
+    return toRows(await this.request<unknown>(url, { method: "GET" }));
+  }
+
+  async fetchDeliveryContactByContactId(contactId: string): Promise<Record<string, unknown>[]> {
+    const id = String(contactId || "").trim();
+    if (!id) return [];
+
+    const contactIdValue = /^\d+$/.test(id) ? id : odataString(id);
+    const query = new URLSearchParams({
+      $filter: `ContactID eq ${contactIdValue}`,
+      $top: "1",
+    });
+    const url = `${this.deliveryEntityBase}/Contact?${query.toString()}`;
 
     return toRows(await this.request<unknown>(url, { method: "GET" }));
   }
