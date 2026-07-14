@@ -123,6 +123,61 @@ function getAcumaticaFieldValue(row: Record<string, unknown> | null, key: string
   return String(raw);
 }
 
+function withAcumaticaFieldValue(original: unknown, value: string): unknown {
+  if (typeof original === "object" && original !== null && "value" in original) {
+    return {
+      ...original,
+      value
+    };
+  }
+
+  return { value };
+}
+
+function stockItemMatchKey(value: string): string {
+  return value.trim().toUpperCase().replace(/_/g, " ");
+}
+
+function getStockItemRowId(row: Record<string, unknown>): string | null {
+  return (
+    getAcumaticaFieldValue(row, "InventoryID") ??
+    getAcumaticaFieldValue(row, "InventoryCD") ??
+    getAcumaticaFieldValue(row, "id")
+  );
+}
+
+function normalizeStockItemRowForRequestedId(
+  row: Record<string, unknown>,
+  requestedInventoryId: string
+): Record<string, unknown> {
+  const requestedId = String(requestedInventoryId || "").trim().toUpperCase();
+  if (!requestedId) return row;
+
+  const acumaticaId = getStockItemRowId(row);
+  if (!acumaticaId || acumaticaId === requestedId) return row;
+  if (!requestedId.includes("_")) return row;
+  if (stockItemMatchKey(acumaticaId) !== stockItemMatchKey(requestedId)) return row;
+
+  return {
+    ...row,
+    InventoryID: withAcumaticaFieldValue(row.InventoryID, requestedId),
+    RequestedInventoryID: { value: requestedId },
+    AcumaticaInventoryID: { value: acumaticaId },
+    InventoryIDMatch: { value: "underscore_space_equivalence" }
+  };
+}
+
+export function normalizeStockItemPayloadForRequestedId(
+  payload: unknown,
+  requestedInventoryId: string
+): unknown {
+  const rows = toRows(payload);
+  if (!rows.length) return payload;
+
+  const normalizedRows = rows.map((row) => normalizeStockItemRowForRequestedId(row, requestedInventoryId));
+  return Array.isArray(payload) ? normalizedRows : normalizedRows[0];
+}
+
 export class AcumaticaClient {
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
@@ -325,14 +380,10 @@ export class AcumaticaClient {
       }
       const rows = toRows(payload);
       for (const row of rows) {
-        const rowId =
-          getAcumaticaFieldValue(row, "InventoryID") ??
-          getAcumaticaFieldValue(row, "InventoryCD") ??
-          getAcumaticaFieldValue(row, "id") ??
-          JSON.stringify(row);
+        const rowId = getStockItemRowId(row) ?? JSON.stringify(row);
         if (!seen.has(rowId)) {
           seen.add(rowId);
-          allRows.push(row);
+          allRows.push(normalizeStockItemRowForRequestedId(row, id));
         }
       }
     }
@@ -385,10 +436,14 @@ export class AcumaticaClient {
 
   async createStockItem(payload: Record<string, unknown>): Promise<unknown> {
     const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}`;
-    return this.request<unknown>(url, {
+    const result = await this.request<unknown>(url, {
       method: "PUT",
       body: JSON.stringify(payload)
     });
+    const requestedInventoryId = getAcumaticaFieldValue(payload, "InventoryID");
+    return requestedInventoryId
+      ? normalizeStockItemPayloadForRequestedId(result, requestedInventoryId)
+      : result;
   }
 
   async updateOpportunity(opportunityId: string, payload: Record<string, unknown>): Promise<unknown> {
