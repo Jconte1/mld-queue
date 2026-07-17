@@ -123,6 +123,36 @@ function getAcumaticaFieldValue(row: Record<string, unknown> | null, key: string
   return String(raw);
 }
 
+function readCustomDocumentAttribute(
+  row: Record<string, unknown> | null,
+  attributeName: string
+): { exposed: boolean; value: string | null } {
+  if (!row) return { exposed: false, value: null };
+
+  const custom = row.custom;
+  if (custom && typeof custom === "object" && "Document" in custom) {
+    const document = (custom as { Document?: unknown }).Document;
+    if (document && typeof document === "object" && attributeName in document) {
+      const raw = (document as Record<string, unknown>)[attributeName];
+      if (raw == null) return { exposed: true, value: null };
+      if (typeof raw === "object" && raw !== null && "value" in raw) {
+        const nested = (raw as { value?: unknown }).value;
+        return { exposed: true, value: nested == null ? null : String(nested) };
+      }
+      return { exposed: true, value: String(raw) };
+    }
+  }
+
+  const directKeys = [attributeName, `Document.${attributeName}`];
+  for (const key of directKeys) {
+    if (key in row) {
+      return { exposed: true, value: getAcumaticaFieldValue(row, key) };
+    }
+  }
+
+  return { exposed: false, value: null };
+}
+
 function withAcumaticaFieldValue(original: unknown, value: string): unknown {
   if (typeof original === "object" && original !== null && "value" in original) {
     return {
@@ -637,11 +667,96 @@ export class AcumaticaClient {
     const query = new URLSearchParams({
       $filter: clauses.join(" and "),
       $expand: DEFAULT_DELIVERY_SALES_ORDER_EXPAND,
-      $custom: "Document.AttributeBUYERGROUP",
+      $custom:
+        "Document.AttributeBUYERGROUP,Document.AttributeCONFIRMVIA,Document.AttributeCONFIRMWTH",
     });
     const url = `${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`;
 
     return toRows(await this.request<unknown>(url, { method: "GET" }));
+  }
+
+  async fetchDeliveryConfirmationAttributes(
+    orderNbr: string,
+    orderType?: string | null
+  ): Promise<{
+    orderType: string | null;
+    orderNumber: string | null;
+    confirmedVia: { exposed: boolean; value: string | null };
+    confirmedWith: { exposed: boolean; value: string | null };
+  } | null> {
+    const clauses = [`OrderNbr eq ${odataString(orderNbr)}`];
+    if (orderType) {
+      clauses.push(`OrderType eq ${odataString(orderType)}`);
+    }
+
+    const query = new URLSearchParams({
+      $filter: clauses.join(" and "),
+      $select: "OrderNbr,OrderType",
+      $custom: "Document.AttributeCONFIRMVIA,Document.AttributeCONFIRMWTH",
+      $top: "1",
+    });
+    const url = `${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`;
+    const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+    const row = rows[0] || null;
+    if (!row) return null;
+
+    return {
+      orderType: getAcumaticaFieldValue(row, "OrderType"),
+      orderNumber: getAcumaticaFieldValue(row, "OrderNbr"),
+      confirmedVia: readCustomDocumentAttribute(row, "AttributeCONFIRMVIA"),
+      confirmedWith: readCustomDocumentAttribute(row, "AttributeCONFIRMWTH"),
+    };
+  }
+
+  async putDeliveryConfirmationAttributes(
+    payload: Record<string, unknown>
+  ): Promise<{ status: number; body: unknown }> {
+    const token = await this.getToken();
+    const endpointName =
+      process.env.ACUMATICA_CONFIRMATION_WRITEBACK_ENDPOINT_NAME?.trim() ||
+      env.acumaticaDeliverySalesOrderEndpointName;
+    const endpointVersion =
+      process.env.ACUMATICA_CONFIRMATION_WRITEBACK_ENDPOINT_VERSION?.trim() ||
+      env.acumaticaDeliverySalesOrderEndpointVersion;
+    const url = `${env.acumaticaBaseUrl}/entity/${endpointName}/${endpointVersion}/SalesOrder`;
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const raw = await response.text();
+    let parsedBody: unknown = raw;
+    try {
+      parsedBody = raw ? (JSON.parse(raw) as unknown) : null;
+    } catch {
+      parsedBody = raw;
+    }
+
+    if (!response.ok) {
+      const err = new Error(
+        `Delivery confirmation attribute writeback failed: ${response.status} ${response.statusText} ${
+          raw || ""
+        }`.trim()
+      );
+      const enriched = err as Error & {
+        status?: number;
+        responseBody?: unknown;
+        responseText?: string;
+      };
+      enriched.status = response.status;
+      enriched.responseBody = parsedBody;
+      enriched.responseText = raw;
+      throw err;
+    }
+
+    return { status: response.status, body: parsedBody };
   }
 
   async fetchDeliveryContactByContactId(contactId: string): Promise<Record<string, unknown>[]> {

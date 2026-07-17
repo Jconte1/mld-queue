@@ -13,7 +13,7 @@ const bodySchema = z.object({
   deliveryGroupId: z.string().min(1),
   deliveryDate: z.string().min(1),
   source: z.string().min(1),
-  dryRun: z.literal(true),
+  dryRun: z.boolean().default(true),
   note: z.string().min(1).optional(),
 });
 
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
       deliveryGroupId: body.deliveryGroupId.trim(),
       deliveryDate: body.deliveryDate.trim(),
       source: body.source.trim(),
-      dryRun: true,
+      dryRun: body.dryRun,
     };
     const note = body.note?.trim();
     if (note) payload.note = note;
