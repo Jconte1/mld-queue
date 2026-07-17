@@ -5,6 +5,7 @@ import { prisma } from "./lib/prisma";
 import { env } from "./lib/env";
 import { log } from "./lib/logger";
 import { AcumaticaClient, isTransientError } from "./lib/acumaticaClient";
+import { buildDeliveryConfirmationAttributesDryRunResult } from "./lib/deliveryConfirmationAttributes";
 import { Semaphore, TokenBucket } from "./lib/throttle";
 import type { JobMessage } from "./types";
 
@@ -367,6 +368,10 @@ async function processJob(message: JobMessage): Promise<unknown> {
       return {
         rows: await acumaticaClient.fetchDeliveryContactByContactId(contactId),
       };
+    }
+
+    case "ERP_UPDATE_DELIVERY_CONFIRMATION_ATTRIBUTES": {
+      return buildDeliveryConfirmationAttributesDryRunResult(message.payload);
     }
 
     case "ERP_MARK_THANK_YOU_SENT": {
