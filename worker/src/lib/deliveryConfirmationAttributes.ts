@@ -34,8 +34,6 @@ export type DeliveryConfirmationAttributesAcumaticaClient = {
   }>;
 };
 
-const CONTROLLED_LIVE_WRITEBACK_ORDER_NUMBER = "SO37860";
-
 function stringValue(payload: Record<string, unknown>, key: string) {
   const value = payload[key];
   if (typeof value !== "string" || !value.trim()) {
@@ -61,13 +59,6 @@ type EnvSource = Record<string, string | undefined>;
 
 function isLiveWritebackEnabled(envSource: EnvSource) {
   return envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED?.trim().toLowerCase() === "true";
-}
-
-function allowedLiveOrderNumber(envSource: EnvSource) {
-  return (
-    envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NUMBER?.trim().toUpperCase() ||
-    CONTROLLED_LIVE_WRITEBACK_ORDER_NUMBER
-  );
 }
 
 export function normalizeDeliveryConfirmationAttributesPayload(
@@ -142,10 +133,8 @@ function resultBase(
       source: normalized.source,
       note: normalized.note ?? null,
     },
-    liveWriteGuard: {
+    liveWriteConfig: {
       enabled: liveWriteEnabled,
-      allowedOrderNumber: allowedLiveOrderNumber(envSource),
-      orderAllowed: normalized.orderNumber === allowedLiveOrderNumber(envSource),
     },
   };
 }
@@ -163,8 +152,7 @@ export function buildDeliveryConfirmationAttributesDryRunResult(
     dryRun: true,
     skippedLiveWrite: true,
     liveWriteEnabled: false,
-    futureLiveWriteRequires:
-      "dryRun=false, ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED=true, and orderNumber=SO37860",
+    futureLiveWriteRequires: "dryRun=false and ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED=true",
     ...resultBase(forcedDryRun),
     acumaticaPayload,
   };
@@ -178,7 +166,6 @@ export async function processDeliveryConfirmationAttributesJob(
   const normalized = normalizeDeliveryConfirmationAttributesPayload(payload);
   const acumaticaPayload = buildDeliveryConfirmationAttributeAcumaticaPayload(normalized);
   const liveWriteEnabled = isLiveWritebackEnabled(envSource);
-  const allowedOrder = allowedLiveOrderNumber(envSource);
 
   if (normalized.dryRun) {
     return {
@@ -187,14 +174,8 @@ export async function processDeliveryConfirmationAttributesJob(
       dryRun: true,
       skippedLiveWrite: true,
       liveWriteEnabled,
-      futureLiveWriteRequires:
-        "dryRun=false, ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED=true, and orderNumber=SO37860",
+      futureLiveWriteRequires: "dryRun=false and ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED=true",
       ...resultBase(normalized, envSource),
-      liveWriteGuard: {
-        enabled: liveWriteEnabled,
-        allowedOrderNumber: allowedOrder,
-        orderAllowed: normalized.orderNumber === allowedOrder,
-      },
       acumaticaPayload,
     };
   }
@@ -208,29 +189,6 @@ export async function processDeliveryConfirmationAttributesJob(
       skippedLiveWrite: true,
       liveWriteEnabled,
       ...resultBase(normalized, envSource),
-      liveWriteGuard: {
-        enabled: liveWriteEnabled,
-        allowedOrderNumber: allowedOrder,
-        orderAllowed: normalized.orderNumber === allowedOrder,
-      },
-      acumaticaPayload,
-    };
-  }
-
-  if (normalized.orderNumber !== allowedOrder) {
-    return {
-      status: "live_write_refused",
-      reason: "order_not_allowed_for_controlled_test",
-      wouldWrite: false,
-      dryRun: false,
-      skippedLiveWrite: true,
-      liveWriteEnabled,
-      ...resultBase(normalized, envSource),
-      liveWriteGuard: {
-        enabled: liveWriteEnabled,
-        allowedOrderNumber: allowedOrder,
-        orderAllowed: false,
-      },
       acumaticaPayload,
     };
   }

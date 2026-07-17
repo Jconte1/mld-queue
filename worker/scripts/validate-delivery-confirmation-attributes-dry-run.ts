@@ -24,7 +24,7 @@ function resultReason(value: unknown) {
 function payload(overrides: Record<string, unknown> = {}) {
   return {
     orderType: "SO",
-    orderNumber: "SO37860",
+    orderNumber: "SO40466",
     confirmedVia: "WEBPAGE",
     confirmedWith: "Trae Customer",
     deliveryConfirmationId: "dc_123",
@@ -44,7 +44,7 @@ function currentValues(params: {
 } = {}): DeliveryConfirmationAttributesCurrentValues {
   return {
     orderType: "SO",
-    orderNumber: "SO37860",
+    orderNumber: "SO40466",
     confirmedVia: {
       exposed: params.viaExposed ?? true,
       value: params.confirmedVia ?? null,
@@ -79,7 +79,7 @@ async function main() {
   assertEqual(dryRunResult.dryRun, true, "dryRun");
   assertEqual(dryRunResult.skippedLiveWrite, true, "dryRun skippedLiveWrite");
   assertEqual(dryRunResult.orderType, "SO", "orderType normalized");
-  assertEqual(dryRunResult.orderNumber, "SO37860", "orderNumber normalized");
+  assertEqual(dryRunResult.orderNumber, "SO40466", "orderNumber normalized");
   assertEqual(dryRunResult.fields["Document.AttributeCONFIRMVIA"], "WEBPAGE", "CONFIRMVIA value");
   assertEqual(
     dryRunResult.fields["Document.AttributeCONFIRMWTH"],
@@ -98,22 +98,17 @@ async function main() {
   assertEqual(disabled.calls.fetch, 0, "disabled guard fetch calls");
   assertEqual(disabled.calls.put.length, 0, "disabled guard put calls");
 
-  const wrongOrder = mockClient(currentValues());
-  const wrongOrderResult = await processDeliveryConfirmationAttributesJob(
+  const anyOrder = mockClient(currentValues());
+  const anyOrderResult = await processDeliveryConfirmationAttributesJob(
     payload({ orderNumber: "SO99999", dryRun: false }),
-    wrongOrder.client,
+    anyOrder.client,
     {
       ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
     }
   );
-  assertEqual(wrongOrderResult.status, "live_write_refused", "wrong order guard status");
-  assertEqual(
-    resultReason(wrongOrderResult),
-    "order_not_allowed_for_controlled_test",
-    "wrong order guard reason"
-  );
-  assertEqual(wrongOrder.calls.fetch, 0, "wrong order fetch calls");
-  assertEqual(wrongOrder.calls.put.length, 0, "wrong order put calls");
+  assertEqual(anyOrderResult.status, "written", "enabled live write accepts any order status");
+  assertEqual(anyOrder.calls.fetch, 1, "enabled live write fetch calls");
+  assertEqual(anyOrder.calls.put.length, 1, "enabled live write put calls");
 
   const liveBlank = mockClient(currentValues());
   const liveBlankResult = await processDeliveryConfirmationAttributesJob(
@@ -177,7 +172,7 @@ async function main() {
       {
         dryRun: dryRunResult.status,
         disabledGuard: disabledResult.status,
-        wrongOrderGuard: wrongOrderResult.status,
+        enabledLiveWriteAnyOrder: anyOrderResult.status,
         blankOnlyWrite: liveBlankResult.status,
         partialBlankWrite: partialResult.status,
         existingValueNoOverwrite: liveExistingResult.status,
