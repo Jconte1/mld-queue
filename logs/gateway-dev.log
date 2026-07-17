@@ -1,0 +1,53 @@
+
+> specbooks-gateway@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.50.120:3000
+- Environments: .env.local
+- Experiments (use with caution):
+  ✓ externalDir
+
+✓ Starting...
+Creating turbopack project {
+  dir: 'C:\\Users\\james\\Documents\\mld-projects\\mld-queue\\gateway',
+  testMode: true
+}
+✓ Ready in 4.4s
+{"level":"info","message":"gateway_job_enqueued","timestamp":"2026-07-17T16:46:58.177Z","jobId":"bcbff378-b401-4a4c-882c-83eb935cc6b3","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","vendorId":"specbooks","queueName":"mld-delivery-erp-jobs","durationMs":1574}
+ POST /api/erp/jobs/delivery/sales-orders/full 202 in 3.3s (compile: 1069ms, render: 2.2s)
+ GET /api/erp/jobs/bcbff378-b401-4a4c-882c-83eb935cc6b3 200 in 1641ms (compile: 1539ms, render: 102ms)
+ GET /api/erp/jobs/bcbff378-b401-4a4c-882c-83eb935cc6b3 200 in 96ms (compile: 37ms, render: 59ms)
+ GET /api/erp/jobs/bcbff378-b401-4a4c-882c-83eb935cc6b3 200 in 57ms (compile: 5ms, render: 52ms)
+ GET /api/erp/jobs/bcbff378-b401-4a4c-882c-83eb935cc6b3 200 in 79ms (compile: 16ms, render: 63ms)
+{"level":"info","message":"gateway_job_enqueued","timestamp":"2026-07-17T16:48:44.808Z","jobId":"e412a167-9b7e-4bde-a6d7-e9f733393cc0","type":"ERP_FIND_DELIVERY_SALES_ORDERS_BY_LINE_REQUESTED_ON","vendorId":"specbooks","queueName":"mld-delivery-erp-jobs","durationMs":100}
+ POST /api/erp/jobs/delivery/sales-orders/by-line-requested-on 202 in 317ms (compile: 120ms, render: 196ms)
+ GET /api/erp/jobs/e412a167-9b7e-4bde-a6d7-e9f733393cc0 200 in 62ms (compile: 17ms, render: 45ms)
+ GET /api/erp/jobs/e412a167-9b7e-4bde-a6d7-e9f733393cc0 200 in 52ms (compile: 4ms, render: 48ms)
+ GET /api/erp/jobs/e412a167-9b7e-4bde-a6d7-e9f733393cc0 200 in 106ms (compile: 41ms, render: 65ms)
+{"level":"info","message":"gateway_job_enqueued","timestamp":"2026-07-17T16:48:47.244Z","jobId":"b091c0d0-e16f-4aed-a58a-39cbfed0f83a","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","vendorId":"specbooks","queueName":"mld-delivery-erp-jobs","durationMs":104}
+ POST /api/erp/jobs/delivery/sales-orders/full 202 in 167ms (compile: 6ms, render: 161ms)
+ GET /api/erp/jobs/b091c0d0-e16f-4aed-a58a-39cbfed0f83a 200 in 52ms (compile: 6ms, render: 46ms)
+ GET /api/erp/jobs/b091c0d0-e16f-4aed-a58a-39cbfed0f83a 200 in 64ms (compile: 4ms, render: 60ms)
+{"level":"info","message":"gateway_job_enqueued","timestamp":"2026-07-17T16:48:48.665Z","jobId":"5274f10c-dddf-42b6-83c0-47d56780a1cb","type":"ERP_GET_DELIVERY_CONTACT","vendorId":"specbooks","queueName":"mld-delivery-erp-jobs","durationMs":97}
+ POST /api/erp/jobs/delivery/contacts 202 in 285ms (compile: 136ms, render: 148ms)
+ GET /api/erp/jobs/5274f10c-dddf-42b6-83c0-47d56780a1cb 200 in 61ms (compile: 14ms, render: 47ms)
+ GET /api/erp/jobs/5274f10c-dddf-42b6-83c0-47d56780a1cb 200 in 51ms (compile: 7ms, render: 44ms)
+ GET /api/erp/jobs/5274f10c-dddf-42b6-83c0-47d56780a1cb 200 in 85ms (compile: 31ms, render: 54ms)
+ GET /api/erp/jobs/5274f10c-dddf-42b6-83c0-47d56780a1cb 200 in 51ms (compile: 6ms, render: 45ms)
+ GET /api/erp/jobs/5274f10c-dddf-42b6-83c0-47d56780a1cb 200 in 85ms (compile: 31ms, render: 54ms)
+{"level":"info","message":"gateway_job_enqueued","timestamp":"2026-07-17T16:51:09.343Z","jobId":"7aab5ee2-bbe0-40ba-9013-e790f45de919","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","vendorId":"specbooks","queueName":"mld-delivery-erp-jobs","durationMs":103}
+ POST /api/erp/jobs/delivery/sales-orders/full 202 in 193ms (compile: 4ms, render: 189ms)
+ GET /api/erp/jobs/7aab5ee2-bbe0-40ba-9013-e790f45de919 200 in 62ms (compile: 14ms, render: 48ms)
+ GET /api/erp/jobs/7aab5ee2-bbe0-40ba-9013-e790f45de919 200 in 64ms (compile: 3ms, render: 61ms)
+{"level":"info","message":"gateway_job_enqueued","timestamp":"2026-07-17T16:51:52.398Z","jobId":"7248605b-c3da-4c77-adae-dc0f6116e38c","type":"ERP_UPDATE_DELIVERY_CONFIRMATION_ATTRIBUTES","vendorId":"specbooks","queueName":"mld-delivery-erp-jobs","durationMs":108}
+ POST /api/erp/jobs/delivery/confirmation-attributes 202 in 850ms (compile: 646ms, render: 204ms)
+ GET /api/erp/jobs/7248605b-c3da-4c77-adae-dc0f6116e38c 200 in 71ms (compile: 21ms, render: 49ms)
+ GET /api/erp/jobs/7248605b-c3da-4c77-adae-dc0f6116e38c 200 in 464ms (compile: 15ms, render: 448ms)
+{"level":"info","message":"gateway_job_enqueued","timestamp":"2026-07-17T16:52:14.168Z","jobId":"8fcf7e81-a92b-476a-b2ff-d4e9c12dae00","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","vendorId":"specbooks","queueName":"mld-delivery-erp-jobs","durationMs":102}
+ POST /api/erp/jobs/delivery/sales-orders/full 202 in 230ms (compile: 4ms, render: 226ms)
+ GET /api/erp/jobs/8fcf7e81-a92b-476a-b2ff-d4e9c12dae00 200 in 64ms (compile: 18ms, render: 46ms)
+ GET /api/erp/jobs/8fcf7e81-a92b-476a-b2ff-d4e9c12dae00 200 in 49ms (compile: 4ms, render: 45ms)
+ GET /api/erp/jobs/8fcf7e81-a92b-476a-b2ff-d4e9c12dae00 200 in 74ms (compile: 15ms, render: 60ms)
+[?25h

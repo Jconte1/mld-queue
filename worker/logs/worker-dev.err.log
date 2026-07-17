@@ -1,0 +1,45 @@
+mld-delivery-erp-jobs : The term 'mld-delivery-erp-jobs' is not recognized as the name of a cmdlet, function, script 
+file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct 
+and try again.
+At line:1 char:34
++ $env:MLD_QUEUE_WORKER_QUEUE_NAME=mld-delivery-erp-jobs; $env:ACUMATIC ...
++                                  ~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (mld-delivery-erp-jobs:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+true : The term 'true' is not recognized as the name of a cmdlet, function, script file, or operable program. Check 
+the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:103
++ ... -erp-jobs; $env:ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED=true; $env:A ...
++                                                              ~~~~
+    + CategoryInfo          : ObjectNotFound: (true:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+SO37860 : The term 'SO37860' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:168
++ ... ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NUMBER=SO37860; $env:G ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (SO37860:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8080
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at main (C:\Users\james\Documents\mld-projects\mld-queue\worker\src\index.ts:21:10)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1976:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 8080
+}
+
+Node.js v22.18.0

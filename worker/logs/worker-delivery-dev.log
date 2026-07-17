@@ -1,0 +1,25 @@
+
+> specbooks-worker@0.1.0 dev
+> tsx watch src/index.ts
+
+{"level":"info","message":"worker_started","timestamp":"2026-07-17T16:46:13.055Z","queue":"mld-delivery-erp-jobs","vendorMaxConcurrency":1,"vendorMaxRpm":30,"globalMaxConcurrency":1,"globalMaxRpm":30,"updateCoalesceWindowMs":5000}
+{"level":"info","message":"health_server_started","timestamp":"2026-07-17T16:46:13.124Z","port":8080}
+{"level":"info","message":"job_received","timestamp":"2026-07-17T16:46:58.188Z","jobId":"bcbff378-b401-4a4c-882c-83eb935cc6b3","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","vendorId":"specbooks","deliveryCount":0}
+{"level":"info","message":"job_succeeded","timestamp":"2026-07-17T16:47:02.757Z","jobId":"bcbff378-b401-4a4c-882c-83eb935cc6b3","vendorId":"specbooks","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","durationMs":4569,"outcome":"succeeded"}
+{"level":"info","message":"job_received","timestamp":"2026-07-17T16:48:44.809Z","jobId":"e412a167-9b7e-4bde-a6d7-e9f733393cc0","type":"ERP_FIND_DELIVERY_SALES_ORDERS_BY_LINE_REQUESTED_ON","vendorId":"specbooks","deliveryCount":0}
+{"level":"info","message":"job_succeeded","timestamp":"2026-07-17T16:48:46.212Z","jobId":"e412a167-9b7e-4bde-a6d7-e9f733393cc0","vendorId":"specbooks","type":"ERP_FIND_DELIVERY_SALES_ORDERS_BY_LINE_REQUESTED_ON","durationMs":1403,"outcome":"succeeded"}
+{"level":"info","message":"job_received","timestamp":"2026-07-17T16:48:47.245Z","jobId":"b091c0d0-e16f-4aed-a58a-39cbfed0f83a","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","vendorId":"specbooks","deliveryCount":0}
+{"level":"info","message":"job_succeeded","timestamp":"2026-07-17T16:48:48.368Z","jobId":"b091c0d0-e16f-4aed-a58a-39cbfed0f83a","vendorId":"specbooks","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","durationMs":1123,"outcome":"succeeded"}
+{"level":"info","message":"job_received","timestamp":"2026-07-17T16:48:48.665Z","jobId":"5274f10c-dddf-42b6-83c0-47d56780a1cb","type":"ERP_GET_DELIVERY_CONTACT","vendorId":"specbooks","deliveryCount":0}
+{"level":"info","message":"job_succeeded","timestamp":"2026-07-17T16:48:52.574Z","jobId":"5274f10c-dddf-42b6-83c0-47d56780a1cb","vendorId":"specbooks","type":"ERP_GET_DELIVERY_CONTACT","durationMs":3909,"outcome":"succeeded"}
+{"level":"info","message":"job_received","timestamp":"2026-07-17T16:51:09.344Z","jobId":"7aab5ee2-bbe0-40ba-9013-e790f45de919","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","vendorId":"specbooks","deliveryCount":0}
+{"level":"info","message":"job_succeeded","timestamp":"2026-07-17T16:51:10.449Z","jobId":"7aab5ee2-bbe0-40ba-9013-e790f45de919","vendorId":"specbooks","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","durationMs":1105,"outcome":"succeeded"}
+{"level":"info","message":"job_received","timestamp":"2026-07-17T16:51:52.398Z","jobId":"7248605b-c3da-4c77-adae-dc0f6116e38c","type":"ERP_UPDATE_DELIVERY_CONFIRMATION_ATTRIBUTES","vendorId":"specbooks","deliveryCount":0}
+{"level":"info","message":"job_succeeded","timestamp":"2026-07-17T16:51:55.637Z","jobId":"7248605b-c3da-4c77-adae-dc0f6116e38c","vendorId":"specbooks","type":"ERP_UPDATE_DELIVERY_CONFIRMATION_ATTRIBUTES","durationMs":3239,"outcome":"succeeded"}
+{"level":"info","message":"job_received","timestamp":"2026-07-17T16:52:14.169Z","jobId":"8fcf7e81-a92b-476a-b2ff-d4e9c12dae00","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","vendorId":"specbooks","deliveryCount":0}
+{"level":"info","message":"job_succeeded","timestamp":"2026-07-17T16:52:15.786Z","jobId":"8fcf7e81-a92b-476a-b2ff-d4e9c12dae00","vendorId":"specbooks","type":"ERP_GET_DELIVERY_SALES_ORDER_FULL","durationMs":1617,"outcome":"succeeded"}
+11:05:38 AM [tsx] unlink in ./..\prisma\generated\client\index.js Rerunning...
+c{"level":"info","message":"worker_started","timestamp":"2026-07-17T17:05:40.394Z","queue":"mld-delivery-erp-jobs","vendorMaxConcurrency":1,"vendorMaxRpm":30,"globalMaxConcurrency":1,"globalMaxRpm":30,"updateCoalesceWindowMs":5000}
+{"level":"info","message":"health_server_started","timestamp":"2026-07-17T17:05:41.063Z","port":8080}
+11:06:26 AM [tsx] unlink in ./..\prisma\generated\client\index.js Restarting...
+c{"level":"info","message":"worker_started","timestamp":"2026-07-17T17:06:27.297Z","queue":"mld-delivery-erp-jobs","vendorMaxConcurrency":1,"vendorMaxRpm":30,"globalMaxConcurrency":1,"globalMaxRpm":30,"updateCoalesceWindowMs":5000}

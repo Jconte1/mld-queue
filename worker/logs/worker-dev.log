@@ -1,0 +1,11 @@
+
+> specbooks-worker@0.1.0 dev
+> tsx watch src/index.ts
+
+{"level":"info","message":"worker_started","timestamp":"2026-07-17T16:44:35.610Z","queue":"specbooks-jobs","vendorMaxConcurrency":1,"vendorMaxRpm":30,"globalMaxConcurrency":1,"globalMaxRpm":30,"updateCoalesceWindowMs":5000}
+{"level":"info","message":"health_server_started","timestamp":"2026-07-17T16:44:35.726Z","port":8080}
+11:05:38 AM [tsx] unlink in ./..\prisma\generated\client\index.js Rerunning...
+c{"level":"info","message":"worker_started","timestamp":"2026-07-17T17:05:40.395Z","queue":"specbooks-jobs","vendorMaxConcurrency":1,"vendorMaxRpm":30,"globalMaxConcurrency":1,"globalMaxRpm":30,"updateCoalesceWindowMs":5000}
+11:06:26 AM [tsx] change in ./..\prisma\generated\client\runtime\library.js Rerunning...
+c{"level":"info","message":"worker_started","timestamp":"2026-07-17T17:06:27.220Z","queue":"specbooks-jobs","vendorMaxConcurrency":1,"vendorMaxRpm":30,"globalMaxConcurrency":1,"globalMaxRpm":30,"updateCoalesceWindowMs":5000}
+{"level":"info","message":"health_server_started","timestamp":"2026-07-17T17:06:27.302Z","port":8080}
