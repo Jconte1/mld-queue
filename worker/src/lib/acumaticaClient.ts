@@ -668,7 +668,7 @@ export class AcumaticaClient {
       $filter: clauses.join(" and "),
       $expand: DEFAULT_DELIVERY_SALES_ORDER_EXPAND,
       $custom:
-        "Document.AttributeBUYERGROUP,Document.AttributeCONFIRMVIA,Document.AttributeCONFIRMWTH",
+        "Document.AttributeBUYERGROUP,Document.AttributeCONFIRMVIA,Document.AttributeCONFIRMWTH,Document.AttributeSALESNEW",
     });
     const url = `${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`;
 
