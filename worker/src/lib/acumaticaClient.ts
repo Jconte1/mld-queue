@@ -123,6 +123,22 @@ function getAcumaticaFieldValue(row: Record<string, unknown> | null, key: string
   return String(raw);
 }
 
+function getAcumaticaBooleanFieldValue(row: Record<string, unknown> | null, key: string): boolean | null {
+  if (!row) return null;
+  const raw = row[key];
+  const value =
+    typeof raw === "object" && raw !== null && "value" in raw
+      ? (raw as { value?: unknown }).value
+      : raw;
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === "true") return true;
+    if (normalized === "false") return false;
+  }
+  return null;
+}
+
 function readCustomDocumentAttribute(
   row: Record<string, unknown> | null,
   attributeName: string
@@ -742,6 +758,78 @@ export class AcumaticaClient {
     if (!response.ok) {
       const err = new Error(
         `Delivery confirmation attribute writeback failed: ${response.status} ${response.statusText} ${
+          raw || ""
+        }`.trim()
+      );
+      const enriched = err as Error & {
+        status?: number;
+        responseBody?: unknown;
+        responseText?: string;
+      };
+      enriched.status = response.status;
+      enriched.responseBody = parsedBody;
+      enriched.responseText = raw;
+      throw err;
+    }
+
+    return { status: response.status, body: parsedBody };
+  }
+
+  async fetchDeliveryPrepaymentHoldStates(orderNbr: string, orderType: string): Promise<
+    Array<{
+      orderType: string | null;
+      orderNumber: string | null;
+      status: string | null;
+      hold: boolean | null;
+      holdExposed: boolean;
+    }>
+  > {
+    const clauses = [`OrderNbr eq ${odataString(orderNbr)}`, `OrderType eq ${odataString(orderType)}`];
+    const query = new URLSearchParams({
+      $filter: clauses.join(" and "),
+      $select: "OrderNbr,OrderType,Status,Hold",
+      $top: "2",
+    });
+    const url = `${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`;
+    const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+
+    return rows.map((row) => ({
+      orderType: getAcumaticaFieldValue(row, "OrderType"),
+      orderNumber: getAcumaticaFieldValue(row, "OrderNbr"),
+      status: getAcumaticaFieldValue(row, "Status"),
+      hold: getAcumaticaBooleanFieldValue(row, "Hold"),
+      holdExposed: row && Object.prototype.hasOwnProperty.call(row, "Hold"),
+    }));
+  }
+
+  async putDeliveryPrepaymentHold(
+    payload: Record<string, unknown>
+  ): Promise<{ status: number; body: unknown }> {
+    const token = await this.getToken();
+    const url = `${this.deliverySalesOrderEntityBase}/SalesOrder`;
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const raw = await response.text();
+    let parsedBody: unknown = raw;
+    try {
+      parsedBody = raw ? (JSON.parse(raw) as unknown) : null;
+    } catch {
+      parsedBody = raw;
+    }
+
+    if (!response.ok) {
+      const err = new Error(
+        `Delivery prepayment hold write failed: ${response.status} ${response.statusText} ${
           raw || ""
         }`.trim()
       );
