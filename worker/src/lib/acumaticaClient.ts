@@ -192,6 +192,22 @@ function getStockItemRowId(row: Record<string, unknown>): string | null {
   );
 }
 
+function getStockItemDescriptionAlias(
+  row: Record<string, unknown>,
+  acumaticaId: string,
+  requestedId: string
+): string | null {
+  const description = getAcumaticaFieldValue(row, "Description");
+  if (!description) return null;
+
+  const alias = description.trim().toUpperCase();
+  if (!alias.includes("_")) return null;
+  if (stockItemMatchKey(alias) !== stockItemMatchKey(acumaticaId)) return null;
+  if (requestedId && stockItemMatchKey(alias) !== stockItemMatchKey(requestedId)) return null;
+
+  return alias;
+}
+
 function normalizeStockItemRowForRequestedId(
   row: Record<string, unknown>,
   requestedInventoryId: string
@@ -200,16 +216,24 @@ function normalizeStockItemRowForRequestedId(
   if (!requestedId) return row;
 
   const acumaticaId = getStockItemRowId(row);
-  if (!acumaticaId || acumaticaId === requestedId) return row;
-  if (!requestedId.includes("_")) return row;
-  if (stockItemMatchKey(acumaticaId) !== stockItemMatchKey(requestedId)) return row;
+  if (!acumaticaId) return row;
+
+  const requestedAlias =
+    requestedId.includes("_") && stockItemMatchKey(acumaticaId) === stockItemMatchKey(requestedId)
+      ? requestedId
+      : null;
+  const descriptionAlias = getStockItemDescriptionAlias(row, acumaticaId, requestedId);
+  const normalizedId = requestedAlias ?? descriptionAlias;
+  if (!normalizedId || normalizedId === acumaticaId) return row;
 
   return {
     ...row,
-    InventoryID: withAcumaticaFieldValue(row.InventoryID, requestedId),
+    InventoryID: withAcumaticaFieldValue(row.InventoryID, normalizedId),
     RequestedInventoryID: { value: requestedId },
     AcumaticaInventoryID: { value: acumaticaId },
-    InventoryIDMatch: { value: "underscore_space_equivalence" }
+    InventoryIDMatch: {
+      value: requestedAlias ? "underscore_space_equivalence" : "description_underscore_space_equivalence"
+    }
   };
 }
 
