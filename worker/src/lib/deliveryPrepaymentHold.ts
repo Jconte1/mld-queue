@@ -178,6 +178,55 @@ export async function processDeliveryPrepaymentHoldJob(
   const effectiveDryRun = normalized.dryRun || envDryRunEnabled(envSource);
   const allowlist = allowedOrderNumber(envSource);
   const allowedByOrderAllowlist = !allowlist || normalized.orderNumber === allowlist;
+
+  if (effectiveDryRun) {
+    return {
+      status: "dry_run",
+      reason: "dry_run",
+      wouldWrite: true,
+      stateReadSkipped: true,
+      ...resultBase({
+        payload: normalized,
+        envSource,
+        effectiveDryRun,
+        allowedByOrderAllowlist,
+        current: null,
+      }),
+    };
+  }
+
+  if (!envFlagEnabled(envSource, "ACUMATICA_PREPAYMENT_HOLD_WRITE_ENABLED")) {
+    return {
+      status: "refused",
+      reason: "live_write_disabled",
+      wouldWrite: false,
+      stateReadSkipped: true,
+      ...resultBase({
+        payload: normalized,
+        envSource,
+        effectiveDryRun,
+        allowedByOrderAllowlist,
+        current: null,
+      }),
+    };
+  }
+
+  if (!allowedByOrderAllowlist) {
+    return {
+      status: "refused",
+      reason: "order_not_allowlisted",
+      wouldWrite: false,
+      stateReadSkipped: true,
+      ...resultBase({
+        payload: normalized,
+        envSource,
+        effectiveDryRun,
+        allowedByOrderAllowlist,
+        current: null,
+      }),
+    };
+  }
+
   const states = await acumaticaClient.fetchDeliveryPrepaymentHoldStates(
     normalized.orderNumber,
     normalized.orderType
@@ -247,51 +296,6 @@ export async function processDeliveryPrepaymentHoldJob(
         holdAfter: current.hold,
         statusAfter: current.status,
       },
-    };
-  }
-
-  if (effectiveDryRun) {
-    return {
-      status: "dry_run",
-      reason: "dry_run",
-      wouldWrite: true,
-      ...resultBase({
-        payload: normalized,
-        envSource,
-        effectiveDryRun,
-        allowedByOrderAllowlist,
-        current,
-      }),
-    };
-  }
-
-  if (!envFlagEnabled(envSource, "ACUMATICA_PREPAYMENT_HOLD_WRITE_ENABLED")) {
-    return {
-      status: "refused",
-      reason: "live_write_disabled",
-      wouldWrite: false,
-      ...resultBase({
-        payload: normalized,
-        envSource,
-        effectiveDryRun,
-        allowedByOrderAllowlist,
-        current,
-      }),
-    };
-  }
-
-  if (!allowedByOrderAllowlist) {
-    return {
-      status: "refused",
-      reason: "order_not_allowlisted",
-      wouldWrite: false,
-      ...resultBase({
-        payload: normalized,
-        envSource,
-        effectiveDryRun,
-        allowedByOrderAllowlist,
-        current,
-      }),
     };
   }
 

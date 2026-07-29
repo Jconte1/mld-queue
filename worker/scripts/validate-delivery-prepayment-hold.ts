@@ -69,6 +69,23 @@ class MockAcumaticaClient {
   }
 }
 
+class HangingAcumaticaClient {
+  readCalls = 0;
+  putCalls = 0;
+
+  async fetchDeliveryPrepaymentHoldStates(): Promise<DeliveryPrepaymentHoldState[]> {
+    this.readCalls += 1;
+    return new Promise(() => {
+      // Intentionally never resolves; dry-run validation proves this is never awaited.
+    });
+  }
+
+  async putDeliveryPrepaymentHold(): Promise<{ status: number; body: unknown }> {
+    this.putCalls += 1;
+    throw new Error("dry-run must not call PUT");
+  }
+}
+
 const openState: DeliveryPrepaymentHoldState = {
   orderType: "SO",
   orderNumber: "SO38056",
@@ -129,6 +146,7 @@ async function main() {
   assertIncludes(workerSource, "ACUMATICA_PREPAYMENT_HOLD_DRY_RUN", "worker dry-run env");
   assertIncludes(workerSource, "ACUMATICA_PREPAYMENT_HOLD_WRITE_ENABLED", "worker write env");
   assertIncludes(workerSource, "ACUMATICA_PREPAYMENT_HOLD_ALLOWED_ORDER_NUMBER", "worker allowlist env");
+  assertIncludes(workerSource, "stateReadSkipped", "safe paths report skipped Acumatica state reads");
   assertIncludes(
     workerSource,
     "TODO: Replace existing On Hold write target with configured Prepayment Hold status/action once Acumatica configuration is complete.",
@@ -136,6 +154,13 @@ async function main() {
   );
   assert(!workerSource.includes("Hold: { value: false }"), "worker must not implement Hold=false");
   assertIncludes(acumaticaClient, "$select: \"OrderNbr,OrderType,Status,Hold\"", "hold read select");
+  assertIncludes(workerSwitch, "case \"ERP_UPDATE_DELIVERY_PREPAYMENT_HOLD\"", "worker switch has hold case");
+  assertIncludes(workerSwitch, "return processDeliveryPrepaymentHoldJob", "worker switch awaits/returns hold handler");
+  assertIncludes(workerSwitch, "Unsupported job type", "unknown job types fail cleanly");
+  assertIncludes(workerSwitch, "status: \"succeeded\"", "worker persists succeeded status");
+  assertIncludes(workerSwitch, "result: toPrismaJsonValue(result)", "worker persists serializable result");
+  assertIncludes(workerSwitch, "status: \"failed\"", "worker persists failed status");
+  assertIncludes(workerSwitch, "error: message.slice(0, MAX_STORED_ERROR_CHARS)", "worker persists bounded error message");
   assertIncludes(envExample, "ACUMATICA_PREPAYMENT_HOLD_WRITE_ENABLED=false", "write env doc");
   assertIncludes(envExample, "ACUMATICA_PREPAYMENT_HOLD_DRY_RUN=true", "dry-run env doc");
   assertIncludes(
@@ -205,10 +230,36 @@ async function main() {
     {}
   );
   assertEqual(dryRun.status, "dry_run", "dry-run status");
+  assertEqual(dryRun.reason, "dry_run", "dry-run reason");
   assertEqual(dryRunClient.putCalls, 0, "dry-run does not call PUT");
+  assertEqual(dryRunClient.readCalls, 0, "dry-run does not call Acumatica GET");
   assertEqual(dryRun.wouldWrite, true, "dry-run would write when not already held");
-  assertEqual(dryRun.currentStatus, "Awaiting Payment", "dry-run includes current status");
-  assertEqual(dryRun.currentHoldValue, false, "dry-run includes current hold");
+  assertEqual(dryRun.currentStatus, null, "dry-run skips current status read");
+  assertEqual(dryRun.currentHoldValue, null, "dry-run skips current hold read");
+  assertEqual((dryRun as { stateReadSkipped?: boolean }).stateReadSkipped, true, "dry-run reports state read skipped");
+  JSON.stringify(dryRun);
+
+  const hangingClient = new HangingAcumaticaClient();
+  const timedDryRun = await Promise.race([
+    processDeliveryPrepaymentHoldJob(
+      {
+        orderType: "SO",
+        orderNumber: "SO38056",
+        reason: DELIVERY_PREPAYMENT_HOLD_REASON,
+        dryRun: true,
+      },
+      hangingClient,
+      {}
+    ),
+    new Promise((resolve) => setTimeout(() => resolve({ status: "timeout" }), 100)),
+  ]);
+  assertEqual(
+    (timedDryRun as { status?: string }).status,
+    "dry_run",
+    "dry-run does not hang on unavailable Acumatica client"
+  );
+  assertEqual(hangingClient.readCalls, 0, "hanging dry-run does not call Acumatica GET");
+  assertEqual(hangingClient.putCalls, 0, "hanging dry-run does not call Acumatica PUT");
 
   const envDryRunClient = new MockAcumaticaClient([openState]);
   const envDryRun = await processDeliveryPrepaymentHoldJob(
@@ -223,6 +274,7 @@ async function main() {
   );
   assertEqual(envDryRun.status, "dry_run", "env dry-run overrides live payload");
   assertEqual(envDryRunClient.putCalls, 0, "env dry-run does not call PUT");
+  assertEqual(envDryRunClient.readCalls, 0, "env dry-run does not call GET");
 
   const disabledClient = new MockAcumaticaClient([openState]);
   const disabled = await processDeliveryPrepaymentHoldJob(
@@ -238,6 +290,7 @@ async function main() {
   assertEqual(disabled.status, "refused", "live disabled refuses");
   assertEqual(disabled.reason, "live_write_disabled", "live disabled reason");
   assertEqual(disabledClient.putCalls, 0, "live disabled does not call PUT");
+  assertEqual(disabledClient.readCalls, 0, "live disabled does not call GET");
 
   const notExposedClient = new MockAcumaticaClient([holdNotExposedState]);
   const notExposed = await processDeliveryPrepaymentHoldJob(
@@ -245,10 +298,14 @@ async function main() {
       orderType: "SO",
       orderNumber: "SO38056",
       reason: DELIVERY_PREPAYMENT_HOLD_REASON,
-      dryRun: true,
+      dryRun: false,
     },
     notExposedClient,
-    {}
+    {
+      ACUMATICA_PREPAYMENT_HOLD_DRY_RUN: "false",
+      ACUMATICA_PREPAYMENT_HOLD_WRITE_ENABLED: "true",
+      ACUMATICA_PREPAYMENT_HOLD_ALLOWED_ORDER_NUMBER: "SO38056",
+    }
   );
   assertEqual(notExposed.status, "failed", "hold field missing fails safely");
   assertEqual(notExposed.reason, "hold_field_not_exposed", "hold field missing reason");
@@ -273,6 +330,7 @@ async function main() {
   assertEqual(allowlist.reason, "order_not_allowlisted", "allowlist reason");
   assertEqual(allowlist.allowedByOrderAllowlist, false, "allowlist result flag");
   assertEqual(allowlistClient.putCalls, 0, "allowlist does not call PUT");
+  assertEqual(allowlistClient.readCalls, 0, "allowlist does not call GET");
 
   const alreadyClient = new MockAcumaticaClient([heldState]);
   const already = await processDeliveryPrepaymentHoldJob(
@@ -324,6 +382,11 @@ async function main() {
         blankOrderNumberRejected: true,
         invalidReasonRejected: true,
         dryRunDoesNotPut: true,
+        dryRunDoesNotGet: true,
+        dryRunDoesNotHangOnUnavailableAcumaticaClient: true,
+        dryRunResultIsSerializable: true,
+        resultPersistenceWired: true,
+        failurePersistenceWired: true,
         liveWriteDisabledRefuses: true,
         holdFieldNotExposedFailsSafely: true,
         allowlistBlocksNonAllowedOrder: true,
