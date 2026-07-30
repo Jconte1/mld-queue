@@ -8,7 +8,8 @@
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate --schema ../prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev --schema ../prisma/schema.prisma",
-    "validate:delivery-prepayment-hold": "tsx scripts/validate-delivery-prepayment-hold.ts"
+    "validate:delivery-prepayment-hold": "tsx scripts/validate-delivery-prepayment-hold.ts",
+    "validate:one-week-confirmation-writeback": "tsx scripts/validate-delivery-ten-day-confirmation.ts"
   },
   "dependencies": {
     "@azure/service-bus": "^7.9.5",

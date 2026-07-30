@@ -7,6 +7,7 @@ import { log } from "./lib/logger";
 import { AcumaticaClient, isTransientError } from "./lib/acumaticaClient";
 import { processDeliveryConfirmationAttributesJob } from "./lib/deliveryConfirmationAttributes";
 import { processDeliveryPrepaymentHoldJob } from "./lib/deliveryPrepaymentHold";
+import { processDeliveryTenDayConfirmationJob } from "./lib/deliveryTenDayConfirmation";
 import { Semaphore, TokenBucket } from "./lib/throttle";
 import type { JobMessage } from "./types";
 
@@ -377,6 +378,10 @@ async function processJob(message: JobMessage): Promise<unknown> {
 
     case "ERP_UPDATE_DELIVERY_PREPAYMENT_HOLD": {
       return processDeliveryPrepaymentHoldJob(message.payload, acumaticaClient);
+    }
+
+    case "ERP_UPDATE_DELIVERY_TEN_DAY_CONFIRMATION": {
+      return processDeliveryTenDayConfirmationJob(message.payload, acumaticaClient);
     }
 
     case "ERP_MARK_THANK_YOU_SENT": {

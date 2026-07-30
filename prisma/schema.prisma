@@ -29,6 +29,7 @@ enum JobType {
   ERP_GET_DELIVERY_CONTACT
   ERP_UPDATE_DELIVERY_CONFIRMATION_ATTRIBUTES
   ERP_UPDATE_DELIVERY_PREPAYMENT_HOLD
+  ERP_UPDATE_DELIVERY_TEN_DAY_CONFIRMATION
   ERP_MARK_THANK_YOU_SENT
   ERP_VERIFY_CUSTOMER
   ERP_PUT_SALES_INVOICE
@@ -46,16 +47,16 @@ enum JobStatus {
 }
 
 model Job {
-  id         String    @id
-  vendorId   String
-  type       JobType
-  status     JobStatus @default(queued)
-  entityKey  String?
-  payload    Json?
-  result     Json?
-  error      String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id              String           @id
+  vendorId        String
+  type            JobType
+  status          JobStatus        @default(queued)
+  entityKey       String?
+  payload         Json?
+  result          Json?
+  error           String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   idempotencyKeys IdempotencyKey[]
 
   @@index([vendorId, createdAt])

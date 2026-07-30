@@ -8,6 +8,8 @@ type TokenResponse = {
   error_description?: string;
 };
 
+type AcumaticaRow = Record<string, unknown>;
+
 function requireEnv(name: string): string {
   const v = process.env[name]?.trim();
   if (!v) {
@@ -76,7 +78,7 @@ function entityBase(): string {
   return `${ACUMATICA_BASE_URL()}/entity/${ACUMATICA_ENDPOINT_NAME()}/${ACUMATICA_ENDPOINT_VERSION()}`;
 }
 
-async function fetchJson(url: string, endpoint: string): Promise<any> {
+async function fetchJson(url: string, endpoint: string): Promise<unknown> {
   return withErpProtection(endpoint, async () => {
     const token = await getToken();
     const response = await fetch(url, {
@@ -101,10 +103,20 @@ async function fetchJson(url: string, endpoint: string): Promise<any> {
   });
 }
 
-function toRows(payload: any): Record<string, any>[] {
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function toRows(payload: unknown): AcumaticaRow[] {
   if (Array.isArray(payload)) return payload;
-  if (Array.isArray(payload?.value)) return payload.value;
+  if (isObject(payload) && Array.isArray(payload.value)) return payload.value;
   return [];
+}
+
+function fieldValue(row: AcumaticaRow, key: string): unknown {
+  const value = row[key];
+  if (isObject(value) && "value" in value) return value.value;
+  return value;
 }
 
 export async function verifyCustomerByZip(customerId: string, zip5: string): Promise<boolean> {
@@ -119,7 +131,7 @@ export async function verifyCustomerByZip(customerId: string, zip5: string): Pro
   return rows.length > 0;
 }
 
-export async function fetchOrderReadyReportRows(): Promise<Record<string, any>[]> {
+export async function fetchOrderReadyReportRows(): Promise<AcumaticaRow[]> {
   const url =
     process.env.ACUMATICA_ORDER_READY_ODATA_URL?.trim() ||
     "https://acumatica.mld.com/OData/MLD/Ready%20for%20Willcall";
@@ -157,7 +169,7 @@ export async function fetchOrderSummariesRows(
   pageSize: number,
   maxPages: number,
   useOrderBy: boolean
-): Promise<Record<string, any>[]> {
+): Promise<AcumaticaRow[]> {
   const select = [
     "OrderNbr",
     "Status",
@@ -182,7 +194,7 @@ export async function fetchOrderSummariesRows(
     "TRANS BOISE","TRANS JACKSON","TRANS PROVO","TRANS SLC","WAIVER PROVO","WAIVER SLC",
   ];
 
-  const all: Record<string, any>[] = [];
+  const all: AcumaticaRow[] = [];
   for (let page = 0; page < maxPages; page++) {
     const params = new URLSearchParams();
     params.set(
@@ -225,7 +237,7 @@ export async function fetchOrderSummariesDeltaRows(
   pageSize: number,
   maxPages: number,
   useOrderBy: boolean
-): Promise<Record<string, any>[]> {
+): Promise<AcumaticaRow[]> {
   const select = [
     "OrderNbr",
     "Status",
@@ -242,7 +254,7 @@ export async function fetchOrderSummariesDeltaRows(
 
   const normalizedSince = since.startsWith("datetimeoffset'") ? since : `datetimeoffset'${since}'`;
 
-  const all: Record<string, any>[] = [];
+  const all: AcumaticaRow[] = [];
   for (let page = 0; page < maxPages; page++) {
     const params = new URLSearchParams();
     params.set(
@@ -265,7 +277,7 @@ export async function fetchOrderSummariesDeltaRows(
   return all;
 }
 
-export async function fetchPaymentInfoRows(baid: string, orderNbrs: string[]): Promise<Record<string, any>[]> {
+export async function fetchPaymentInfoRows(baid: string, orderNbrs: string[]): Promise<AcumaticaRow[]> {
   if (!orderNbrs.length) return [];
   const select = ["OrderNbr", "OrderTotal", "UnpaidBalance", "Terms", "Status"].join(",");
   const ors = orderNbrs.map((n) => `OrderNbr eq '${quoteForOData(n)}'`).join(" or ");
@@ -277,7 +289,7 @@ export async function fetchPaymentInfoRows(baid: string, orderNbrs: string[]): P
   return toRows(await fetchJson(`${entityBase()}/SalesOrder?${params.toString()}`, "orders.payment-info"));
 }
 
-export async function fetchInventoryDetailsRows(baid: string, orderNbrs: string[]): Promise<Record<string, any>[]> {
+export async function fetchInventoryDetailsRows(baid: string, orderNbrs: string[]): Promise<AcumaticaRow[]> {
   if (!orderNbrs.length) return [];
   const select = [
     "OrderNbr",
@@ -322,7 +334,7 @@ export async function fetchAddressContactRows(
   cutoffLiteral?: string | null,
   useOrderBy = false,
   pageSize = 500
-): Promise<Record<string, any>[]> {
+): Promise<AcumaticaRow[]> {
   const select = [
     "OrderNbr",
     "AddressLine1",
@@ -368,15 +380,17 @@ export async function fetchOrderLastModifiedRaw(
   const rows = toRows(await fetchJson(`${entityBase()}/SalesOrder?${params.toString()}`, "orders.last-modified"));
   const row = rows[0] || null;
   return (
-    row?.LastModified?.value ??
-    row?.lastModified?.value ??
-    row?.LastModified ??
-    row?.lastModified ??
-    null
+    normalizeString(fieldValue(row, "LastModified")) ??
+    normalizeString(fieldValue(row, "lastModified"))
   );
 }
 
-export async function fetchOrderHeaderByOrderNbr(orderNbr: string): Promise<Record<string, any> | null> {
+function normalizeString(value: unknown): string | null {
+  if (value === null || value === undefined) return null;
+  return typeof value === "string" ? value : String(value);
+}
+
+export async function fetchOrderHeaderByOrderNbr(orderNbr: string): Promise<AcumaticaRow | null> {
   const params = new URLSearchParams();
   params.set("$filter", `OrderNbr eq '${quoteForOData(orderNbr)}'`);
   params.set("$select", "OrderNbr,Status,LocationID,ShipVia,CustomerID,LastModified");

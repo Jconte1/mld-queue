@@ -130,11 +130,20 @@ function getAcumaticaBooleanFieldValue(row: Record<string, unknown> | null, key:
     typeof raw === "object" && raw !== null && "value" in raw
       ? (raw as { value?: unknown }).value
       : raw;
+  return parseAcumaticaBooleanValue(value);
+}
+
+function parseAcumaticaBooleanValue(value: unknown): boolean | null {
   if (typeof value === "boolean") return value;
+  if (typeof value === "number") {
+    if (value === 1) return true;
+    if (value === 0) return false;
+    return null;
+  }
   if (typeof value === "string") {
     const normalized = value.trim().toLowerCase();
-    if (normalized === "true") return true;
-    if (normalized === "false") return false;
+    if (["1", "true", "t", "yes", "y", "on"].includes(normalized)) return true;
+    if (["0", "false", "f", "no", "n", "off"].includes(normalized)) return false;
   }
   return null;
 }
@@ -164,6 +173,23 @@ function readCustomDocumentAttribute(
     if (key in row) {
       return { exposed: true, value: getAcumaticaFieldValue(row, key) };
     }
+  }
+
+  return { exposed: false, value: null };
+}
+
+function readCustomDocumentBooleanAttribute(
+  row: Record<string, unknown> | null,
+  attributeName: string
+): { exposed: boolean; value: boolean | null } {
+  if (!row) return { exposed: false, value: null };
+
+  const stringValue = readCustomDocumentAttribute(row, attributeName);
+  if (stringValue.exposed) {
+    return {
+      exposed: true,
+      value: parseAcumaticaBooleanValue(stringValue.value),
+    };
   }
 
   return { exposed: false, value: null };
@@ -708,7 +734,7 @@ export class AcumaticaClient {
       $filter: clauses.join(" and "),
       $expand: DEFAULT_DELIVERY_SALES_ORDER_EXPAND,
       $custom:
-        "Document.AttributeBUYERGROUP,Document.AttributeCONFIRMVIA,Document.AttributeCONFIRMWTH,Document.AttributeSALESNEW",
+        "Document.AttributeBUYERGROUP,Document.AttributeCONFIRMVIA,Document.AttributeCONFIRMWTH,Document.AttributeSALESNEW,Document.AttributeONEWEEKCON",
     });
     const url = `${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`;
 
@@ -782,6 +808,80 @@ export class AcumaticaClient {
     if (!response.ok) {
       const err = new Error(
         `Delivery confirmation attribute writeback failed: ${response.status} ${response.statusText} ${
+          raw || ""
+        }`.trim()
+      );
+      const enriched = err as Error & {
+        status?: number;
+        responseBody?: unknown;
+        responseText?: string;
+      };
+      enriched.status = response.status;
+      enriched.responseBody = parsedBody;
+      enriched.responseText = raw;
+      throw err;
+    }
+
+    return { status: response.status, body: parsedBody };
+  }
+
+  async fetchDeliveryTenDayConfirmationStates(orderNbr: string, orderType: string): Promise<
+    Array<{
+      orderType: string | null;
+      orderNumber: string | null;
+      oneWeekConfirmed: boolean | null;
+      oneWeekConfirmedExposed: boolean;
+    }>
+  > {
+    const clauses = [`OrderNbr eq ${odataString(orderNbr)}`, `OrderType eq ${odataString(orderType)}`];
+    const query = new URLSearchParams({
+      $filter: clauses.join(" and "),
+      $select: "OrderNbr,OrderType",
+      $custom: "Document.AttributeONEWEEKCON",
+      $top: "2",
+    });
+    const url = `${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`;
+    const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+
+    return rows.map((row) => {
+      const oneWeekConfirmed = readCustomDocumentBooleanAttribute(row, "AttributeONEWEEKCON");
+      return {
+        orderType: getAcumaticaFieldValue(row, "OrderType"),
+        orderNumber: getAcumaticaFieldValue(row, "OrderNbr"),
+        oneWeekConfirmed: oneWeekConfirmed.value,
+        oneWeekConfirmedExposed: oneWeekConfirmed.exposed,
+      };
+    });
+  }
+
+  async putDeliveryTenDayConfirmation(
+    payload: Record<string, unknown>
+  ): Promise<{ status: number; body: unknown }> {
+    const token = await this.getToken();
+    const url = `${this.deliverySalesOrderEntityBase}/SalesOrder`;
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const raw = await response.text();
+    let parsedBody: unknown = raw;
+    try {
+      parsedBody = raw ? (JSON.parse(raw) as unknown) : null;
+    } catch {
+      parsedBody = raw;
+    }
+
+    if (!response.ok) {
+      const err = new Error(
+        `Delivery ten-day confirmation write failed: ${response.status} ${response.statusText} ${
           raw || ""
         }`.trim()
       );
