@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "validate:delivery-prepayment-hold": "npm.cmd --prefix worker run validate:delivery-prepayment-hold",
+    "validate:delivery-contact-opt-in-fetch": "npm.cmd --prefix worker run validate:delivery-contact-opt-in-fetch",
     "validate:one-week-confirmation-writeback": "npm.cmd --prefix worker run validate:one-week-confirmation-writeback"
   },
   "dependencies": {

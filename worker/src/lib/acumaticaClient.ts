@@ -1,4 +1,5 @@
 import { env } from "./env";
+import { DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS } from "./deliveryContactOptInFields";
 
 type TokenResponse = {
   access_token: string;
@@ -979,6 +980,7 @@ export class AcumaticaClient {
     const query = new URLSearchParams({
       $filter: `ContactID eq ${contactIdValue}`,
       $top: "1",
+      $custom: DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS,
     });
     const url = `${this.deliveryEntityBase}/Contact?${query.toString()}`;
 
