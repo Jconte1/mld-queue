@@ -20,6 +20,24 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Delivery Contact Opt-Out Writeback
+
+`ERP_UPDATE_DELIVERY_CONTACT_OPT_IN_ATTRIBUTES` is a false-only delivery Contact writeback job. It writes only these custom Contact attributes when enabled:
+
+- `smsOptIn=false` -> `Contact.AttributeCONTEXT=false`
+- `emailOptIn=false` -> `Contact.AttributeCONEMAIL=false`
+- `phoneCallOptIn=false` -> `Contact.AttributeCONPHONE=false`
+
+Safety defaults:
+
+- `ACUMATICA_CONTACT_OPT_IN_WRITE_ENABLED=false`
+- `ACUMATICA_CONTACT_OPT_IN_DRY_RUN=true`
+- `ACUMATICA_CONTACT_OPT_IN_ALLOWED_CONTACT_ID=`
+- `ACUMATICA_CONTACT_OPT_IN_WRITE_ENDPOINT_NAME=Delivery`
+- `ACUMATICA_CONTACT_OPT_IN_WRITE_ENDPOINT_VERSION=24.200.001`
+
+The worker never writes true opt-in values and does not read or write `DoNotEmail`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

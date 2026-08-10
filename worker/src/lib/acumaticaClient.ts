@@ -196,6 +196,53 @@ function readCustomDocumentBooleanAttribute(
   return { exposed: false, value: null };
 }
 
+function readCustomContactAttribute(
+  row: Record<string, unknown> | null,
+  attributeName: string
+): { exposed: boolean; value: string | null } {
+  if (!row) return { exposed: false, value: null };
+
+  const custom = row.custom;
+  if (custom && typeof custom === "object" && "Contact" in custom) {
+    const contact = (custom as { Contact?: unknown }).Contact;
+    if (contact && typeof contact === "object" && attributeName in contact) {
+      const raw = (contact as Record<string, unknown>)[attributeName];
+      if (raw == null) return { exposed: true, value: null };
+      if (typeof raw === "object" && raw !== null && "value" in raw) {
+        const nested = (raw as { value?: unknown }).value;
+        return { exposed: true, value: nested == null ? null : String(nested) };
+      }
+      return { exposed: true, value: String(raw) };
+    }
+  }
+
+  const directKeys = [attributeName, `Contact.${attributeName}`];
+  for (const key of directKeys) {
+    if (key in row) {
+      return { exposed: true, value: getAcumaticaFieldValue(row, key) };
+    }
+  }
+
+  return { exposed: false, value: null };
+}
+
+function readCustomContactBooleanAttribute(
+  row: Record<string, unknown> | null,
+  attributeName: string
+): { exposed: boolean; value: boolean | null } {
+  if (!row) return { exposed: false, value: null };
+
+  const stringValue = readCustomContactAttribute(row, attributeName);
+  if (stringValue.exposed) {
+    return {
+      exposed: true,
+      value: parseAcumaticaBooleanValue(stringValue.value),
+    };
+  }
+
+  return { exposed: false, value: null };
+}
+
 function withAcumaticaFieldValue(original: unknown, value: string): unknown {
   if (typeof original === "object" && original !== null && "value" in original) {
     return {
@@ -985,6 +1032,86 @@ export class AcumaticaClient {
     const url = `${this.deliveryEntityBase}/Contact?${query.toString()}`;
 
     return toRows(await this.request<unknown>(url, { method: "GET" }));
+  }
+
+  async fetchDeliveryContactOptInAttributeStates(contactId: string): Promise<
+    Array<{
+      contactId: string | null;
+      smsOptIn: { exposed: boolean; value: boolean | null };
+      emailOptIn: { exposed: boolean; value: boolean | null };
+      phoneCallOptIn: { exposed: boolean; value: boolean | null };
+    }>
+  > {
+    const id = String(contactId || "").trim();
+    if (!id) return [];
+
+    const contactIdValue = /^\d+$/.test(id) ? id : odataString(id);
+    const query = new URLSearchParams({
+      $filter: `ContactID eq ${contactIdValue}`,
+      $select: "ContactID",
+      $top: "2",
+      $custom: DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS,
+    });
+    const url = `${this.deliveryEntityBase}/Contact?${query.toString()}`;
+    const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+
+    return rows.map((row) => ({
+      contactId: getAcumaticaFieldValue(row, "ContactID"),
+      smsOptIn: readCustomContactBooleanAttribute(row, "AttributeCONTEXT"),
+      emailOptIn: readCustomContactBooleanAttribute(row, "AttributeCONEMAIL"),
+      phoneCallOptIn: readCustomContactBooleanAttribute(row, "AttributeCONPHONE"),
+    }));
+  }
+
+  async putDeliveryContactOptInAttributes(
+    payload: Record<string, unknown>
+  ): Promise<{ status: number; body: unknown }> {
+    const token = await this.getToken();
+    const endpointName =
+      process.env.ACUMATICA_CONTACT_OPT_IN_WRITE_ENDPOINT_NAME?.trim() ||
+      env.acumaticaDeliveryEndpointName;
+    const endpointVersion =
+      process.env.ACUMATICA_CONTACT_OPT_IN_WRITE_ENDPOINT_VERSION?.trim() ||
+      env.acumaticaDeliveryEndpointVersion;
+    const url = `${env.acumaticaBaseUrl}/entity/${endpointName}/${endpointVersion}/Contact`;
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const raw = await response.text();
+    let parsedBody: unknown = raw;
+    try {
+      parsedBody = raw ? (JSON.parse(raw) as unknown) : null;
+    } catch {
+      parsedBody = raw;
+    }
+
+    if (!response.ok) {
+      const err = new Error(
+        `Delivery Contact opt-in attribute write failed: ${response.status} ${response.statusText} ${
+          raw || ""
+        }`.trim()
+      );
+      const enriched = err as Error & {
+        status?: number;
+        responseBody?: unknown;
+        responseText?: string;
+      };
+      enriched.status = response.status;
+      enriched.responseBody = parsedBody;
+      enriched.responseText = raw;
+      throw err;
+    }
+
+    return { status: response.status, body: parsedBody };
   }
 
   async verifyCustomerByZip(customerId: string, zip5: string): Promise<boolean> {

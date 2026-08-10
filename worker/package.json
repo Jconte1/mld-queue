@@ -10,6 +10,7 @@
     "prisma:migrate": "prisma migrate dev --schema ../prisma/schema.prisma",
     "validate:delivery-prepayment-hold": "tsx scripts/validate-delivery-prepayment-hold.ts",
     "validate:delivery-contact-opt-in-fetch": "tsx scripts/validate-delivery-contact-opt-in-fetch.ts",
+    "validate:delivery-contact-opt-in-writeback": "tsx scripts/validate-delivery-contact-opt-in-writeback.ts",
     "validate:one-week-confirmation-writeback": "tsx scripts/validate-delivery-ten-day-confirmation.ts"
   },
   "dependencies": {
