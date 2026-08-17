@@ -365,6 +365,10 @@ async function processJob(message: JobMessage): Promise<unknown> {
       };
     }
 
+    case "ERP_COUNT_OPEN_SALES_ORDERS_WITH_CONTACT": {
+      return acumaticaClient.countOpenSalesOrdersWithContact(message.payload);
+    }
+
     case "ERP_GET_DELIVERY_CONTACT": {
       const contactId = String(message.payload?.contactId || "").trim();
       if (!contactId) throw new Error("contactId is required");

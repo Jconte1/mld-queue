@@ -11,7 +11,8 @@
     "validate:delivery-prepayment-hold": "tsx scripts/validate-delivery-prepayment-hold.ts",
     "validate:delivery-contact-opt-in-fetch": "tsx scripts/validate-delivery-contact-opt-in-fetch.ts",
     "validate:delivery-contact-opt-in-writeback": "tsx scripts/validate-delivery-contact-opt-in-writeback.ts",
-    "validate:one-week-confirmation-writeback": "tsx scripts/validate-delivery-ten-day-confirmation.ts"
+    "validate:one-week-confirmation-writeback": "tsx scripts/validate-delivery-ten-day-confirmation.ts",
+    "count:sales-orders-with-contact": "tsx scripts/count-sales-orders-with-contact.ts"
   },
   "dependencies": {
     "@azure/service-bus": "^7.9.5",

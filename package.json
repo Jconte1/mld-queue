@@ -10,7 +10,8 @@
     "validate:delivery-prepayment-hold": "npm.cmd --prefix worker run validate:delivery-prepayment-hold",
     "validate:delivery-contact-opt-in-fetch": "npm.cmd --prefix worker run validate:delivery-contact-opt-in-fetch",
     "validate:delivery-contact-opt-in-writeback": "npm.cmd --prefix worker run validate:delivery-contact-opt-in-writeback",
-    "validate:one-week-confirmation-writeback": "npm.cmd --prefix worker run validate:one-week-confirmation-writeback"
+    "validate:one-week-confirmation-writeback": "npm.cmd --prefix worker run validate:one-week-confirmation-writeback",
+    "count:sales-orders-with-contact": "npm.cmd --prefix worker run count:sales-orders-with-contact --"
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",

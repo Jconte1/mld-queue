@@ -2,11 +2,34 @@ import { env } from "./env";
 import { DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS } from "./deliveryContactOptInFields";
 
 type TokenResponse = {
-  access_token: string;
+  access_token?: string;
   refresh_token?: string;
-  expires_in: number;
+  expires_in?: number;
   error?: string;
   error_description?: string;
+};
+
+type TokenGrantType = "password" | "refresh_token";
+
+type SalesOrderContactCountEndpoint = "read" | "delivery-sales-order";
+
+type SalesOrderContactCountContactFilter = "non-null-and-not-empty" | "non-null";
+
+export type SalesOrderContactCountResult = {
+  count: number;
+  method: "server-count" | "paged";
+  endpoint: SalesOrderContactCountEndpoint;
+  contactIdFilter: SalesOrderContactCountContactFilter;
+  filter: string;
+  statuses: string[];
+  excludedOrderTypes: string[];
+  pageSize: number;
+  maxPages: number;
+  pagesFetched: number;
+  serverCountAttempted: boolean;
+  serverCountReturned: boolean;
+  pagedFallbackUsed: boolean;
+  serverCountError: string | null;
 };
 
 class StockItemNotFoundError extends Error {
@@ -81,6 +104,15 @@ const DEFAULT_DELIVERY_ALLOWED_STATUSES = [
 
 const DEFAULT_DELIVERY_SALES_ORDER_EXPAND = "Totals,Details/Allocations,ShipToAddress,TaxDetails";
 
+const DEFAULT_SALES_ORDER_CONTACT_COUNT_STATUSES = [
+  "Open",
+  "Back Order",
+  "Shipping",
+  "On Hold but Approved",
+];
+
+const DEFAULT_SALES_ORDER_CONTACT_COUNT_EXCLUDED_ORDER_TYPES = ["QT"];
+
 function isNoEntitySatisfiesConditionError(error: unknown): boolean {
   const msg = error instanceof Error ? error.message : String(error);
   return (
@@ -111,6 +143,82 @@ function normalizedStringArray(value: unknown, fallback: string[]): string[] {
   }
 
   return value.map((item) => String(item || "").trim()).filter(Boolean);
+}
+
+function tokenErrorMessage(data: TokenResponse): string {
+  return data.error || data.error_description || "unknown";
+}
+
+function isInvalidGrant(data: TokenResponse): boolean {
+  return [data.error, data.error_description].some(
+    (value) => typeof value === "string" && value.includes("invalid_grant")
+  );
+}
+
+function positiveInteger(value: unknown, fallback: number, max: number): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+  return Math.min(Math.trunc(parsed), max);
+}
+
+function booleanOption(value: unknown, fallback: boolean): boolean {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    if (["1", "true", "yes", "y", "on"].includes(normalized)) return true;
+    if (["0", "false", "no", "n", "off"].includes(normalized)) return false;
+  }
+  return fallback;
+}
+
+function salesOrderContactCountEndpoint(value: unknown): SalesOrderContactCountEndpoint {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (["delivery", "delivery-sales-order", "deliverysalesorder"].includes(normalized)) {
+    return "delivery-sales-order";
+  }
+  return "read";
+}
+
+function buildSalesOrderContactCountFilter(
+  statuses: string[],
+  excludedOrderTypes: string[],
+  contactIdClause: string
+): string {
+  const clauses = [contactIdClause];
+
+  if (statuses.length) {
+    clauses.push(`(${statuses.map((status) => `Status eq ${odataString(status)}`).join(" or ")})`);
+  }
+
+  clauses.push(...excludedOrderTypes.map((orderType) => `OrderType ne ${odataString(orderType)}`));
+
+  return clauses.join(" and ");
+}
+
+function readODataCount(payload: unknown): number | null {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return null;
+  const raw =
+    (payload as Record<string, unknown>)["@odata.count"] ??
+    (payload as Record<string, unknown>)["odata.count"];
+  const count = Number(raw);
+  return Number.isFinite(count) && count >= 0 ? count : null;
+}
+
+function compactErrorMessage(error: unknown): string {
+  return (error instanceof Error ? error.message : String(error)).slice(0, 1000);
+}
+
+function mayBeContactIdEmptyStringTypeError(error: unknown): boolean {
+  const normalized = compactErrorMessage(error).toLowerCase();
+  return (
+    normalized.includes("contactid") &&
+    (normalized.includes("edm.int") ||
+      normalized.includes("edm.decimal") ||
+      normalized.includes("incompatible") ||
+      normalized.includes("binary operator") ||
+      normalized.includes("not valid") ||
+      normalized.includes("invalid"))
+  );
 }
 
 function getAcumaticaFieldValue(row: Record<string, unknown> | null, key: string): string | null {
@@ -349,19 +457,21 @@ export class AcumaticaClient {
     return `${env.acumaticaBaseUrl}/entity/${env.acumaticaDeliverySalesOrderEndpointName}/${env.acumaticaDeliverySalesOrderEndpointVersion}`;
   }
 
-  async getToken(): Promise<string> {
-    if (this.accessToken && this.tokenExpiry && this.tokenExpiry > Date.now()) {
-      return this.accessToken;
-    }
-
+  private async requestToken(
+    grantType: TokenGrantType,
+    refreshToken?: string
+  ): Promise<{ response: Response; data: TokenResponse }> {
     const body = new URLSearchParams({
-      grant_type: this.refreshToken ? "refresh_token" : "password",
+      grant_type: grantType,
       client_id: env.acumaticaClientId,
       client_secret: env.acumaticaClientSecret
     });
 
-    if (this.refreshToken) {
-      body.append("refresh_token", this.refreshToken);
+    if (grantType === "refresh_token") {
+      if (!refreshToken) {
+        throw new Error("refreshToken is required for refresh_token grant");
+      }
+      body.append("refresh_token", refreshToken);
     } else {
       body.append("username", env.acumaticaUsername);
       body.append("password", env.acumaticaPassword);
@@ -375,8 +485,12 @@ export class AcumaticaClient {
     });
 
     const data = (await response.json()) as TokenResponse;
-    if (!response.ok) {
-      throw new Error(`Token request failed: ${data.error || data.error_description || "unknown"}`);
+    return { response, data };
+  }
+
+  private storeTokenResponse(data: TokenResponse): string {
+    if (!data.access_token || typeof data.expires_in !== "number") {
+      throw new Error(`Token request failed: ${tokenErrorMessage(data)}`);
     }
 
     this.accessToken = data.access_token;
@@ -384,6 +498,37 @@ export class AcumaticaClient {
     this.tokenExpiry = Date.now() + data.expires_in * 1000;
 
     return this.accessToken;
+  }
+
+  async getToken(): Promise<string> {
+    if (this.accessToken && this.tokenExpiry && this.tokenExpiry > Date.now()) {
+      return this.accessToken;
+    }
+
+    if (this.refreshToken) {
+      const refreshAttempt = await this.requestToken("refresh_token", this.refreshToken);
+      if (refreshAttempt.response.ok) {
+        return this.storeTokenResponse(refreshAttempt.data);
+      }
+
+      if (!isInvalidGrant(refreshAttempt.data)) {
+        throw new Error(`Token request failed: ${tokenErrorMessage(refreshAttempt.data)}`);
+      }
+
+      console.warn("[queue][acumatica][token] refresh token rejected; retrying password grant", {
+        error: tokenErrorMessage(refreshAttempt.data)
+      });
+      this.accessToken = null;
+      this.refreshToken = null;
+      this.tokenExpiry = null;
+    }
+
+    const passwordAttempt = await this.requestToken("password");
+    if (!passwordAttempt.response.ok) {
+      throw new Error(`Token request failed: ${tokenErrorMessage(passwordAttempt.data)}`);
+    }
+
+    return this.storeTokenResponse(passwordAttempt.data);
   }
 
   private async request<T>(path: string, init: RequestInit): Promise<T> {
@@ -726,6 +871,133 @@ export class AcumaticaClient {
     const url = `${this.readEntityBase}/SalesOrder?${params.toString()}`;
     const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
     return rows[0] || null;
+  }
+
+  async countOpenSalesOrdersWithContact(params: {
+    statuses?: unknown;
+    excludedOrderTypes?: unknown;
+    pageSize?: unknown;
+    maxPages?: unknown;
+    preferServerCount?: unknown;
+    endpoint?: unknown;
+  } = {}): Promise<SalesOrderContactCountResult> {
+    const statuses = normalizedStringArray(
+      params.statuses,
+      DEFAULT_SALES_ORDER_CONTACT_COUNT_STATUSES
+    );
+    const excludedOrderTypes = normalizedStringArray(
+      params.excludedOrderTypes,
+      DEFAULT_SALES_ORDER_CONTACT_COUNT_EXCLUDED_ORDER_TYPES
+    );
+    const pageSize = positiveInteger(params.pageSize, 500, 1000);
+    const maxPages = positiveInteger(params.maxPages, 10000, 100000);
+    const preferServerCount = booleanOption(params.preferServerCount, true);
+    const endpoint = salesOrderContactCountEndpoint(params.endpoint);
+    const entityBase = endpoint === "delivery-sales-order" ? this.deliverySalesOrderEntityBase : this.readEntityBase;
+    const contactFilters: Array<{
+      mode: SalesOrderContactCountContactFilter;
+      clause: string;
+    }> = [
+      { mode: "non-null-and-not-empty", clause: "ContactID ne null and ContactID ne ''" },
+      { mode: "non-null", clause: "ContactID ne null" },
+    ];
+
+    let strictContactFilterError: unknown = null;
+    for (const contactFilter of contactFilters) {
+      const filter = buildSalesOrderContactCountFilter(
+        statuses,
+        excludedOrderTypes,
+        contactFilter.clause
+      );
+      let serverCountError: string | null = null;
+
+      try {
+        if (preferServerCount) {
+          try {
+            const query = new URLSearchParams({
+              $filter: filter,
+              $select: "OrderNbr",
+              $count: "true",
+              $top: "0",
+            });
+            const payload = await this.request<unknown>(`${entityBase}/SalesOrder?${query.toString()}`, {
+              method: "GET",
+            });
+            const serverCount = readODataCount(payload);
+            if (serverCount !== null) {
+              return {
+                count: serverCount,
+                method: "server-count",
+                endpoint,
+                contactIdFilter: contactFilter.mode,
+                filter,
+                statuses,
+                excludedOrderTypes,
+                pageSize,
+                maxPages,
+                pagesFetched: 0,
+                serverCountAttempted: true,
+                serverCountReturned: true,
+                pagedFallbackUsed: false,
+                serverCountError: null,
+              };
+            }
+          } catch (error) {
+            serverCountError = compactErrorMessage(error);
+          }
+        }
+
+        let total = 0;
+        let pagesFetched = 0;
+        for (let page = 0; page < maxPages; page++) {
+          const query = new URLSearchParams({
+            $filter: filter,
+            $select: "OrderNbr",
+            $top: String(pageSize),
+            $skip: String(page * pageSize),
+          });
+          const rows = toRows(
+            await this.request<unknown>(`${entityBase}/SalesOrder?${query.toString()}`, {
+              method: "GET",
+            })
+          );
+          pagesFetched += 1;
+          total += rows.length;
+          if (rows.length < pageSize) {
+            return {
+              count: total,
+              method: "paged",
+              endpoint,
+              contactIdFilter: contactFilter.mode,
+              filter,
+              statuses,
+              excludedOrderTypes,
+              pageSize,
+              maxPages,
+              pagesFetched,
+              serverCountAttempted: preferServerCount,
+              serverCountReturned: false,
+              pagedFallbackUsed: true,
+              serverCountError,
+            };
+          }
+        }
+
+        throw new Error(
+          `SalesOrder count reached maxPages=${maxPages} before Acumatica returned a short page`
+        );
+      } catch (error) {
+        if (contactFilter.mode === "non-null-and-not-empty" && mayBeContactIdEmptyStringTypeError(error)) {
+          strictContactFilterError = error;
+          continue;
+        }
+        throw error;
+      }
+    }
+
+    throw strictContactFilterError instanceof Error
+      ? strictContactFilterError
+      : new Error("SalesOrder count failed for all ContactID filter variants");
   }
 
   async fetchDeliverySalesOrdersByLineRequestedOn(params: {
