@@ -36,6 +36,7 @@ enum JobType {
   ERP_VERIFY_CUSTOMER
   ERP_PUT_SALES_INVOICE
   ERP_PUT_CUSTOMER_LOCATION
+  ERP_STOCK_ITEM_CLEANUP_RUN
   GET_CONTACT
   GET_STOCK_ITEM
   GET_ITEM_CLASS
@@ -46,6 +47,27 @@ enum JobStatus {
   processing
   succeeded
   failed
+}
+
+enum StockItemCleanupRunStatus {
+  queued
+  processing
+  completed
+  failed
+}
+
+enum StockItemCleanupItemStatus {
+  pending
+  processing
+  dry_run_ready
+  updated_successfully
+  already_updated
+  skipped_qty_on_hand
+  skipped_item_class
+  skipped_vendor_review
+  failed_api_transient
+  failed_validation_business_rule
+  refused_write
 }
 
 model Job {
@@ -103,4 +125,64 @@ model OpportunityUpdateBuffer {
 
   @@index([pending, updatedAt])
   @@map("opportunity_update_buffer")
+}
+
+model StockItemCleanupRun {
+  id             String                    @id
+  jobId          String?                   @unique
+  status         StockItemCleanupRunStatus @default(queued)
+  dryRun         Boolean                   @default(true)
+  writeMode      Boolean                   @default(false)
+  maxItems       Int                       @default(10)
+  maxInFlight    Int                       @default(1)
+  delayMs        Int                       @default(0)
+  requestedCount Int                       @default(0)
+  currentItemId  String?
+  lastItemId     String?
+  error          String?
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+  items          StockItemCleanupItem[]
+
+  @@index([status, createdAt])
+  @@map("stock_item_cleanup_runs")
+}
+
+model StockItemCleanupItem {
+  id                 String                     @id @default(cuid())
+  runId              String
+  inventoryId        String
+  description        String?
+  currentItemClass   String?
+  proposedVendorId   String?
+  proposedVendorName String?
+  vendorConfidence   String?
+  vendorMatchReason  String?
+  sourcePayload      Json?
+  status             StockItemCleanupItemStatus @default(pending)
+  attemptCount       Int                        @default(0)
+  oldVendorId        String?
+  oldVendorName      String?
+  newVendorId        String?
+  newVendorName      String?
+  vendorClass        String?
+  oldItemClass       String?
+  newItemClass       String?
+  qtyOnHandSummary   Json?
+  beforeState        Json?
+  afterState         Json?
+  acumaticaResponse  Json?
+  verification       Json?
+  error              String?
+  startedAt          DateTime?
+  completedAt        DateTime?
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+
+  run StockItemCleanupRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, inventoryId])
+  @@index([runId, status, createdAt])
+  @@index([inventoryId])
+  @@map("stock_item_cleanup_items")
 }

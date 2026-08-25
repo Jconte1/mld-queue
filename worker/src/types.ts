@@ -28,7 +28,8 @@ export type JobType =
   | "ERP_MARK_THANK_YOU_SENT"
   | "ERP_VERIFY_CUSTOMER"
   | "ERP_PUT_SALES_INVOICE"
-  | "ERP_PUT_CUSTOMER_LOCATION";
+  | "ERP_PUT_CUSTOMER_LOCATION"
+  | "ERP_STOCK_ITEM_CLEANUP_RUN";
 
 export type JobMessage = {
   jobId: string;

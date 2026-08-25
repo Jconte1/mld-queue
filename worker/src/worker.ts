@@ -9,6 +9,7 @@ import { processDeliveryConfirmationAttributesJob } from "./lib/deliveryConfirma
 import { processDeliveryContactOptInAttributesJob } from "./lib/deliveryContactOptInAttributes";
 import { processDeliveryPrepaymentHoldJob } from "./lib/deliveryPrepaymentHold";
 import { processDeliveryTenDayConfirmationJob } from "./lib/deliveryTenDayConfirmation";
+import { processStockItemCleanupRunJob } from "./lib/stockItemCleanup";
 import { Semaphore, TokenBucket } from "./lib/throttle";
 import type { JobMessage } from "./types";
 
@@ -424,6 +425,10 @@ async function processJob(message: JobMessage): Promise<unknown> {
         throw new Error("payload is required");
       }
       return acumaticaClient.putCustomerLocation(payload);
+    }
+
+    case "ERP_STOCK_ITEM_CLEANUP_RUN": {
+      return processStockItemCleanupRunJob(message.payload, acumaticaClient);
     }
 
     default:

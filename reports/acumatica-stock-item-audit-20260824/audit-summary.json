@@ -1,0 +1,619 @@
+{
+  "generatedAt": "2026-08-24T15:18:22.543Z",
+  "readOnly": true,
+  "dataMethodsUsed": [
+    "GET StockItem",
+    "GET Vendor"
+  ],
+  "authMethodNote": "OAuth token retrieval uses the existing password grant; all StockItem/Vendor data calls are GET.",
+  "endpoints": {
+    "stockItem": "CustomEndpoint/24.200.001/StockItem",
+    "stockItemExpand": "WarehouseDetails,VendorDetails,CrossReferences",
+    "vendor": "CustomEndpoint/24.200.001/Vendor",
+    "vendorSelect": "VendorID,VendorName,LegalName,Status,VendorClass,AccountRef"
+  },
+  "totalExcelRows": 1942,
+  "totalUniqueInventoryIds": 1942,
+  "itemsFound": 1942,
+  "itemsNotFound": 0,
+  "apiErrors": 0,
+  "qtyStatusCounts": {
+    "ELIGIBLE": 1601,
+    "SKIP_QTY_ON_HAND": 341
+  },
+  "auditStatusCounts": {
+    "VENDOR_REVIEW_REQUIRED": 771,
+    "SKIP_QTY_ON_HAND": 341,
+    "UNKNOWN_ITEM_CLASS": 332,
+    "READY": 498
+  },
+  "itemClassCorrectionCounts": {
+    "APLS-LOT -> APLS-RCVD": 6,
+    "NO_DEFINED_MAPPING": 510,
+    "APLS-USED -> APLS-RCVD": 1,
+    "APPLIANCE -> APLS-RCVD": 91,
+    "HARDWARE -> HARD-LOT": 17,
+    "PLUMBING -> PLUMB-LOT": 1317
+  },
+  "noDefinedItemClassMapping": 510,
+  "highConfidenceVendor": 1107,
+  "vendorReviewRequired": 771,
+  "noVendorInferred": 662,
+  "noWarehouseDetailsRows": 386,
+  "vendorRecordsAvailable": 2495,
+  "vendorStatusCounts": {
+    "Active": 2437,
+    "Inactive": 56,
+    "On Hold": 1,
+    "One-Time": 1
+  },
+  "vendorUsefulFields": [
+    "VendorID",
+    "VendorName",
+    "LegalName",
+    "Status",
+    "VendorClass",
+    "AccountRef"
+  ],
+  "duplicateVendorNameExamples": [
+    [
+      {
+        "VendorID": "BA0000001",
+        "VendorName": "BSH Home Appliances",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0001908",
+        "VendorName": "BSH HOME APPLIANCES",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000009",
+        "VendorName": "Rocky Mountain Hardware, Inc.",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0004044",
+        "VendorName": "ROCKY MOUNTAIN HARDWARE, INC.",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000015",
+        "VendorName": "Craig Peters",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0008370",
+        "VendorName": "Craig Peters",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000035",
+        "VendorName": "Upland Development",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0007173",
+        "VendorName": "UPLAND DEVELOPMENT",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000063",
+        "VendorName": "Alphagraphics",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003323",
+        "VendorName": "Alphagraphics",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000065",
+        "VendorName": "AMB Design",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0000939",
+        "VendorName": "AMB Design",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000114",
+        "VendorName": "BOISE CITY UTILITY BILLING",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003320",
+        "VendorName": "BOISE CITY UTILITY BILLING",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000258",
+        "VendorName": "Forte Brands LLC",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0000712",
+        "VendorName": "Forte Brands, LLC",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000373",
+        "VendorName": "La Cabanita",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0004380",
+        "VendorName": "La Cabanita",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000446",
+        "VendorName": "Our Glass Cleaner, LLC.",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0007609",
+        "VendorName": "Our Glass Cleaner LLC",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000502",
+        "VendorName": "Salt Lake Home Builders Association",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003336",
+        "VendorName": "Salt Lake Home Builders Association",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000546",
+        "VendorName": "ST. Luke's Health System",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0023899",
+        "VendorName": "St. Luke's Health System",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000615",
+        "VendorName": "Watts Enterprises",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0002992",
+        "VendorName": "Watts Enterprises",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000657",
+        "VendorName": "DuVerre Hardware",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003326",
+        "VendorName": "DuVerre Hardware",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000674",
+        "VendorName": "Linnea Llc",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003337",
+        "VendorName": "Linnea Llc",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000695",
+        "VendorName": "Top Notch Distributors, Inc.",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003322",
+        "VendorName": "Top Notch Distributors, Inc.",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000708",
+        "VendorName": "Barclay Products",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003331",
+        "VendorName": "Barclay Products",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000719",
+        "VendorName": "Electric Mirror",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003328",
+        "VendorName": "Electric Mirror",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000728",
+        "VendorName": "Hajoca Corporation",
+        "Status": "Inactive"
+      },
+      {
+        "VendorID": "BA0003290",
+        "VendorName": "Hajoca Corporation",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000734",
+        "VendorName": "Julien",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003318",
+        "VendorName": "Julien",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000737",
+        "VendorName": "Lenova",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003329",
+        "VendorName": "Lenova",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0000757",
+        "VendorName": "Vogue USA",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003319",
+        "VendorName": "Vogue USA",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0001129",
+        "VendorName": "GESSI North America",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0003324",
+        "VendorName": "GESSI North America",
+        "Status": "Inactive"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0001863",
+        "VendorName": "MCCARTER-MOORHOUSE",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0008075",
+        "VendorName": "McCarter Moorhouse",
+        "Status": "Active"
+      }
+    ],
+    [
+      {
+        "VendorID": "BA0001954",
+        "VendorName": "Harmony Young Design",
+        "Status": "Active"
+      },
+      {
+        "VendorID": "BA0009899",
+        "VendorName": "Harmony Young Design",
+        "Status": "Active"
+      }
+    ]
+  ],
+  "stockReferenceRowsFetched": 3276,
+  "stockReferenceRowsWithVendor": 1918,
+  "apiDiagnostics": {
+    "batchStockGetRowsFound": 1942,
+    "stockGetErrors": {},
+    "targetedPrefixQueries": 250,
+    "targetedPrefixes": [
+      "USH",
+      "TOTH",
+      "V7KA",
+      "4176",
+      "9126",
+      "9127",
+      "TOPB",
+      "TOTH2",
+      "MSW",
+      "TOV",
+      "0104",
+      "1200",
+      "2207",
+      "MRLV",
+      "TOPBL",
+      "DGC",
+      "HLS",
+      "1207",
+      "2540",
+      "3230",
+      "5202",
+      "53P6",
+      "8695",
+      "8901",
+      "93P6",
+      "DGC7",
+      "F907",
+      "HLS3",
+      "K359",
+      "K511",
+      "KT14",
+      "MSW2",
+      "MW64",
+      "P213",
+      "P314",
+      "TOV5",
+      "UNKS",
+      "UNWO",
+      "USH3",
+      "V702",
+      "12005",
+      "25401",
+      "32301",
+      "53P6R",
+      "93P6H",
+      "HLS31",
+      "K5110",
+      "P2138",
+      "UNKS1",
+      "USH30",
+      "V702T",
+      "HLS311",
+      "UNKS15",
+      "BKM",
+      "BLS",
+      "BPH",
+      "BRH",
+      "CWT",
+      "HKM",
+      "HTH",
+      "MAG",
+      "NLS",
+      "TMD",
+      "USB",
+      "0103",
+      "2271",
+      "3717",
+      "5017",
+      "5395",
+      "7023",
+      "BLS7",
+      "BPH0",
+      "BRH0",
+      "CT22",
+      "ETLS",
+      "FLLS",
+      "FS41",
+      "G830",
+      "HNHS",
+      "K221",
+      "K263",
+      "K313",
+      "K358",
+      "K501",
+      "K783",
+      "LG42",
+      "LYNX",
+      "N769",
+      "NOSK",
+      "STIF",
+      "USH1",
+      "USH2",
+      "01034",
+      "22713",
+      "5395R",
+      "70230",
+      "86958",
+      "9126S",
+      "BPH00",
+      "CT221",
+      "DGC78",
+      "K3585",
+      "K3592",
+      "K5010",
+      "KT144",
+      "LG42H",
+      "MSW25",
+      "MW642",
+      "NOSK2",
+      "P3142",
+      "UNWO5",
+      "USH20",
+      "V7KAL",
+      "CT2214",
+      "MW6424",
+      "UNWO51",
+      "USH206",
+      "BTH",
+      "CKM",
+      "CLS",
+      "CST",
+      "FLS",
+      "HLK",
+      "HXT",
+      "IWA",
+      "MPU",
+      "NST",
+      "QDB",
+      "RQD",
+      "TAA",
+      "TSR",
+      "TUB",
+      "1036",
+      "1111",
+      "1788",
+      "2001",
+      "2011",
+      "2061",
+      "2158",
+      "2201",
+      "3122",
+      "3301",
+      "3323",
+      "3328",
+      "3517",
+      "3520",
+      "3622",
+      "3686",
+      "3991",
+      "4102",
+      "4178",
+      "4204",
+      "4432",
+      "493X",
+      "5011",
+      "5014",
+      "6001",
+      "6304",
+      "6333",
+      "6991",
+      "7071",
+      "9067",
+      "9116",
+      "9125",
+      "BH23",
+      "BKM4",
+      "BLUE",
+      "BTH2",
+      "BXBK",
+      "C043",
+      "CLS3",
+      "CWT4",
+      "DD24",
+      "DSXT",
+      "F924",
+      "F985",
+      "FCSS",
+      "FLS3",
+      "FLTS",
+      "FS31",
+      "G671",
+      "G994",
+      "GT52",
+      "HGXT",
+      "HL70",
+      "HLK0",
+      "HN2T",
+      "HNCH",
+      "HNRH",
+      "HNTB",
+      "HNWH",
+      "HTH1",
+      "HXT3",
+      "K144",
+      "K200",
+      "K258",
+      "K357",
+      "K379",
+      "K551",
+      "K600",
+      "K653",
+      "K779",
+      "K818",
+      "K831",
+      "KT78",
+      "LDLS",
+      "LDTH",
+      "MAG1",
+      "MIBT",
+      "MSSU",
+      "MTCS",
+      "NLS2",
+      "NST6",
+      "P212",
+      "P220",
+      "P244",
+      "PS12",
+      "QDB4",
+      "RQD5",
+      "RS36",
+      "SDDH",
+      "SH06",
+      "SLTI",
+      "SS50",
+      "SS60",
+      "STEG",
+      "T202",
+      "T20K",
+      "TA60",
+      "TA61",
+      "TA64",
+      "TD90",
+      "TFWH",
+      "TMD1",
+      "TO36",
+      "TS25",
+      "TSR5",
+      "UCWL",
+      "UNAS",
+      "UNWD",
+      "USB5",
+      "V766",
+      "V770",
+      "V786",
+      "V7K3",
+      "V941",
+      "W117",
+      "WMCL",
+      "01046",
+      "12076"
+    ]
+  }
+}

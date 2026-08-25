@@ -642,6 +642,54 @@ export class AcumaticaClient {
     }
   }
 
+  async getStockItemForCleanup(inventoryId: string): Promise<unknown> {
+    const id = String(inventoryId || "").trim().toUpperCase();
+    if (!id) return [];
+
+    const params = new URLSearchParams();
+    params.set("$expand", "WarehouseDetails,VendorDetails");
+
+    const directUrl = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}/${encodeURIComponent(id)}?${params.toString()}`;
+    try {
+      return await this.request<unknown>(directUrl, { method: "GET" });
+    } catch (error) {
+      const byInventoryId = await this.getStockItemForCleanupByFilter("InventoryID", id);
+      if (byInventoryId) return byInventoryId;
+
+      const byInventoryCd = await this.getStockItemForCleanupByFilter("InventoryCD", id);
+      if (byInventoryCd) return byInventoryCd;
+
+      if (isNoEntitySatisfiesConditionError(error)) {
+        throw new StockItemNotFoundError(id);
+      }
+
+      throw new StockItemNotFoundError(id);
+    }
+  }
+
+  private async getStockItemForCleanupByFilter(
+    field: "InventoryID" | "InventoryCD",
+    id: string
+  ): Promise<unknown | null> {
+    const params = new URLSearchParams();
+    params.set("$filter", `${field} eq '${quoteForOData(id)}'`);
+    params.set("$expand", "WarehouseDetails,VendorDetails");
+    params.set("$top", "1");
+
+    const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}?${params.toString()}`;
+    try {
+      const payload = await this.request<unknown>(url, { method: "GET" });
+      const rows = toRows(payload);
+      if (!rows.length) return null;
+      return rows[0];
+    } catch (error) {
+      if (isNoEntitySatisfiesConditionError(error)) {
+        return null;
+      }
+      return null;
+    }
+  }
+
   async getStockItems(inventoryIds: string[]): Promise<unknown> {
     const ids = Array.from(
       new Set(
@@ -715,6 +763,22 @@ export class AcumaticaClient {
     return this.request<unknown>(url, { method: "GET" });
   }
 
+  async getVendor(vendorId: string): Promise<unknown> {
+    const id = String(vendorId || "").trim().toUpperCase();
+    if (!id) return [];
+
+    const directUrl = `${this.entityBase}/${env.acumaticaVendorEntity}/${encodeURIComponent(id)}`;
+    try {
+      return await this.request<unknown>(directUrl, { method: "GET" });
+    } catch {
+      const params = new URLSearchParams();
+      params.set("$filter", `VendorID eq '${quoteForOData(id)}'`);
+      params.set("$top", "1");
+      const url = `${this.entityBase}/${env.acumaticaVendorEntity}?${params.toString()}`;
+      return this.request<unknown>(url, { method: "GET" });
+    }
+  }
+
   async createOpportunity(payload: Record<string, unknown>): Promise<unknown> {
     const url = `${this.entityBase}/${env.acumaticaOpportunityEntity}`;
     return this.request<unknown>(url, {
@@ -733,6 +797,49 @@ export class AcumaticaClient {
     return requestedInventoryId
       ? normalizeStockItemPayloadForRequestedId(result, requestedInventoryId)
       : result;
+  }
+
+  async putStockItemForCleanup(payload: Record<string, unknown>): Promise<{ status: number; body: unknown }> {
+    const token = await this.getToken();
+    const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}`;
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const raw = await response.text();
+    let parsedBody: unknown = raw;
+    try {
+      parsedBody = raw ? (JSON.parse(raw) as unknown) : null;
+    } catch {
+      parsedBody = raw;
+    }
+
+    if (!response.ok) {
+      const err = new Error(
+        `StockItem cleanup write failed: ${response.status} ${response.statusText} ${
+          raw || ""
+        }`.trim()
+      );
+      const enriched = err as Error & {
+        status?: number;
+        responseBody?: unknown;
+        responseText?: string;
+      };
+      enriched.status = response.status;
+      enriched.responseBody = parsedBody;
+      enriched.responseText = raw;
+      throw err;
+    }
+
+    return { status: response.status, body: parsedBody };
   }
 
   async updateOpportunity(opportunityId: string, payload: Record<string, unknown>): Promise<unknown> {
