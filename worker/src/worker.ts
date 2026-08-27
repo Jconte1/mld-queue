@@ -6,6 +6,7 @@ import { env } from "./lib/env";
 import { log } from "./lib/logger";
 import { AcumaticaClient, isTransientError } from "./lib/acumaticaClient";
 import { processDeliveryConfirmationAttributesJob } from "./lib/deliveryConfirmationAttributes";
+import { processDeliveryRequestedDateJob } from "./lib/deliveryRequestedDate";
 import { processDeliveryContactOptInAttributesJob } from "./lib/deliveryContactOptInAttributes";
 import { processDeliveryPrepaymentHoldJob } from "./lib/deliveryPrepaymentHold";
 import { processDeliveryTenDayConfirmationJob } from "./lib/deliveryTenDayConfirmation";
@@ -380,6 +381,10 @@ async function processJob(message: JobMessage): Promise<unknown> {
 
     case "ERP_UPDATE_DELIVERY_CONFIRMATION_ATTRIBUTES": {
       return processDeliveryConfirmationAttributesJob(message.payload, acumaticaClient);
+    }
+
+    case "ERP_UPDATE_DELIVERY_REQUESTED_DATE": {
+      return processDeliveryRequestedDateJob(message.payload, acumaticaClient);
     }
 
     case "ERP_UPDATE_DELIVERY_CONTACT_OPT_IN_ATTRIBUTES": {

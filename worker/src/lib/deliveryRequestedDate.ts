@@ -1,0 +1,494 @@
+export type DeliveryRequestedDatePayload = {
+  orderType: string;
+  orderNumber: string;
+  deliveryConfirmationId: string;
+  deliveryGroupId: string;
+  originalDeliveryDate: string;
+  requestedDeliveryDate: string;
+  lineNumbers: number[];
+  source: "WEBPAGE" | "SMS";
+  dryRun: boolean;
+  requestedAt?: string;
+  requestedBy?: Record<string, unknown>;
+  note?: string;
+};
+
+export type DeliveryRequestedDateLineState = {
+  lineNbr: number | null;
+  requestedOnExposed: boolean;
+  requestedOnRaw: string | null;
+  requestedOnDateKey: string | null;
+  inventoryId: string | null;
+};
+
+export type DeliveryRequestedDateAcumaticaClient = {
+  fetchDeliverySalesOrderFull(
+    orderNumber: string,
+    orderType?: string | null
+  ): Promise<Record<string, unknown>[]>;
+  putDeliveryRequestedDateLines(payload: Record<string, unknown>): Promise<{
+    status: number;
+    body: unknown;
+  }>;
+};
+
+type EnvSource = Record<string, string | undefined>;
+
+function stringValue(payload: Record<string, unknown>, key: string) {
+  const value = payload[key];
+  if (typeof value !== "string" || !value.trim()) {
+    throw new Error(`${key} is required`);
+  }
+  return value.trim();
+}
+
+function optionalStringValue(payload: Record<string, unknown>, key: string) {
+  const value = payload[key];
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function booleanValue(payload: Record<string, unknown>, key: string, fallback: boolean) {
+  const value = payload[key];
+  if (value === undefined) return fallback;
+  if (typeof value !== "boolean") {
+    throw new Error(`${key} must be a boolean`);
+  }
+  return value;
+}
+
+function normalizeSource(value: string): "WEBPAGE" | "SMS" {
+  const normalized = value.trim().toUpperCase();
+  if (normalized !== "WEBPAGE" && normalized !== "SMS") {
+    throw new Error("source must be WEBPAGE or SMS");
+  }
+  return normalized;
+}
+
+function normalizeDateKey(value: string, fieldName: string) {
+  const trimmed = value.trim();
+  if (!trimmed) throw new Error(`${fieldName} is required`);
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(trimmed)
+    ? new Date(`${trimmed}T00:00:00.000Z`)
+    : new Date(trimmed);
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`${fieldName} must be a valid date`);
+  }
+  return date.toISOString().slice(0, 10);
+}
+
+function requestedOnDateTime(dateKey: string) {
+  return `${dateKey}T00:00:00.000Z`;
+}
+
+function normalizeLineNumbers(value: unknown) {
+  if (!Array.isArray(value)) {
+    throw new Error("lineNumbers must be an array");
+  }
+
+  const normalized = Array.from(
+    new Set(
+      value
+        .map((item) => Number(item))
+        .filter((lineNumber) => Number.isInteger(lineNumber) && lineNumber > 0)
+    )
+  ).sort((left, right) => left - right);
+
+  if (normalized.length === 0) {
+    throw new Error("lineNumbers must contain at least one positive integer");
+  }
+
+  return normalized;
+}
+
+function flagIsTrue(envSource: EnvSource, name: string) {
+  return envSource[name]?.trim().toLowerCase() === "true";
+}
+
+function listValues(value: string | undefined) {
+  return new Set(
+    (value ?? "")
+      .split(/[,\s;]+/)
+      .map((item) => item.trim().toUpperCase())
+      .filter(Boolean)
+  );
+}
+
+function isLiveWritebackEnabled(envSource: EnvSource) {
+  return envSource.ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED?.trim().toLowerCase() === "true";
+}
+
+export function evaluateDeliveryRequestedDateWritebackLiveGate(
+  normalized: Pick<DeliveryRequestedDatePayload, "orderType" | "orderNumber">,
+  envSource: EnvSource = process.env
+) {
+  const allowAll = flagIsTrue(envSource, "ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOW_ALL");
+  const allowedOrderNumbers = listValues(
+    envSource.ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOWED_ORDER_NBRS
+  );
+  const allowedOrderTypes = listValues(
+    envSource.ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOWED_ORDER_TYPES
+  );
+  const orderNumbersConfigured = allowedOrderNumbers.size > 0;
+  const orderTypesConfigured = allowedOrderTypes.size > 0;
+  const allowedByOrderNumber =
+    orderNumbersConfigured && allowedOrderNumbers.has(normalized.orderNumber.toUpperCase());
+  const allowedByOrderType =
+    orderTypesConfigured && allowedOrderTypes.has(normalized.orderType.toUpperCase());
+  const allowlistConfigured = orderNumbersConfigured || orderTypesConfigured;
+  const allowedByAllowlist =
+    allowlistConfigured &&
+    (orderNumbersConfigured ? allowedByOrderNumber : true) &&
+    (orderTypesConfigured ? allowedByOrderType : true);
+  const allowedByLiveWriteGate = allowAll || allowedByAllowlist;
+
+  return {
+    allowAll,
+    orderNumbersConfigured,
+    orderTypesConfigured,
+    allowedByOrderNumber,
+    allowedByOrderType,
+    allowedByAllowlist,
+    allowedByLiveWriteGate,
+  };
+}
+
+export function normalizeDeliveryRequestedDatePayload(
+  payload: Record<string, unknown> | undefined
+): DeliveryRequestedDatePayload {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    throw new Error("payload is required");
+  }
+
+  return {
+    orderType: stringValue(payload, "orderType").toUpperCase(),
+    orderNumber: stringValue(payload, "orderNumber").toUpperCase(),
+    deliveryConfirmationId: stringValue(payload, "deliveryConfirmationId"),
+    deliveryGroupId: stringValue(payload, "deliveryGroupId"),
+    originalDeliveryDate: normalizeDateKey(stringValue(payload, "originalDeliveryDate"), "originalDeliveryDate"),
+    requestedDeliveryDate: normalizeDateKey(
+      stringValue(payload, "requestedDeliveryDate"),
+      "requestedDeliveryDate"
+    ),
+    lineNumbers: normalizeLineNumbers(payload.lineNumbers),
+    source: normalizeSource(stringValue(payload, "source")),
+    dryRun: booleanValue(payload, "dryRun", true),
+    requestedAt: optionalStringValue(payload, "requestedAt"),
+    requestedBy:
+      payload.requestedBy && typeof payload.requestedBy === "object" && !Array.isArray(payload.requestedBy)
+        ? (payload.requestedBy as Record<string, unknown>)
+        : undefined,
+    note: optionalStringValue(payload, "note"),
+  };
+}
+
+export function buildDeliveryRequestedDateAcumaticaPayload(
+  payload: DeliveryRequestedDatePayload
+) {
+  const requestedDateTime = requestedOnDateTime(payload.requestedDeliveryDate);
+  return {
+    OrderType: { value: payload.orderType },
+    OrderNbr: { value: payload.orderNumber },
+    Details: payload.lineNumbers.map((lineNbr) => ({
+      LineNbr: { value: lineNbr },
+      RequestedOn: { value: requestedDateTime },
+    })),
+  };
+}
+
+function unwrapAcumaticaValue(value: unknown) {
+  if (value && typeof value === "object" && "value" in value) {
+    return (value as { value?: unknown }).value;
+  }
+  return value;
+}
+
+function acumaticaString(row: Record<string, unknown> | null, key: string) {
+  if (!row) return null;
+  const raw = unwrapAcumaticaValue(row[key]);
+  if (raw === null || raw === undefined) return null;
+  const trimmed = String(raw).trim();
+  return trimmed || null;
+}
+
+function acumaticaInteger(row: Record<string, unknown> | null, key: string) {
+  const value = acumaticaString(row, key);
+  if (!value) return null;
+  const number = Number(value);
+  return Number.isInteger(number) ? number : null;
+}
+
+function acumaticaDateKey(row: Record<string, unknown> | null, key: string) {
+  const value = acumaticaString(row, key);
+  if (!value) return null;
+  try {
+    return normalizeDateKey(value, key);
+  } catch {
+    return null;
+  }
+}
+
+function acumaticaRows(value: unknown): Record<string, unknown>[] {
+  const raw = unwrapAcumaticaValue(value);
+  if (!Array.isArray(raw)) return [];
+  return raw.filter((row): row is Record<string, unknown> => {
+    return Boolean(row && typeof row === "object" && !Array.isArray(row));
+  });
+}
+
+export function readDeliveryRequestedDateLineStates(
+  order: Record<string, unknown>
+): DeliveryRequestedDateLineState[] {
+  return acumaticaRows(order.Details).map((line) => ({
+    lineNbr: acumaticaInteger(line, "LineNbr"),
+    requestedOnExposed: Object.prototype.hasOwnProperty.call(line, "RequestedOn"),
+    requestedOnRaw: acumaticaString(line, "RequestedOn"),
+    requestedOnDateKey: acumaticaDateKey(line, "RequestedOn"),
+    inventoryId: acumaticaString(line, "InventoryID"),
+  }));
+}
+
+function resultBase(
+  normalized: DeliveryRequestedDatePayload,
+  envSource: EnvSource = process.env
+) {
+  const liveWriteEnabled = isLiveWritebackEnabled(envSource);
+  const liveWriteGate = evaluateDeliveryRequestedDateWritebackLiveGate(normalized, envSource);
+  return {
+    orderType: normalized.orderType,
+    orderNumber: normalized.orderNumber,
+    fields: {
+      "Details[].LineNbr": normalized.lineNumbers,
+      "Details[].RequestedOn": requestedOnDateTime(normalized.requestedDeliveryDate),
+    },
+    trace: {
+      deliveryConfirmationId: normalized.deliveryConfirmationId,
+      deliveryGroupId: normalized.deliveryGroupId,
+      originalDeliveryDate: normalized.originalDeliveryDate,
+      requestedDeliveryDate: normalized.requestedDeliveryDate,
+      requestedAt: normalized.requestedAt ?? null,
+      source: normalized.source,
+      note: normalized.note ?? null,
+    },
+    liveWriteConfig: {
+      enabled: liveWriteEnabled,
+      allowAll: liveWriteGate.allowAll,
+      orderNumbersConfigured: liveWriteGate.orderNumbersConfigured,
+      orderTypesConfigured: liveWriteGate.orderTypesConfigured,
+      allowedByOrderNumber: liveWriteGate.allowedByOrderNumber,
+      allowedByOrderType: liveWriteGate.allowedByOrderType,
+      allowedByAllowlist: liveWriteGate.allowedByAllowlist,
+      allowedByLiveWriteGate: liveWriteGate.allowedByLiveWriteGate,
+    },
+  };
+}
+
+function currentOrderIdentity(order: Record<string, unknown>) {
+  return {
+    orderType: acumaticaString(order, "OrderType")?.toUpperCase() ?? null,
+    orderNumber: acumaticaString(order, "OrderNbr")?.toUpperCase() ?? null,
+  };
+}
+
+function targetLineSummary(lines: DeliveryRequestedDateLineState[]) {
+  return lines.map((line) => ({
+    lineNbr: line.lineNbr,
+    requestedOnExposed: line.requestedOnExposed,
+    requestedOnRaw: line.requestedOnRaw,
+    requestedOnDateKey: line.requestedOnDateKey,
+    inventoryId: line.inventoryId,
+  }));
+}
+
+export function buildDeliveryRequestedDateDryRunResult(
+  payload: Record<string, unknown> | undefined
+) {
+  const normalized = normalizeDeliveryRequestedDatePayload(payload);
+  const forcedDryRun = { ...normalized, dryRun: true };
+  const acumaticaPayload = buildDeliveryRequestedDateAcumaticaPayload(forcedDryRun);
+
+  return {
+    status: "dry_run",
+    wouldWrite: true,
+    dryRun: true,
+    skippedLiveWrite: true,
+    liveWriteEnabled: false,
+    futureLiveWriteRequires:
+      "dryRun=false, ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED=true, and ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOW_ALL=true or a matching ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOWED_ORDER_NBRS/ALLOWED_ORDER_TYPES allowlist",
+    ...resultBase(forcedDryRun),
+    acumaticaPayload,
+  };
+}
+
+export async function processDeliveryRequestedDateJob(
+  payload: Record<string, unknown> | undefined,
+  acumaticaClient: DeliveryRequestedDateAcumaticaClient,
+  envSource: EnvSource = process.env
+) {
+  const normalized = normalizeDeliveryRequestedDatePayload(payload);
+  const acumaticaPayload = buildDeliveryRequestedDateAcumaticaPayload(normalized);
+  const liveWriteEnabled = isLiveWritebackEnabled(envSource);
+
+  if (normalized.dryRun) {
+    return {
+      status: "dry_run",
+      wouldWrite: true,
+      dryRun: true,
+      skippedLiveWrite: true,
+      liveWriteEnabled,
+      futureLiveWriteRequires:
+        "dryRun=false, ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED=true, and ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOW_ALL=true or a matching ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOWED_ORDER_NBRS/ALLOWED_ORDER_TYPES allowlist",
+      ...resultBase(normalized, envSource),
+      acumaticaPayload,
+    };
+  }
+
+  if (!liveWriteEnabled) {
+    return {
+      status: "live_write_refused",
+      reason: "live_writeback_disabled",
+      wouldWrite: false,
+      dryRun: false,
+      skippedLiveWrite: true,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      acumaticaPayload,
+    };
+  }
+
+  const liveWriteGate = evaluateDeliveryRequestedDateWritebackLiveGate(normalized, envSource);
+  if (!liveWriteGate.allowedByLiveWriteGate) {
+    return {
+      status: "live_write_refused",
+      reason: "requested_date_writeback_not_allowlisted",
+      wouldWrite: false,
+      dryRun: false,
+      skippedLiveWrite: true,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      acumaticaPayload,
+    };
+  }
+
+  const rows = await acumaticaClient.fetchDeliverySalesOrderFull(
+    normalized.orderNumber,
+    normalized.orderType
+  );
+  const current = rows[0] || null;
+  if (!current) {
+    return {
+      status: "blocked_sales_order_not_found",
+      reason: "sales_order_not_found",
+      wouldWrite: false,
+      dryRun: false,
+      skippedLiveWrite: true,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      currentValues: null,
+      acumaticaPayload,
+    };
+  }
+
+  const currentIdentity = currentOrderIdentity(current);
+  if (
+    currentIdentity.orderType !== normalized.orderType ||
+    currentIdentity.orderNumber !== normalized.orderNumber
+  ) {
+    return {
+      status: "blocked_order_mismatch",
+      reason: "sales_order_identity_mismatch",
+      wouldWrite: false,
+      dryRun: false,
+      skippedLiveWrite: true,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      currentValues: currentIdentity,
+      acumaticaPayload,
+    };
+  }
+
+  const currentLines = readDeliveryRequestedDateLineStates(current);
+  const linesByNumber = new Map(
+    currentLines
+      .filter((line): line is DeliveryRequestedDateLineState & { lineNbr: number } => line.lineNbr !== null)
+      .map((line) => [line.lineNbr, line])
+  );
+  const missingLineNumbers = normalized.lineNumbers.filter((lineNbr) => !linesByNumber.has(lineNbr));
+  if (missingLineNumbers.length > 0) {
+    return {
+      status: "blocked_line_not_found",
+      reason: "requested_date_target_line_not_found",
+      wouldWrite: false,
+      dryRun: false,
+      skippedLiveWrite: true,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      currentValues: {
+        ...currentIdentity,
+        missingLineNumbers,
+      },
+      acumaticaPayload,
+    };
+  }
+
+  const targetLines = normalized.lineNumbers.map((lineNbr) => linesByNumber.get(lineNbr)!);
+  const notExposed = targetLines.filter((line) => !line.requestedOnExposed);
+  if (notExposed.length > 0) {
+    return {
+      status: "blocked_requested_on_not_exposed",
+      reason: "requested_on_not_readable",
+      wouldWrite: false,
+      dryRun: false,
+      skippedLiveWrite: true,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      currentValues: {
+        ...currentIdentity,
+        targetLines: targetLineSummary(targetLines),
+      },
+      acumaticaPayload,
+    };
+  }
+
+  const staleLines = targetLines.filter(
+    (line) => line.requestedOnDateKey !== normalized.originalDeliveryDate
+  );
+  if (staleLines.length > 0) {
+    const alreadyApplied = staleLines.every(
+      (line) => line.requestedOnDateKey === normalized.requestedDeliveryDate
+    );
+    return {
+      status: alreadyApplied ? "skipped_existing_value" : "blocked_stale_line_requested_on",
+      reason: alreadyApplied ? "requested_date_already_applied" : "requested_on_no_longer_matches_original",
+      wouldWrite: false,
+      dryRun: false,
+      skippedLiveWrite: true,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      currentValues: {
+        ...currentIdentity,
+        targetLines: targetLineSummary(targetLines),
+      },
+      acumaticaPayload,
+    };
+  }
+
+  const putResult = await acumaticaClient.putDeliveryRequestedDateLines(acumaticaPayload);
+
+  return {
+    status: "written",
+    wouldWrite: true,
+    dryRun: false,
+    skippedLiveWrite: false,
+    liveWriteEnabled,
+    ...resultBase(normalized, envSource),
+    currentValues: {
+      ...currentIdentity,
+      targetLines: targetLineSummary(targetLines),
+    },
+    acumaticaPayload,
+    acumaticaResponse: {
+      status: putResult.status,
+      body: putResult.body,
+    },
+  };
+}

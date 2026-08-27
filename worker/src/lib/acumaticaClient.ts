@@ -1252,6 +1252,57 @@ export class AcumaticaClient {
     return { status: response.status, body: parsedBody };
   }
 
+  async putDeliveryRequestedDateLines(
+    payload: Record<string, unknown>
+  ): Promise<{ status: number; body: unknown }> {
+    const token = await this.getToken();
+    const endpointName =
+      process.env.ACUMATICA_REQUESTED_DATE_WRITEBACK_ENDPOINT_NAME?.trim() ||
+      env.acumaticaDeliverySalesOrderEndpointName;
+    const endpointVersion =
+      process.env.ACUMATICA_REQUESTED_DATE_WRITEBACK_ENDPOINT_VERSION?.trim() ||
+      env.acumaticaDeliverySalesOrderEndpointVersion;
+    const url = `${env.acumaticaBaseUrl}/entity/${endpointName}/${endpointVersion}/SalesOrder`;
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const raw = await response.text();
+    let parsedBody: unknown = raw;
+    try {
+      parsedBody = raw ? (JSON.parse(raw) as unknown) : null;
+    } catch {
+      parsedBody = raw;
+    }
+
+    if (!response.ok) {
+      const err = new Error(
+        `Delivery requested-date writeback failed: ${response.status} ${response.statusText} ${
+          raw || ""
+        }`.trim()
+      );
+      const enriched = err as Error & {
+        status?: number;
+        responseBody?: unknown;
+        responseText?: string;
+      };
+      enriched.status = response.status;
+      enriched.responseBody = parsedBody;
+      enriched.responseText = raw;
+      throw err;
+    }
+
+    return { status: response.status, body: parsedBody };
+  }
+
   async fetchDeliveryTenDayConfirmationStates(orderNbr: string, orderType: string): Promise<
     Array<{
       orderType: string | null;
