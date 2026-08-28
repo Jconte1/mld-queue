@@ -15,6 +15,7 @@ export type DeliveryRequestedDatePayload = {
 
 export type DeliveryRequestedDateLineState = {
   lineNbr: number | null;
+  id: string | null;
   requestedOnExposed: boolean;
   requestedOnRaw: string | null;
   requestedOnDateKey: string | null;
@@ -182,16 +183,30 @@ export function normalizeDeliveryRequestedDatePayload(
 }
 
 export function buildDeliveryRequestedDateAcumaticaPayload(
-  payload: DeliveryRequestedDatePayload
+  payload: DeliveryRequestedDatePayload,
+  lineStates: DeliveryRequestedDateLineState[] = []
 ) {
   const requestedDateTime = requestedOnDateTime(payload.requestedDeliveryDate);
+  const lineIdsByNumber = new Map(
+    lineStates
+      .filter((line): line is DeliveryRequestedDateLineState & { lineNbr: number; id: string } => {
+        return line.lineNbr !== null && typeof line.id === "string" && line.id.trim().length > 0;
+      })
+      .map((line) => [line.lineNbr, line.id.trim()])
+  );
+
   return {
     OrderType: { value: payload.orderType },
     OrderNbr: { value: payload.orderNumber },
-    Details: payload.lineNumbers.map((lineNbr) => ({
-      LineNbr: { value: lineNbr },
-      RequestedOn: { value: requestedDateTime },
-    })),
+    Details: payload.lineNumbers.map((lineNbr) => {
+      const detail: Record<string, unknown> = {
+        LineNbr: { value: lineNbr },
+        RequestedOn: { value: requestedDateTime },
+      };
+      const id = lineIdsByNumber.get(lineNbr);
+      if (id) detail.id = id;
+      return detail;
+    }),
   };
 }
 
@@ -240,6 +255,7 @@ export function readDeliveryRequestedDateLineStates(
 ): DeliveryRequestedDateLineState[] {
   return acumaticaRows(order.Details).map((line) => ({
     lineNbr: acumaticaInteger(line, "LineNbr"),
+    id: acumaticaString(line, "id"),
     requestedOnExposed: Object.prototype.hasOwnProperty.call(line, "RequestedOn"),
     requestedOnRaw: acumaticaString(line, "RequestedOn"),
     requestedOnDateKey: acumaticaDateKey(line, "RequestedOn"),
@@ -292,6 +308,7 @@ function currentOrderIdentity(order: Record<string, unknown>) {
 function targetLineSummary(lines: DeliveryRequestedDateLineState[]) {
   return lines.map((line) => ({
     lineNbr: line.lineNbr,
+    hasId: Boolean(line.id),
     requestedOnExposed: line.requestedOnExposed,
     requestedOnRaw: line.requestedOnRaw,
     requestedOnDateKey: line.requestedOnDateKey,
@@ -431,6 +448,24 @@ export async function processDeliveryRequestedDateJob(
   }
 
   const targetLines = normalized.lineNumbers.map((lineNbr) => linesByNumber.get(lineNbr)!);
+  const missingIds = targetLines.filter((line) => !line.id);
+  if (missingIds.length > 0) {
+    return {
+      status: "blocked_line_identity_not_exposed",
+      reason: "requested_date_target_line_id_not_readable",
+      wouldWrite: false,
+      dryRun: false,
+      skippedLiveWrite: true,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      currentValues: {
+        ...currentIdentity,
+        targetLines: targetLineSummary(targetLines),
+      },
+      acumaticaPayload,
+    };
+  }
+
   const notExposed = targetLines.filter((line) => !line.requestedOnExposed);
   if (notExposed.length > 0) {
     return {
@@ -472,7 +507,8 @@ export async function processDeliveryRequestedDateJob(
     };
   }
 
-  const putResult = await acumaticaClient.putDeliveryRequestedDateLines(acumaticaPayload);
+  const writePayload = buildDeliveryRequestedDateAcumaticaPayload(normalized, targetLines);
+  const putResult = await acumaticaClient.putDeliveryRequestedDateLines(writePayload);
 
   return {
     status: "written",
@@ -485,7 +521,7 @@ export async function processDeliveryRequestedDateJob(
       ...currentIdentity,
       targetLines: targetLineSummary(targetLines),
     },
-    acumaticaPayload,
+    acumaticaPayload: writePayload,
     acumaticaResponse: {
       status: putResult.status,
       body: putResult.body,

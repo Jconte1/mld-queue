@@ -57,16 +57,19 @@ function orderRow(params: {
       params.lines ??
       [
         {
+          id: "line-1",
           LineNbr: field(1),
           InventoryID: field("ITEM-1"),
           RequestedOn: field("2026-10-07T00:00:00.000Z"),
         },
         {
+          id: "line-3",
           LineNbr: field(3),
           InventoryID: field("ITEM-3"),
           RequestedOn: field("2026-10-07"),
         },
         {
+          id: "line-8",
           LineNbr: field(8),
           InventoryID: field("OTHER-8"),
           RequestedOn: field("2026-11-01"),
@@ -164,18 +167,30 @@ async function main() {
   assertEqual(allowAllResult.status, "written", "allow-all live write status");
   assertEqual(allowAll.calls.fetch, 1, "allow-all fetch calls");
   assertEqual(allowAll.calls.put.length, 1, "allow-all put calls");
-  assertEqual(JSON.stringify(allowAll.calls.put[0]), JSON.stringify(buildDeliveryRequestedDateAcumaticaPayload({
-    orderType: "SO",
-    orderNumber: "SO40466",
-    deliveryConfirmationId: "dc_123",
-    deliveryGroupId: "dg_123",
-    originalDeliveryDate: "2026-10-07",
-    requestedDeliveryDate: "2026-10-14",
-    lineNumbers: [1, 3],
-    source: "WEBPAGE",
-    dryRun: false,
-    requestedAt: "2026-08-27T12:00:00.000Z",
-  })), "allow-all exact Acumatica payload");
+  assertEqual(
+    JSON.stringify(allowAll.calls.put[0]),
+    JSON.stringify({
+      OrderType: { value: "SO" },
+      OrderNbr: { value: "SO40466" },
+      Details: [
+        {
+          LineNbr: { value: 1 },
+          RequestedOn: { value: "2026-10-14T00:00:00.000Z" },
+          id: "line-1",
+        },
+        {
+          LineNbr: { value: 3 },
+          RequestedOn: { value: "2026-10-14T00:00:00.000Z" },
+          id: "line-3",
+        },
+      ],
+    }),
+    "allow-all exact Acumatica payload"
+  );
+  assert(
+    (allowAll.calls.put[0].Details as Array<Record<string, unknown>>).every((line) => typeof line.id === "string"),
+    "live write payload must include child detail ids"
+  );
   assert(
     !JSON.stringify(allowAll.calls.put[0]).includes("OTHER-8"),
     "write payload must not include unrelated order lines"
@@ -185,7 +200,25 @@ async function main() {
     "write payload must not include header RequestedOn"
   );
 
-  const missingLine = mockClient([orderRow({ lines: [{ LineNbr: field(1), RequestedOn: field("2026-10-07") }] })]);
+  const explicitPayloadShape = buildDeliveryRequestedDateAcumaticaPayload(payload(), [
+    {
+      lineNbr: 1,
+      id: "line-1",
+      requestedOnExposed: true,
+      requestedOnRaw: "2026-10-07",
+      requestedOnDateKey: "2026-10-07",
+      inventoryId: "ITEM-1",
+    },
+  ]);
+  assertEqual(
+    (explicitPayloadShape.Details[0] as Record<string, unknown>).id,
+    "line-1",
+    "explicit payload builder includes detail id"
+  );
+
+  const missingLine = mockClient([
+    orderRow({ lines: [{ id: "line-1", LineNbr: field(1), RequestedOn: field("2026-10-07") }] }),
+  ]);
   const missingLineResult = await processDeliveryRequestedDateJob(
     payload({ dryRun: false }),
     missingLine.client,
@@ -197,8 +230,36 @@ async function main() {
   assertEqual(missingLineResult.status, "blocked_line_not_found", "missing target line status");
   assertEqual(missingLine.calls.put.length, 0, "missing target line put calls");
 
+  const missingLineId = mockClient([
+    orderRow({
+      lines: [
+        { id: "line-1", LineNbr: field(1), RequestedOn: field("2026-10-07") },
+        { LineNbr: field(3), RequestedOn: field("2026-10-07") },
+      ],
+    }),
+  ]);
+  const missingLineIdResult = await processDeliveryRequestedDateJob(
+    payload({ dryRun: false }),
+    missingLineId.client,
+    {
+      ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED: "true",
+      ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOW_ALL: "true",
+    }
+  );
+  assertEqual(
+    missingLineIdResult.status,
+    "blocked_line_identity_not_exposed",
+    "missing target line id status"
+  );
+  assertEqual(missingLineId.calls.put.length, 0, "missing target line id put calls");
+
   const missingRequestedOn = mockClient([
-    orderRow({ lines: [{ LineNbr: field(1) }, { LineNbr: field(3), RequestedOn: field("2026-10-07") }] }),
+    orderRow({
+      lines: [
+        { id: "line-1", LineNbr: field(1) },
+        { id: "line-3", LineNbr: field(3), RequestedOn: field("2026-10-07") },
+      ],
+    }),
   ]);
   const missingRequestedOnResult = await processDeliveryRequestedDateJob(
     payload({ dryRun: false }),
@@ -214,8 +275,8 @@ async function main() {
   const stale = mockClient([
     orderRow({
       lines: [
-        { LineNbr: field(1), RequestedOn: field("2026-10-08") },
-        { LineNbr: field(3), RequestedOn: field("2026-10-07") },
+        { id: "line-1", LineNbr: field(1), RequestedOn: field("2026-10-08") },
+        { id: "line-3", LineNbr: field(3), RequestedOn: field("2026-10-07") },
       ],
     }),
   ]);
@@ -233,8 +294,8 @@ async function main() {
   const alreadyApplied = mockClient([
     orderRow({
       lines: [
-        { LineNbr: field(1), RequestedOn: field("2026-10-14") },
-        { LineNbr: field(3), RequestedOn: field("2026-10-14") },
+        { id: "line-1", LineNbr: field(1), RequestedOn: field("2026-10-14") },
+        { id: "line-3", LineNbr: field(3), RequestedOn: field("2026-10-14") },
       ],
     }),
   ]);
@@ -298,6 +359,7 @@ async function main() {
         allowlistMismatch: allowlistMismatchResult.status,
         allowAllLiveWrite: allowAllResult.status,
         missingTargetLine: missingLineResult.status,
+        missingTargetLineId: missingLineIdResult.status,
         requestedOnNotExposed: missingRequestedOnResult.status,
         staleRequestedOn: staleResult.status,
         alreadyApplied: alreadyAppliedResult.status,
