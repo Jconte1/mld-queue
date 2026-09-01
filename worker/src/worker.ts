@@ -10,6 +10,7 @@ import { processDeliveryRequestedDateJob } from "./lib/deliveryRequestedDate";
 import { processDeliveryContactOptInAttributesJob } from "./lib/deliveryContactOptInAttributes";
 import { processDeliveryPrepaymentHoldJob } from "./lib/deliveryPrepaymentHold";
 import { processDeliveryTenDayConfirmationJob } from "./lib/deliveryTenDayConfirmation";
+import { processDeliveryScheduledIntervalJob } from "./lib/deliveryScheduledInterval";
 import { processStockItemCleanupRunJob } from "./lib/stockItemCleanup";
 import { Semaphore, TokenBucket } from "./lib/throttle";
 import type { JobMessage } from "./types";
@@ -397,6 +398,10 @@ async function processJob(message: JobMessage): Promise<unknown> {
 
     case "ERP_UPDATE_DELIVERY_TEN_DAY_CONFIRMATION": {
       return processDeliveryTenDayConfirmationJob(message.payload, acumaticaClient);
+    }
+
+    case "RUN_DELIVERY_INTERVAL_SCHEDULED": {
+      return processDeliveryScheduledIntervalJob(message.payload);
     }
 
     case "ERP_MARK_THANK_YOU_SENT": {

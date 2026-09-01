@@ -14,12 +14,15 @@
     "validate:delivery-contact-opt-in-fetch": "tsx scripts/validate-delivery-contact-opt-in-fetch.ts",
     "validate:delivery-contact-opt-in-writeback": "tsx scripts/validate-delivery-contact-opt-in-writeback.ts",
     "validate:one-week-confirmation-writeback": "tsx scripts/validate-delivery-ten-day-confirmation.ts",
+    "validate:delivery-scheduled-interval": "tsx scripts/validate-delivery-scheduled-interval.ts",
     "count:sales-orders-with-contact": "tsx scripts/count-sales-orders-with-contact.ts"
   },
   "dependencies": {
     "@azure/service-bus": "^7.9.5",
     "@prisma/client": "^6.6.0",
-    "dotenv": "^17.3.1"
+    "@types/pg": "^8.11.10",
+    "dotenv": "^17.3.1",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "@types/node": "^20.17.0",
