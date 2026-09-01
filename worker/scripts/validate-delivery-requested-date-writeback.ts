@@ -7,6 +7,7 @@ import {
   evaluateDeliveryRequestedDateWritebackLiveGate,
   processDeliveryRequestedDateJob,
   type DeliveryRequestedDateAcumaticaClient,
+  type DeliveryRequestedDatePayload,
 } from "../src/lib/deliveryRequestedDate";
 
 function assertEqual<T>(actual: T, expected: T, label: string) {
@@ -25,7 +26,9 @@ function resultReason(value: unknown) {
     : null;
 }
 
-function payload(overrides: Record<string, unknown> = {}) {
+function payload(
+  overrides: Partial<DeliveryRequestedDatePayload> = {}
+): DeliveryRequestedDatePayload {
   return {
     orderType: "SO",
     orderNumber: "SO40466",
