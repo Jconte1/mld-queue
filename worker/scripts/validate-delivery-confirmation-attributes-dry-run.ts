@@ -92,29 +92,22 @@ async function main() {
   const disabledResult = await processDeliveryConfirmationAttributesJob(
     payload({ dryRun: false }),
     disabled.client,
-    {}
+    { ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "false" }
   );
   assertEqual(disabledResult.status, "live_write_refused", "disabled guard status");
   assertEqual(resultReason(disabledResult), "live_writeback_disabled", "disabled guard reason");
   assertEqual(disabled.calls.fetch, 0, "disabled guard fetch calls");
   assertEqual(disabled.calls.put.length, 0, "disabled guard put calls");
 
-  const anyOrder = mockClient(currentValues());
-  const anyOrderResult = await processDeliveryConfirmationAttributesJob(
+  const defaultLive = mockClient(currentValues());
+  const defaultLiveResult = await processDeliveryConfirmationAttributesJob(
     payload({ orderNumber: "SO99999", dryRun: false }),
-    anyOrder.client,
-    {
-      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
-    }
+    defaultLive.client,
+    {}
   );
-  assertEqual(anyOrderResult.status, "live_write_refused", "enabled live write without allowlist status");
-  assertEqual(
-    resultReason(anyOrderResult),
-    "confirmation_writeback_not_allowlisted",
-    "enabled live write without allowlist reason"
-  );
-  assertEqual(anyOrder.calls.fetch, 0, "enabled live write without allowlist fetch calls");
-  assertEqual(anyOrder.calls.put.length, 0, "enabled live write without allowlist put calls");
+  assertEqual(defaultLiveResult.status, "written", "missing env defaults to live write status");
+  assertEqual(defaultLive.calls.fetch, 1, "missing env defaults to live write fetch calls");
+  assertEqual(defaultLive.calls.put.length, 1, "missing env defaults to live write put calls");
 
   const allowAll = mockClient(currentValues());
   const allowAllResult = await processDeliveryConfirmationAttributesJob(
@@ -245,7 +238,7 @@ async function main() {
       {
         dryRun: dryRunResult.status,
         disabledGuard: disabledResult.status,
-        enabledLiveWriteWithoutAllowlist: anyOrderResult.status,
+        missingEnvDefaultsToLiveWrite: defaultLiveResult.status,
         allowAllLiveWrite: allowAllResult.status,
         orderNumberAllowlistLiveWrite: allowlistedOrderResult.status,
         orderTypeAllowlistLiveWrite: allowlistedTypeResult.status,

@@ -285,7 +285,10 @@ async function main() {
       dryRun: false,
     },
     disabledClient,
-    { ACUMATICA_PREPAYMENT_HOLD_DRY_RUN: "false" }
+    {
+      ACUMATICA_PREPAYMENT_HOLD_DRY_RUN: "false",
+      ACUMATICA_PREPAYMENT_HOLD_WRITE_ENABLED: "false",
+    }
   );
   assertEqual(disabled.status, "refused", "live disabled refuses");
   assertEqual(disabled.reason, "live_write_disabled", "live disabled reason");

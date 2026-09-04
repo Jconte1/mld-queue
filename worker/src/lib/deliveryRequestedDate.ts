@@ -115,14 +115,13 @@ function listValues(value: string | undefined) {
 }
 
 function isLiveWritebackEnabled(envSource: EnvSource) {
-  return envSource.ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED?.trim().toLowerCase() === "true";
+  return envSource.ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED?.trim().toLowerCase() !== "false";
 }
 
 export function evaluateDeliveryRequestedDateWritebackLiveGate(
   normalized: Pick<DeliveryRequestedDatePayload, "orderType" | "orderNumber">,
   envSource: EnvSource = process.env
 ) {
-  const allowAll = flagIsTrue(envSource, "ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOW_ALL");
   const allowedOrderNumbers = listValues(
     envSource.ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOWED_ORDER_NBRS
   );
@@ -131,11 +130,15 @@ export function evaluateDeliveryRequestedDateWritebackLiveGate(
   );
   const orderNumbersConfigured = allowedOrderNumbers.size > 0;
   const orderTypesConfigured = allowedOrderTypes.size > 0;
+  const allowlistConfigured = orderNumbersConfigured || orderTypesConfigured;
+  const allowAll =
+    flagIsTrue(envSource, "ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOW_ALL") ||
+    (!allowlistConfigured &&
+      envSource.ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOW_ALL?.trim().toLowerCase() !== "false");
   const allowedByOrderNumber =
     orderNumbersConfigured && allowedOrderNumbers.has(normalized.orderNumber.toUpperCase());
   const allowedByOrderType =
     orderTypesConfigured && allowedOrderTypes.has(normalized.orderType.toUpperCase());
-  const allowlistConfigured = orderNumbersConfigured || orderTypesConfigured;
   const allowedByAllowlist =
     allowlistConfigured &&
     (orderNumbersConfigured ? allowedByOrderNumber : true) &&
@@ -172,7 +175,7 @@ export function normalizeDeliveryRequestedDatePayload(
     ),
     lineNumbers: normalizeLineNumbers(payload.lineNumbers),
     source: normalizeSource(stringValue(payload, "source")),
-    dryRun: booleanValue(payload, "dryRun", true),
+    dryRun: booleanValue(payload, "dryRun", false),
     requestedAt: optionalStringValue(payload, "requestedAt"),
     requestedBy:
       payload.requestedBy && typeof payload.requestedBy === "object" && !Array.isArray(payload.requestedBy)

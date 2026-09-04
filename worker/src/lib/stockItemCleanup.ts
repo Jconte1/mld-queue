@@ -56,6 +56,34 @@ function cleanErrorMessage(error: unknown): string {
   return (error instanceof Error ? error.message : String(error)).slice(0, MAX_ERROR_CHARS);
 }
 
+function errorStatus(error: unknown): number | null {
+  const status = (error as { status?: unknown } | undefined)?.status;
+  return typeof status === "number" ? status : null;
+}
+
+function isFatalRunError(error: unknown): boolean {
+  const status = errorStatus(error);
+  if (status === 401 || status === 403) return true;
+
+  const message = cleanErrorMessage(error).toLowerCase();
+  return (
+    message.includes("token request failed") ||
+    message.includes("missing required env var") ||
+    message.includes("unauthorized")
+  );
+}
+
+function isBusinessRuleError(error: unknown): boolean {
+  const message = cleanErrorMessage(error).toLowerCase();
+  return (
+    message.includes("an error occurred during processing of the field") ||
+    message.includes("cannot be changed") ||
+    message.includes("purchase receipt") ||
+    message.includes("business rule") ||
+    message.includes("validation")
+  );
+}
+
 function toPrismaJson(value: unknown): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
   if (value === null || value === undefined) return Prisma.JsonNull;
   return value as Prisma.InputJsonValue;
@@ -264,6 +292,8 @@ async function processCleanupItem(
     data: { currentItemId: item.inventoryId },
   });
 
+  let failureContext: Prisma.StockItemCleanupItemUpdateInput = {};
+
   try {
     const stockPayload = await withAcumaticaRetry(
       `StockItem GET ${item.inventoryId}`,
@@ -283,14 +313,17 @@ async function processCleanupItem(
     const oldVendor = firstVendor(stockItem);
     const beforeState = stockItemSummary(stockItem);
     const oldItemClass = upper(stringField(stockItem, "ItemClass"));
+    failureContext = {
+      oldVendorId: oldVendor?.vendorId || null,
+      oldVendorName: oldVendor?.vendorName || null,
+      oldItemClass: oldItemClass || null,
+      qtyOnHandSummary: toPrismaJson(qtyOnHandSummary),
+      beforeState: toPrismaJson(beforeState),
+    };
 
     if (qtyOnHandSummary.hasPositiveQtyOnHand) {
       await markItem(item.id, "skipped_qty_on_hand", {
-        oldVendorId: oldVendor?.vendorId || null,
-        oldVendorName: oldVendor?.vendorName || null,
-        oldItemClass: oldItemClass || null,
-        qtyOnHandSummary: toPrismaJson(qtyOnHandSummary),
-        beforeState: toPrismaJson(beforeState),
+        ...failureContext,
       });
       return { stopRun: false };
     }
@@ -349,6 +382,7 @@ async function processCleanupItem(
       qtyOnHandSummary: toPrismaJson(qtyOnHandSummary),
       beforeState: toPrismaJson(beforeState),
     };
+    failureContext = commonResult;
 
     if (alreadyMatches) {
       await markItem(item.id, "already_updated", {
@@ -442,13 +476,21 @@ async function processCleanupItem(
     });
     return { stopRun: false };
   } catch (error) {
+    const fatal = isFatalRunError(error);
     const transient = isTransientError(error);
-    await markItem(item.id, transient ? "failed_api_transient" : "failed_validation_business_rule", {
+    const status =
+      !fatal && (isBusinessRuleError(error) || !transient)
+        ? "failed_validation_business_rule"
+        : "failed_api_transient";
+
+    await markItem(item.id, status, {
+      ...failureContext,
       error: cleanErrorMessage(error),
     });
+
     return {
-      stopRun: true,
-      reason: transient ? "transient_api_error" : "validation_or_business_rule_error",
+      stopRun: fatal,
+      reason: fatal ? "fatal_acumatica_error" : undefined,
     };
   } finally {
     await prisma.stockItemCleanupRun.update({

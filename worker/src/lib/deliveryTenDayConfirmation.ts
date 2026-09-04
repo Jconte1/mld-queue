@@ -64,11 +64,11 @@ function normalizeReason(value: string | undefined) {
 }
 
 function envFlagEnabled(envSource: EnvSource, name: string) {
-  return envSource[name]?.trim().toLowerCase() === "true";
+  return envSource[name]?.trim().toLowerCase() !== "false";
 }
 
 function envDryRunEnabled(envSource: EnvSource) {
-  return envSource.ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN?.trim().toLowerCase() !== "false";
+  return envSource.ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN?.trim().toLowerCase() === "true";
 }
 
 function allowedOrderNumber(envSource: EnvSource) {

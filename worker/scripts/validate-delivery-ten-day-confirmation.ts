@@ -99,7 +99,10 @@ async function main() {
   const disabledResult = await processDeliveryTenDayConfirmationJob(
     { orderType: "SO", orderNumber: "SO123", dryRun: false },
     disabled.client,
-    { ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN: "false" }
+    {
+      ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN: "false",
+      ACUMATICA_TEN_DAY_CONFIRMATION_WRITE_ENABLED: "false",
+    }
   );
   assert(disabledResult.status === "refused", "live disabled is refused", failures);
   assert(disabledResult.reason === "live_write_disabled", "live disabled reason", failures);

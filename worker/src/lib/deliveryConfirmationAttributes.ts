@@ -58,7 +58,7 @@ function isBlank(value: string | null | undefined) {
 type EnvSource = Record<string, string | undefined>;
 
 function isLiveWritebackEnabled(envSource: EnvSource) {
-  return envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED?.trim().toLowerCase() === "true";
+  return envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED?.trim().toLowerCase() !== "false";
 }
 
 function flagIsTrue(envSource: EnvSource, name: string) {
@@ -78,7 +78,6 @@ export function evaluateDeliveryConfirmationWritebackLiveGate(
   normalized: Pick<DeliveryConfirmationAttributesPayload, "orderType" | "orderNumber">,
   envSource: EnvSource = process.env
 ) {
-  const allowAll = flagIsTrue(envSource, "ACUMATICA_CONFIRMATION_WRITEBACK_ALLOW_ALL");
   const allowedOrderNumbers = listValues(
     envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS
   );
@@ -87,11 +86,15 @@ export function evaluateDeliveryConfirmationWritebackLiveGate(
   );
   const orderNumbersConfigured = allowedOrderNumbers.size > 0;
   const orderTypesConfigured = allowedOrderTypes.size > 0;
+  const allowlistConfigured = orderNumbersConfigured || orderTypesConfigured;
+  const allowAll =
+    flagIsTrue(envSource, "ACUMATICA_CONFIRMATION_WRITEBACK_ALLOW_ALL") ||
+    (!allowlistConfigured &&
+      envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ALLOW_ALL?.trim().toLowerCase() !== "false");
   const allowedByOrderNumber =
     orderNumbersConfigured && allowedOrderNumbers.has(normalized.orderNumber.toUpperCase());
   const allowedByOrderType =
     orderTypesConfigured && allowedOrderTypes.has(normalized.orderType.toUpperCase());
-  const allowlistConfigured = orderNumbersConfigured || orderTypesConfigured;
   const allowedByAllowlist =
     allowlistConfigured &&
     (orderNumbersConfigured ? allowedByOrderNumber : true) &&
@@ -125,7 +128,7 @@ export function normalizeDeliveryConfirmationAttributesPayload(
     deliveryGroupId: stringValue(payload, "deliveryGroupId"),
     deliveryDate: stringValue(payload, "deliveryDate"),
     source: stringValue(payload, "source"),
-    dryRun: booleanValue(payload, "dryRun", true),
+    dryRun: booleanValue(payload, "dryRun", false),
     note: typeof payload.note === "string" && payload.note.trim() ? payload.note.trim() : undefined,
   };
 }

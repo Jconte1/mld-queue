@@ -78,11 +78,11 @@ function optionalFalseValue(
 }
 
 function envFlagEnabled(envSource: EnvSource, name: string) {
-  return envSource[name]?.trim().toLowerCase() === "true";
+  return envSource[name]?.trim().toLowerCase() !== "false";
 }
 
 function envDryRunEnabled(envSource: EnvSource) {
-  return envSource.ACUMATICA_CONTACT_OPT_IN_DRY_RUN?.trim().toLowerCase() !== "false";
+  return envSource.ACUMATICA_CONTACT_OPT_IN_DRY_RUN?.trim().toLowerCase() === "true";
 }
 
 function allowedContactId(envSource: EnvSource) {

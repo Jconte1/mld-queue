@@ -15,6 +15,7 @@
     "validate:delivery-contact-opt-in-writeback": "tsx scripts/validate-delivery-contact-opt-in-writeback.ts",
     "validate:one-week-confirmation-writeback": "tsx scripts/validate-delivery-ten-day-confirmation.ts",
     "validate:delivery-scheduled-interval": "tsx scripts/validate-delivery-scheduled-interval.ts",
+    "stock-item-cleanup:run": "tsx scripts/run-stock-item-cleanup.ts",
     "count:sales-orders-with-contact": "tsx scripts/count-sales-orders-with-contact.ts"
   },
   "dependencies": {

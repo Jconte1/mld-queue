@@ -174,7 +174,10 @@ async function main() {
       dryRun: false,
     },
     disabled.client,
-    { ACUMATICA_CONTACT_OPT_IN_DRY_RUN: "false" }
+    {
+      ACUMATICA_CONTACT_OPT_IN_DRY_RUN: "false",
+      ACUMATICA_CONTACT_OPT_IN_WRITE_ENABLED: "false",
+    }
   );
   assert(disabledResult.status === "refused", "live disabled is refused", failures);
   assert(disabledResult.reason === "live_write_disabled", "live disabled reason is reported", failures);

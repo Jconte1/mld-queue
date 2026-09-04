@@ -117,10 +117,19 @@ async function main() {
 
   const disabled = mockClient();
   const disabledResult = await processDeliveryRequestedDateJob(payload({ dryRun: false }), disabled.client, {});
-  assertEqual(disabledResult.status, "live_write_refused", "disabled guard status");
-  assertEqual(resultReason(disabledResult), "live_writeback_disabled", "disabled guard reason");
-  assertEqual(disabled.calls.fetch, 0, "disabled guard fetch calls");
-  assertEqual(disabled.calls.put.length, 0, "disabled guard put calls");
+  const explicitlyDisabled = mockClient();
+  const explicitlyDisabledResult = await processDeliveryRequestedDateJob(
+    payload({ dryRun: false }),
+    explicitlyDisabled.client,
+    { ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED: "false" }
+  );
+  assertEqual(disabledResult.status, "written", "missing env defaults to live write status");
+  assertEqual(disabled.calls.fetch, 1, "missing env defaults to live write fetch calls");
+  assertEqual(disabled.calls.put.length, 1, "missing env defaults to live write put calls");
+  assertEqual(explicitlyDisabledResult.status, "live_write_refused", "disabled guard status");
+  assertEqual(resultReason(explicitlyDisabledResult), "live_writeback_disabled", "disabled guard reason");
+  assertEqual(explicitlyDisabled.calls.fetch, 0, "disabled guard fetch calls");
+  assertEqual(explicitlyDisabled.calls.put.length, 0, "disabled guard put calls");
 
   const enabledNoAllowlist = mockClient();
   const enabledNoAllowlistResult = await processDeliveryRequestedDateJob(
@@ -128,13 +137,8 @@ async function main() {
     enabledNoAllowlist.client,
     { ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED: "true" }
   );
-  assertEqual(enabledNoAllowlistResult.status, "live_write_refused", "enabled without allowlist status");
-  assertEqual(
-    resultReason(enabledNoAllowlistResult),
-    "requested_date_writeback_not_allowlisted",
-    "enabled without allowlist reason"
-  );
-  assertEqual(enabledNoAllowlist.calls.fetch, 0, "enabled without allowlist fetch calls");
+  assertEqual(enabledNoAllowlistResult.status, "written", "enabled without allowlist defaults to live status");
+  assertEqual(enabledNoAllowlist.calls.fetch, 1, "enabled without allowlist fetch calls");
 
   const allowlistMismatch = mockClient();
   const allowlistMismatchResult = await processDeliveryRequestedDateJob(
