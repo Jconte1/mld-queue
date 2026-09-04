@@ -441,7 +441,9 @@ export class AcumaticaClient {
 
   private get readEntityBase(): string {
     const endpointName = process.env.ACUMATICA_READ_ENDPOINT_NAME?.trim() || "CustomEndpoint";
-    const endpointVersion = process.env.ACUMATICA_READ_ENDPOINT_VERSION?.trim() || "24.200.001";
+    const endpointVersion =
+      process.env.ACUMATICA_READ_ENDPOINT_VERSION?.trim() ||
+      env.acumaticaEndpointVersion;
     return `${env.acumaticaBaseUrl}/entity/${endpointName}/${endpointVersion}`;
   }
 
@@ -1673,7 +1675,8 @@ export class AcumaticaClient {
     const token = await this.getToken();
     const endpointName = process.env.ACUMATICA_THANK_YOU_WRITE_ENDPOINT_NAME?.trim() || "Default";
     const endpointVersion =
-      process.env.ACUMATICA_THANK_YOU_WRITE_ENDPOINT_VERSION?.trim() || "24.200.001";
+      process.env.ACUMATICA_THANK_YOU_WRITE_ENDPOINT_VERSION?.trim() ||
+      env.acumaticaEndpointVersion;
     const url = `${env.acumaticaBaseUrl}/entity/${endpointName}/${endpointVersion}/SalesOrder`;
 
     const payload: Record<string, unknown> = {

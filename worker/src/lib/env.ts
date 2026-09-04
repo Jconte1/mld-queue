@@ -21,6 +21,14 @@ for (const name of required) {
   getEnv(name);
 }
 
+function optionalEnv(name: string) {
+  return process.env[name]?.trim() || undefined;
+}
+
+function endpointVersion(name: string) {
+  return optionalEnv(name) || optionalEnv("ACUMATICA_ENDPOINT_VERSION") || "24.200.001";
+}
+
 export const env = {
   serviceBusConnectionString: getEnv("AZURE_SERVICEBUS_CONNECTION_STRING"),
   queueName: process.env.MLD_QUEUE_WORKER_QUEUE_NAME?.trim() || getEnv("SPECBOOKS_QUEUE_NAME"),
@@ -29,23 +37,23 @@ export const env = {
   acumaticaClientSecret: getEnv("ACUMATICA_CLIENT_SECRET"),
   acumaticaUsername: getEnv("ACUMATICA_USERNAME"),
   acumaticaPassword: getEnv("ACUMATICA_PASSWORD"),
-  acumaticaEndpointName: process.env.ACUMATICA_ENDPOINT_NAME ?? "CustomEndpoint",
-  acumaticaEndpointVersion: process.env.ACUMATICA_ENDPOINT_VERSION ?? "24.200.001",
-  acumaticaCustomerEntity: process.env.ACUMATICA_CUSTOMER_ENTITY ?? "Customer",
-  acumaticaOpportunityEntity: process.env.ACUMATICA_OPPORTUNITY_ENTITY ?? "Opportunity",
-  acumaticaContactEntity: process.env.ACUMATICA_CONTACT_ENTITY ?? "Contact",
-  acumaticaStockItemEntity: process.env.ACUMATICA_STOCK_ITEM_ENTITY ?? "StockItem",
-  acumaticaItemClassEntity: process.env.ACUMATICA_ITEM_CLASS_ENTITY ?? "ItemClass",
-  acumaticaVendorEntity: process.env.ACUMATICA_VENDOR_ENTITY ?? "Vendor",
-  acumaticaSalesInvoiceEntity: process.env.ACUMATICA_SALES_INVOICE_ENTITY ?? "SalesInvoice",
-  acumaticaStockItemEndpointName: process.env.ACUMATICA_STOCK_ITEM_ENDPOINT_NAME ?? "CustomEndpoint",
-  acumaticaStockItemEndpointVersion: process.env.ACUMATICA_STOCK_ITEM_ENDPOINT_VERSION ?? "24.200.001",
+  acumaticaEndpointName: optionalEnv("ACUMATICA_ENDPOINT_NAME") ?? "CustomEndpoint",
+  acumaticaEndpointVersion: endpointVersion("ACUMATICA_ENDPOINT_VERSION"),
+  acumaticaCustomerEntity: optionalEnv("ACUMATICA_CUSTOMER_ENTITY") ?? "Customer",
+  acumaticaOpportunityEntity: optionalEnv("ACUMATICA_OPPORTUNITY_ENTITY") ?? "Opportunity",
+  acumaticaContactEntity: optionalEnv("ACUMATICA_CONTACT_ENTITY") ?? "Contact",
+  acumaticaStockItemEntity: optionalEnv("ACUMATICA_STOCK_ITEM_ENTITY") ?? "StockItem",
+  acumaticaItemClassEntity: optionalEnv("ACUMATICA_ITEM_CLASS_ENTITY") ?? "ItemClass",
+  acumaticaVendorEntity: optionalEnv("ACUMATICA_VENDOR_ENTITY") ?? "Vendor",
+  acumaticaSalesInvoiceEntity: optionalEnv("ACUMATICA_SALES_INVOICE_ENTITY") ?? "SalesInvoice",
+  acumaticaStockItemEndpointName: optionalEnv("ACUMATICA_STOCK_ITEM_ENDPOINT_NAME") ?? "CustomEndpoint",
+  acumaticaStockItemEndpointVersion: endpointVersion("ACUMATICA_STOCK_ITEM_ENDPOINT_VERSION"),
   acumaticaDeliveryEndpointName: process.env.ACUMATICA_DELIVERY_ENDPOINT_NAME?.trim() || "Delivery",
-  acumaticaDeliveryEndpointVersion: process.env.ACUMATICA_DELIVERY_ENDPOINT_VERSION?.trim() || "24.200.001",
+  acumaticaDeliveryEndpointVersion: endpointVersion("ACUMATICA_DELIVERY_ENDPOINT_VERSION"),
   acumaticaDeliverySalesOrderEndpointName:
     process.env.ACUMATICA_DELIVERY_SALES_ORDER_ENDPOINT_NAME?.trim() || "DeliverySalesOrder",
   acumaticaDeliverySalesOrderEndpointVersion:
-    process.env.ACUMATICA_DELIVERY_SALES_ORDER_ENDPOINT_VERSION?.trim() || "24.200.001",
+    endpointVersion("ACUMATICA_DELIVERY_SALES_ORDER_ENDPOINT_VERSION"),
   acumaticaOpportunityExpand: process.env.ACUMATICA_OPPORTUNITY_EXPAND ?? "Products,Address",
   vendorMaxConcurrency: Number(process.env.VENDOR_MAX_CONCURRENCY ?? 8),
   vendorMaxRpm: Number(process.env.VENDOR_MAX_RPM ?? 90),
