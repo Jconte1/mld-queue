@@ -81,11 +81,40 @@ function orderRow(params: {
   };
 }
 
-function mockClient(rows: Record<string, unknown>[] | null = [orderRow()]) {
+function updatedOrderRow() {
+  return orderRow({
+    lines: [
+      {
+        id: "line-1",
+        LineNbr: field(1),
+        InventoryID: field("ITEM-1"),
+        RequestedOn: field("2026-10-14T00:00:00.000Z"),
+      },
+      {
+        id: "line-3",
+        LineNbr: field(3),
+        InventoryID: field("ITEM-3"),
+        RequestedOn: field("2026-10-14"),
+      },
+      {
+        id: "line-8",
+        LineNbr: field(8),
+        InventoryID: field("OTHER-8"),
+        RequestedOn: field("2026-11-01"),
+      },
+    ],
+  });
+}
+
+function mockClient(
+  rows: Record<string, unknown>[] | null = [orderRow()],
+  verificationRows: Record<string, unknown>[] | null = [updatedOrderRow()]
+) {
   const calls: { fetch: number; put: Array<Record<string, unknown>> } = { fetch: 0, put: [] };
   const client: DeliveryRequestedDateAcumaticaClient = {
     async fetchDeliverySalesOrderFull() {
       calls.fetch += 1;
+      if (calls.fetch > 1) return verificationRows ?? [];
       return rows ?? [];
     },
     async putDeliveryRequestedDateLines(writePayload) {
@@ -124,7 +153,7 @@ async function main() {
     { ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED: "false" }
   );
   assertEqual(disabledResult.status, "written", "missing env defaults to live write status");
-  assertEqual(disabled.calls.fetch, 1, "missing env defaults to live write fetch calls");
+  assertEqual(disabled.calls.fetch, 2, "missing env defaults to live write fetch calls");
   assertEqual(disabled.calls.put.length, 1, "missing env defaults to live write put calls");
   assertEqual(explicitlyDisabledResult.status, "live_write_refused", "disabled guard status");
   assertEqual(resultReason(explicitlyDisabledResult), "live_writeback_disabled", "disabled guard reason");
@@ -138,7 +167,7 @@ async function main() {
     { ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED: "true" }
   );
   assertEqual(enabledNoAllowlistResult.status, "written", "enabled without allowlist defaults to live status");
-  assertEqual(enabledNoAllowlist.calls.fetch, 1, "enabled without allowlist fetch calls");
+  assertEqual(enabledNoAllowlist.calls.fetch, 2, "enabled without allowlist fetch calls");
 
   const allowlistMismatch = mockClient();
   const allowlistMismatchResult = await processDeliveryRequestedDateJob(
@@ -172,7 +201,7 @@ async function main() {
     }
   );
   assertEqual(allowAllResult.status, "written", "allow-all live write status");
-  assertEqual(allowAll.calls.fetch, 1, "allow-all fetch calls");
+  assertEqual(allowAll.calls.fetch, 2, "allow-all fetch calls");
   assertEqual(allowAll.calls.put.length, 1, "allow-all put calls");
   assertEqual(
     JSON.stringify(allowAll.calls.put[0]),
@@ -298,6 +327,24 @@ async function main() {
   assertEqual(staleResult.status, "blocked_stale_line_requested_on", "stale RequestedOn status");
   assertEqual(stale.calls.put.length, 0, "stale RequestedOn put calls");
 
+  const verificationFailed = mockClient([orderRow()], [orderRow()]);
+  const verificationFailedResult = await processDeliveryRequestedDateJob(
+    payload({ dryRun: false }),
+    verificationFailed.client,
+    {
+      ACUMATICA_REQUESTED_DATE_WRITEBACK_ENABLED: "true",
+      ACUMATICA_REQUESTED_DATE_WRITEBACK_ALLOW_ALL: "true",
+    }
+  );
+  assertEqual(verificationFailedResult.status, "failed", "verification mismatch fails status");
+  assertEqual(
+    resultReason(verificationFailedResult),
+    "requested_date_verification_failed",
+    "verification mismatch reason"
+  );
+  assertEqual(verificationFailed.calls.fetch, 2, "verification mismatch fetch count");
+  assertEqual(verificationFailed.calls.put.length, 1, "verification mismatch still attempted put once");
+
   const alreadyApplied = mockClient([
     orderRow({
       lines: [
@@ -369,6 +416,7 @@ async function main() {
         missingTargetLineId: missingLineIdResult.status,
         requestedOnNotExposed: missingRequestedOnResult.status,
         staleRequestedOn: staleResult.status,
+        verificationFailed: verificationFailedResult.status,
         alreadyApplied: alreadyAppliedResult.status,
         salesOrderNotFound: noOrderResult.status,
         acumaticaPutCallsDuringValidation: 0,

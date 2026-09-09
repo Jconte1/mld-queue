@@ -319,6 +319,42 @@ function targetLineSummary(lines: DeliveryRequestedDateLineState[]) {
   }));
 }
 
+function targetLinesByNumber(lines: DeliveryRequestedDateLineState[]) {
+  return new Map(
+    lines
+      .filter((line): line is DeliveryRequestedDateLineState & { lineNbr: number } => line.lineNbr !== null)
+      .map((line) => [line.lineNbr, line])
+  );
+}
+
+function verifiedRequestedDateLineState(params: {
+  lines: DeliveryRequestedDateLineState[];
+  targetLineNumbers: number[];
+  requestedDeliveryDate: string;
+}) {
+  const linesByNumber = targetLinesByNumber(params.lines);
+  const targetLines: DeliveryRequestedDateLineState[] = [];
+  const missingLineNumbers: number[] = [];
+  for (const lineNbr of params.targetLineNumbers) {
+    const line = linesByNumber.get(lineNbr);
+    if (line) {
+      targetLines.push(line);
+    } else {
+      missingLineNumbers.push(lineNbr);
+    }
+  }
+  const mismatchedLines = targetLines.filter(
+    (line) => line.requestedOnDateKey !== params.requestedDeliveryDate
+  );
+
+  return {
+    verified: missingLineNumbers.length === 0 && mismatchedLines.length === 0,
+    missingLineNumbers,
+    targetLines,
+    mismatchedLines,
+  };
+}
+
 export function buildDeliveryRequestedDateDryRunResult(
   payload: Record<string, unknown> | undefined
 ) {
@@ -427,11 +463,7 @@ export async function processDeliveryRequestedDateJob(
   }
 
   const currentLines = readDeliveryRequestedDateLineStates(current);
-  const linesByNumber = new Map(
-    currentLines
-      .filter((line): line is DeliveryRequestedDateLineState & { lineNbr: number } => line.lineNbr !== null)
-      .map((line) => [line.lineNbr, line])
-  );
+  const linesByNumber = targetLinesByNumber(currentLines);
   const missingLineNumbers = normalized.lineNumbers.filter((lineNbr) => !linesByNumber.has(lineNbr));
   if (missingLineNumbers.length > 0) {
     return {
@@ -512,6 +544,76 @@ export async function processDeliveryRequestedDateJob(
 
   const writePayload = buildDeliveryRequestedDateAcumaticaPayload(normalized, targetLines);
   const putResult = await acumaticaClient.putDeliveryRequestedDateLines(writePayload);
+  const verificationRows = await acumaticaClient.fetchDeliverySalesOrderFull(
+    normalized.orderNumber,
+    normalized.orderType
+  );
+  const verificationCurrent = verificationRows[0] || null;
+  const verificationIdentity = verificationCurrent ? currentOrderIdentity(verificationCurrent) : null;
+
+  if (
+    !verificationCurrent ||
+    verificationIdentity?.orderType !== normalized.orderType ||
+    verificationIdentity.orderNumber !== normalized.orderNumber
+  ) {
+    return {
+      status: "failed",
+      reason: "requested_date_verification_order_not_found",
+      wouldWrite: true,
+      dryRun: false,
+      skippedLiveWrite: false,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      currentValues: {
+        ...currentIdentity,
+        targetLines: targetLineSummary(targetLines),
+      },
+      verification: {
+        orderFound: Boolean(verificationCurrent),
+        orderIdentity: verificationIdentity,
+        verified: false,
+      },
+      acumaticaPayload: writePayload,
+      acumaticaResponse: {
+        status: putResult.status,
+        body: putResult.body,
+      },
+    };
+  }
+
+  const verification = verifiedRequestedDateLineState({
+    lines: readDeliveryRequestedDateLineStates(verificationCurrent),
+    targetLineNumbers: normalized.lineNumbers,
+    requestedDeliveryDate: normalized.requestedDeliveryDate,
+  });
+
+  if (!verification.verified) {
+    return {
+      status: "failed",
+      reason: "requested_date_verification_failed",
+      wouldWrite: true,
+      dryRun: false,
+      skippedLiveWrite: false,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      currentValues: {
+        ...currentIdentity,
+        targetLines: targetLineSummary(targetLines),
+      },
+      verification: {
+        verified: false,
+        expectedRequestedOn: normalized.requestedDeliveryDate,
+        missingLineNumbers: verification.missingLineNumbers,
+        mismatchedLines: targetLineSummary(verification.mismatchedLines),
+        targetLinesAfterWrite: targetLineSummary(verification.targetLines),
+      },
+      acumaticaPayload: writePayload,
+      acumaticaResponse: {
+        status: putResult.status,
+        body: putResult.body,
+      },
+    };
+  }
 
   return {
     status: "written",
@@ -528,6 +630,11 @@ export async function processDeliveryRequestedDateJob(
     acumaticaResponse: {
       status: putResult.status,
       body: putResult.body,
+    },
+    verification: {
+      verified: true,
+      expectedRequestedOn: normalized.requestedDeliveryDate,
+      targetLinesAfterWrite: targetLineSummary(verification.targetLines),
     },
   };
 }
