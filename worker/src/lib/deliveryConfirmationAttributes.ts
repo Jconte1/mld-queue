@@ -57,61 +57,6 @@ function isBlank(value: string | null | undefined) {
 
 type EnvSource = Record<string, string | undefined>;
 
-function isLiveWritebackEnabled(envSource: EnvSource) {
-  return envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED?.trim().toLowerCase() !== "false";
-}
-
-function flagIsTrue(envSource: EnvSource, name: string) {
-  return envSource[name]?.trim().toLowerCase() === "true";
-}
-
-function listValues(value: string | undefined) {
-  return new Set(
-    (value ?? "")
-      .split(/[,\s;]+/)
-      .map((item) => item.trim().toUpperCase())
-      .filter(Boolean)
-  );
-}
-
-export function evaluateDeliveryConfirmationWritebackLiveGate(
-  normalized: Pick<DeliveryConfirmationAttributesPayload, "orderType" | "orderNumber">,
-  envSource: EnvSource = process.env
-) {
-  const allowedOrderNumbers = listValues(
-    envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS
-  );
-  const allowedOrderTypes = listValues(
-    envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_TYPES
-  );
-  const orderNumbersConfigured = allowedOrderNumbers.size > 0;
-  const orderTypesConfigured = allowedOrderTypes.size > 0;
-  const allowlistConfigured = orderNumbersConfigured || orderTypesConfigured;
-  const allowAll =
-    flagIsTrue(envSource, "ACUMATICA_CONFIRMATION_WRITEBACK_ALLOW_ALL") ||
-    (!allowlistConfigured &&
-      envSource.ACUMATICA_CONFIRMATION_WRITEBACK_ALLOW_ALL?.trim().toLowerCase() !== "false");
-  const allowedByOrderNumber =
-    orderNumbersConfigured && allowedOrderNumbers.has(normalized.orderNumber.toUpperCase());
-  const allowedByOrderType =
-    orderTypesConfigured && allowedOrderTypes.has(normalized.orderType.toUpperCase());
-  const allowedByAllowlist =
-    allowlistConfigured &&
-    (orderNumbersConfigured ? allowedByOrderNumber : true) &&
-    (orderTypesConfigured ? allowedByOrderType : true);
-  const allowedByLiveWriteGate = allowAll || allowedByAllowlist;
-
-  return {
-    allowAll,
-    orderNumbersConfigured,
-    orderTypesConfigured,
-    allowedByOrderNumber,
-    allowedByOrderType,
-    allowedByAllowlist,
-    allowedByLiveWriteGate,
-  };
-}
-
 export function normalizeDeliveryConfirmationAttributesPayload(
   payload: Record<string, unknown> | undefined
 ): DeliveryConfirmationAttributesPayload {
@@ -166,11 +111,8 @@ export function buildDeliveryConfirmationAttributeAcumaticaPayload(
 }
 
 function resultBase(
-  normalized: DeliveryConfirmationAttributesPayload,
-  envSource: EnvSource = process.env
+  normalized: DeliveryConfirmationAttributesPayload
 ) {
-  const liveWriteEnabled = isLiveWritebackEnabled(envSource);
-  const liveWriteGate = evaluateDeliveryConfirmationWritebackLiveGate(normalized, envSource);
   return {
     orderType: normalized.orderType,
     orderNumber: normalized.orderNumber,
@@ -186,14 +128,8 @@ function resultBase(
       note: normalized.note ?? null,
     },
     liveWriteConfig: {
-      enabled: liveWriteEnabled,
-      allowAll: liveWriteGate.allowAll,
-      orderNumbersConfigured: liveWriteGate.orderNumbersConfigured,
-      orderTypesConfigured: liveWriteGate.orderTypesConfigured,
-      allowedByOrderNumber: liveWriteGate.allowedByOrderNumber,
-      allowedByOrderType: liveWriteGate.allowedByOrderType,
-      allowedByAllowlist: liveWriteGate.allowedByAllowlist,
-      allowedByLiveWriteGate: liveWriteGate.allowedByLiveWriteGate,
+      enabled: true,
+      mode: "production_default",
     },
   };
 }
@@ -211,8 +147,7 @@ export function buildDeliveryConfirmationAttributesDryRunResult(
     dryRun: true,
     skippedLiveWrite: true,
     liveWriteEnabled: false,
-    futureLiveWriteRequires:
-      "dryRun=false, ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED=true, and ACUMATICA_CONFIRMATION_WRITEBACK_ALLOW_ALL=true or a matching ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS/ALLOWED_ORDER_TYPES allowlist",
+    futureLiveWriteRequires: "dryRun=false",
     ...resultBase(forcedDryRun),
     acumaticaPayload,
   };
@@ -225,7 +160,7 @@ export async function processDeliveryConfirmationAttributesJob(
 ) {
   const normalized = normalizeDeliveryConfirmationAttributesPayload(payload);
   const acumaticaPayload = buildDeliveryConfirmationAttributeAcumaticaPayload(normalized);
-  const liveWriteEnabled = isLiveWritebackEnabled(envSource);
+  void envSource;
 
   if (normalized.dryRun) {
     return {
@@ -233,37 +168,9 @@ export async function processDeliveryConfirmationAttributesJob(
       wouldWrite: true,
       dryRun: true,
       skippedLiveWrite: true,
-      liveWriteEnabled,
-      futureLiveWriteRequires:
-        "dryRun=false, ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED=true, and ACUMATICA_CONFIRMATION_WRITEBACK_ALLOW_ALL=true or a matching ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS/ALLOWED_ORDER_TYPES allowlist",
-      ...resultBase(normalized, envSource),
-      acumaticaPayload,
-    };
-  }
-
-  if (!liveWriteEnabled) {
-    return {
-      status: "live_write_refused",
-      reason: "live_writeback_disabled",
-      wouldWrite: false,
-      dryRun: false,
-      skippedLiveWrite: true,
-      liveWriteEnabled,
-      ...resultBase(normalized, envSource),
-      acumaticaPayload,
-    };
-  }
-
-  const liveWriteGate = evaluateDeliveryConfirmationWritebackLiveGate(normalized, envSource);
-  if (!liveWriteGate.allowedByLiveWriteGate) {
-    return {
-      status: "live_write_refused",
-      reason: "confirmation_writeback_not_allowlisted",
-      wouldWrite: false,
-      dryRun: false,
-      skippedLiveWrite: true,
-      liveWriteEnabled,
-      ...resultBase(normalized, envSource),
+      liveWriteEnabled: true,
+      futureLiveWriteRequires: "dryRun=false",
+      ...resultBase(normalized),
       acumaticaPayload,
     };
   }
@@ -280,8 +187,8 @@ export async function processDeliveryConfirmationAttributesJob(
       wouldWrite: false,
       dryRun: false,
       skippedLiveWrite: true,
-      liveWriteEnabled,
-      ...resultBase(normalized, envSource),
+      liveWriteEnabled: true,
+      ...resultBase(normalized),
       currentValues: null,
       acumaticaPayload,
     };
@@ -295,8 +202,8 @@ export async function processDeliveryConfirmationAttributesJob(
       wouldWrite: false,
       dryRun: false,
       skippedLiveWrite: true,
-      liveWriteEnabled,
-      ...resultBase(normalized, envSource),
+      liveWriteEnabled: true,
+      ...resultBase(normalized),
       currentValues: current,
       acumaticaPayload,
     };
@@ -314,8 +221,8 @@ export async function processDeliveryConfirmationAttributesJob(
       wouldWrite: false,
       dryRun: false,
       skippedLiveWrite: true,
-      liveWriteEnabled,
-      ...resultBase(normalized, envSource),
+      liveWriteEnabled: true,
+      ...resultBase(normalized),
       currentValues: current,
       acumaticaPayload,
     };
@@ -329,8 +236,8 @@ export async function processDeliveryConfirmationAttributesJob(
     wouldWrite: true,
     dryRun: false,
     skippedLiveWrite: false,
-    liveWriteEnabled,
-    ...resultBase(normalized, envSource),
+    liveWriteEnabled: true,
+    ...resultBase(normalized),
     currentValues: current,
     fieldsWritten: {
       "Document.AttributeCONFIRMVIA": fieldsToWrite.confirmedVia,

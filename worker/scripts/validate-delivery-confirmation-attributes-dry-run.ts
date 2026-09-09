@@ -1,6 +1,5 @@
 import {
   buildDeliveryConfirmationAttributesDryRunResult,
-  evaluateDeliveryConfirmationWritebackLiveGate,
   processDeliveryConfirmationAttributesJob,
   type DeliveryConfirmationAttributesAcumaticaClient,
   type DeliveryConfirmationAttributesCurrentValues,
@@ -14,12 +13,6 @@ function assertEqual<T>(actual: T, expected: T, label: string) {
 
 function assert(condition: boolean, label: string) {
   if (!condition) throw new Error(label);
-}
-
-function resultReason(value: unknown) {
-  return typeof value === "object" && value !== null && "reason" in value
-    ? String((value as { reason?: unknown }).reason)
-    : null;
 }
 
 function payload(overrides: Record<string, unknown> = {}) {
@@ -88,16 +81,30 @@ async function main() {
     "CONFIRMWTH value"
   );
 
-  const disabled = mockClient(currentValues());
-  const disabledResult = await processDeliveryConfirmationAttributesJob(
+  const formerDisabledEnv = mockClient(currentValues());
+  const formerDisabledResult = await processDeliveryConfirmationAttributesJob(
     payload({ dryRun: false }),
-    disabled.client,
-    { ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "false" }
+    formerDisabledEnv.client,
+    {
+      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "false",
+      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOW_ALL: "false",
+    }
   );
-  assertEqual(disabledResult.status, "live_write_refused", "disabled guard status");
-  assertEqual(resultReason(disabledResult), "live_writeback_disabled", "disabled guard reason");
-  assertEqual(disabled.calls.fetch, 0, "disabled guard fetch calls");
-  assertEqual(disabled.calls.put.length, 0, "disabled guard put calls");
+  assertEqual(
+    formerDisabledResult.status,
+    "written",
+    "former confirmation env blockers no longer disable live write status"
+  );
+  assertEqual(
+    formerDisabledEnv.calls.fetch,
+    1,
+    "former confirmation env blockers no longer disable fetch calls"
+  );
+  assertEqual(
+    formerDisabledEnv.calls.put.length,
+    1,
+    "former confirmation env blockers no longer disable put calls"
+  );
 
   const defaultLive = mockClient(currentValues());
   const defaultLiveResult = await processDeliveryConfirmationAttributesJob(
@@ -109,77 +116,28 @@ async function main() {
   assertEqual(defaultLive.calls.fetch, 1, "missing env defaults to live write fetch calls");
   assertEqual(defaultLive.calls.put.length, 1, "missing env defaults to live write put calls");
 
-  const allowAll = mockClient(currentValues());
-  const allowAllResult = await processDeliveryConfirmationAttributesJob(
-    payload({ orderNumber: "SO99999", dryRun: false }),
-    allowAll.client,
-    {
-      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
-      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOW_ALL: "true",
-    }
-  );
-  assertEqual(allowAllResult.status, "written", "allow-all live write status");
-  assertEqual(allowAll.calls.fetch, 1, "allow-all live write fetch calls");
-  assertEqual(allowAll.calls.put.length, 1, "allow-all live write put calls");
-
-  const allowlistedOrder = mockClient(currentValues());
-  const allowlistedOrderResult = await processDeliveryConfirmationAttributesJob(
-    payload({ orderNumber: "SO40466", dryRun: false }),
-    allowlistedOrder.client,
-    {
-      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
-      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS: "SO40466, SO40467",
-    }
-  );
-  assertEqual(allowlistedOrderResult.status, "written", "order-number allowlist live write status");
-  assertEqual(allowlistedOrder.calls.fetch, 1, "order-number allowlist fetch calls");
-  assertEqual(allowlistedOrder.calls.put.length, 1, "order-number allowlist put calls");
-
-  const allowlistedType = mockClient(currentValues());
-  const allowlistedTypeResult = await processDeliveryConfirmationAttributesJob(
-    payload({ orderType: "SO", orderNumber: "SO40468", dryRun: false }),
-    allowlistedType.client,
-    {
-      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
-      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_TYPES: "SO",
-    }
-  );
-  assertEqual(allowlistedTypeResult.status, "written", "order-type allowlist live write status");
-  assertEqual(allowlistedType.calls.fetch, 1, "order-type allowlist fetch calls");
-  assertEqual(allowlistedType.calls.put.length, 1, "order-type allowlist put calls");
-
-  const allowlistMismatch = mockClient(currentValues());
-  const allowlistMismatchResult = await processDeliveryConfirmationAttributesJob(
+  const formerAllowlistMismatch = mockClient(currentValues());
+  const formerAllowlistMismatchResult = await processDeliveryConfirmationAttributesJob(
     payload({ orderType: "SO", orderNumber: "SO99999", dryRun: false }),
-    allowlistMismatch.client,
-    {
-      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
-      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS: "SO40466",
-      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_TYPES: "SO",
-    }
-  );
-  assertEqual(allowlistMismatchResult.status, "live_write_refused", "allowlist mismatch status");
-  assertEqual(resultReason(allowlistMismatchResult), "confirmation_writeback_not_allowlisted", "allowlist mismatch reason");
-  assertEqual(allowlistMismatch.calls.fetch, 0, "allowlist mismatch fetch calls");
-  assertEqual(allowlistMismatch.calls.put.length, 0, "allowlist mismatch put calls");
-
-  const gate = evaluateDeliveryConfirmationWritebackLiveGate(
-    { orderType: "SO", orderNumber: "SO40466" },
+    formerAllowlistMismatch.client,
     {
       ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS: "SO40466",
       ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_TYPES: "SO",
     }
   );
-  assert(gate.allowedByLiveWriteGate, "matching order number and type should pass live gate");
+  assertEqual(
+    formerAllowlistMismatchResult.status,
+    "written",
+    "former allowlist mismatch no longer blocks confirmation write"
+  );
+  assertEqual(formerAllowlistMismatch.calls.fetch, 1, "former allowlist mismatch fetch calls");
+  assertEqual(formerAllowlistMismatch.calls.put.length, 1, "former allowlist mismatch put calls");
 
   const liveBlank = mockClient(currentValues());
   const liveBlankResult = await processDeliveryConfirmationAttributesJob(
     payload({ dryRun: false }),
     liveBlank.client,
-    {
-      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
-      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS: "SO40466",
-    }
+    {}
   );
   assertEqual(liveBlankResult.status, "written", "blank-only write status");
   assertEqual(liveBlankResult.dryRun, false, "blank-only dryRun");
@@ -192,10 +150,7 @@ async function main() {
   const liveExistingResult = await processDeliveryConfirmationAttributesJob(
     payload({ dryRun: false }),
     liveExisting.client,
-    {
-      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
-      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS: "SO40466",
-    }
+    {}
   );
   assertEqual(liveExistingResult.status, "skipped_existing_value", "existing value status");
   assertEqual(liveExisting.calls.fetch, 1, "existing value fetch calls");
@@ -205,10 +160,7 @@ async function main() {
   const partialResult = await processDeliveryConfirmationAttributesJob(
     payload({ dryRun: false }),
     partial.client,
-    {
-      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
-      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS: "SO40466",
-    }
+    {}
   );
   assertEqual(partialResult.status, "written", "partial blank write status");
   assertEqual(partial.calls.put.length, 1, "partial blank put calls");
@@ -225,10 +177,7 @@ async function main() {
   const notExposedResult = await processDeliveryConfirmationAttributesJob(
     payload({ dryRun: false }),
     notExposed.client,
-    {
-      ACUMATICA_CONFIRMATION_WRITEBACK_ENABLED: "true",
-      ACUMATICA_CONFIRMATION_WRITEBACK_ALLOWED_ORDER_NBRS: "SO40466",
-    }
+    {}
   );
   assertEqual(notExposedResult.status, "blocked_fields_not_exposed", "not exposed status");
   assertEqual(notExposed.calls.put.length, 0, "not exposed put calls");
@@ -237,12 +186,9 @@ async function main() {
     JSON.stringify(
       {
         dryRun: dryRunResult.status,
-        disabledGuard: disabledResult.status,
+        formerDisabledEnvNoLongerBlocks: formerDisabledResult.status,
         missingEnvDefaultsToLiveWrite: defaultLiveResult.status,
-        allowAllLiveWrite: allowAllResult.status,
-        orderNumberAllowlistLiveWrite: allowlistedOrderResult.status,
-        orderTypeAllowlistLiveWrite: allowlistedTypeResult.status,
-        allowlistMismatch: allowlistMismatchResult.status,
+        formerAllowlistMismatchNoLongerBlocks: formerAllowlistMismatchResult.status,
         blankOnlyWrite: liveBlankResult.status,
         partialBlankWrite: partialResult.status,
         existingValueNoOverwrite: liveExistingResult.status,
