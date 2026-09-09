@@ -54,8 +54,10 @@ function orderRow(params: {
   lines?: Array<Record<string, unknown>>;
 } = {}) {
   return {
+    id: "order-entity-id",
     OrderType: field(params.orderType ?? "SO"),
     OrderNbr: field(params.orderNumber ?? "SO40466"),
+    Hold: field(false),
     Details:
       params.lines ??
       [
@@ -138,7 +140,7 @@ async function main() {
   assertEqual(dryRunClient.calls.put.length, 0, "dry-run put calls");
 
   const dryRunShape = buildDeliveryRequestedDateDryRunResult(payload());
-  assertEqual(dryRunShape.fields["Details[].RequestedOn"], "2026-10-14T00:00:00.000Z", "dry-run date format");
+  assertEqual(dryRunShape.fields["Details[].RequestedOn"], "2026-10-14T00:00:00-05:00", "dry-run date format");
   assert(
     !Object.prototype.hasOwnProperty.call(dryRunShape.acumaticaPayload, "RequestedOn"),
     "dry-run payload must not update header RequestedOn"
@@ -154,7 +156,7 @@ async function main() {
   );
   assertEqual(disabledResult.status, "written", "missing env defaults to live write status");
   assertEqual(disabled.calls.fetch, 2, "missing env defaults to live write fetch calls");
-  assertEqual(disabled.calls.put.length, 1, "missing env defaults to live write put calls");
+  assertEqual(disabled.calls.put.length, 3, "missing env defaults to live write put calls");
   assertEqual(explicitlyDisabledResult.status, "live_write_refused", "disabled guard status");
   assertEqual(resultReason(explicitlyDisabledResult), "live_writeback_disabled", "disabled guard reason");
   assertEqual(explicitlyDisabled.calls.fetch, 0, "disabled guard fetch calls");
@@ -202,38 +204,71 @@ async function main() {
   );
   assertEqual(allowAllResult.status, "written", "allow-all live write status");
   assertEqual(allowAll.calls.fetch, 2, "allow-all fetch calls");
-  assertEqual(allowAll.calls.put.length, 1, "allow-all put calls");
+  assertEqual(allowAll.calls.put.length, 3, "allow-all put calls");
+  assertEqual(allowAll.calls.put[0].id, "order-entity-id", "hold-on payload includes parent id");
   assertEqual(
-    JSON.stringify(allowAll.calls.put[0]),
+    JSON.stringify({
+      OrderType: allowAll.calls.put[0].OrderType,
+      OrderNbr: allowAll.calls.put[0].OrderNbr,
+      Hold: allowAll.calls.put[0].Hold,
+    }),
+    JSON.stringify({
+      OrderType: { value: "SO" },
+      OrderNbr: { value: "SO40466" },
+      Hold: { value: true },
+    }),
+    "allow-all first put sets hold before detail update"
+  );
+  assertEqual(
+    JSON.stringify({
+      OrderType: allowAll.calls.put[1].OrderType,
+      OrderNbr: allowAll.calls.put[1].OrderNbr,
+      Details: allowAll.calls.put[1].Details,
+    }),
     JSON.stringify({
       OrderType: { value: "SO" },
       OrderNbr: { value: "SO40466" },
       Details: [
         {
           LineNbr: { value: 1 },
-          RequestedOn: { value: "2026-10-14T00:00:00.000Z" },
+          RequestedOn: { value: "2026-10-14T00:00:00-05:00" },
           id: "line-1",
         },
         {
           LineNbr: { value: 3 },
-          RequestedOn: { value: "2026-10-14T00:00:00.000Z" },
+          RequestedOn: { value: "2026-10-14T00:00:00-05:00" },
           id: "line-3",
         },
       ],
     }),
-    "allow-all exact Acumatica payload"
+    "allow-all Acumatica payload keys"
   );
+  assertEqual(allowAll.calls.put[1].id, "order-entity-id", "live write payload includes parent order entity id");
   assert(
-    (allowAll.calls.put[0].Details as Array<Record<string, unknown>>).every((line) => typeof line.id === "string"),
+    (allowAll.calls.put[1].Details as Array<Record<string, unknown>>).every((line) => typeof line.id === "string"),
     "live write payload must include child detail ids"
   );
   assert(
-    !JSON.stringify(allowAll.calls.put[0]).includes("OTHER-8"),
+    !JSON.stringify(allowAll.calls.put[1]).includes("OTHER-8"),
     "write payload must not include unrelated order lines"
   );
   assert(
-    !Object.prototype.hasOwnProperty.call(allowAll.calls.put[0], "RequestedOn"),
+    !Object.prototype.hasOwnProperty.call(allowAll.calls.put[1], "RequestedOn"),
     "write payload must not include header RequestedOn"
+  );
+  assertEqual(allowAll.calls.put[2].id, "order-entity-id", "hold-restore payload includes parent id");
+  assertEqual(
+    JSON.stringify({
+      OrderType: allowAll.calls.put[2].OrderType,
+      OrderNbr: allowAll.calls.put[2].OrderNbr,
+      Hold: allowAll.calls.put[2].Hold,
+    }),
+    JSON.stringify({
+      OrderType: { value: "SO" },
+      OrderNbr: { value: "SO40466" },
+      Hold: { value: false },
+    }),
+    "allow-all third put restores original hold state"
   );
 
   const explicitPayloadShape = buildDeliveryRequestedDateAcumaticaPayload(payload(), [
@@ -343,7 +378,7 @@ async function main() {
     "verification mismatch reason"
   );
   assertEqual(verificationFailed.calls.fetch, 2, "verification mismatch fetch count");
-  assertEqual(verificationFailed.calls.put.length, 1, "verification mismatch still attempted put once");
+  assertEqual(verificationFailed.calls.put.length, 3, "verification mismatch bracketed write calls");
 
   const alreadyApplied = mockClient([
     orderRow({

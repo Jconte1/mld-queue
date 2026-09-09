@@ -78,7 +78,7 @@ function normalizeDateKey(value: string, fieldName: string) {
 }
 
 function requestedOnDateTime(dateKey: string) {
-  return `${dateKey}T00:00:00.000Z`;
+  return `${dateKey}T00:00:00-05:00`;
 }
 
 function normalizeLineNumbers(value: unknown) {
@@ -187,7 +187,8 @@ export function normalizeDeliveryRequestedDatePayload(
 
 export function buildDeliveryRequestedDateAcumaticaPayload(
   payload: DeliveryRequestedDatePayload,
-  lineStates: DeliveryRequestedDateLineState[] = []
+  lineStates: DeliveryRequestedDateLineState[] = [],
+  orderEntityId?: string | null
 ) {
   const requestedDateTime = requestedOnDateTime(payload.requestedDeliveryDate);
   const lineIdsByNumber = new Map(
@@ -198,7 +199,7 @@ export function buildDeliveryRequestedDateAcumaticaPayload(
       .map((line) => [line.lineNbr, line.id.trim()])
   );
 
-  return {
+  const acumaticaPayload: Record<string, unknown> = {
     OrderType: { value: payload.orderType },
     OrderNbr: { value: payload.orderNumber },
     Details: payload.lineNumbers.map((lineNbr) => {
@@ -211,6 +212,10 @@ export function buildDeliveryRequestedDateAcumaticaPayload(
       return detail;
     }),
   };
+  const trimmedOrderEntityId = orderEntityId?.trim();
+  if (trimmedOrderEntityId) acumaticaPayload.id = trimmedOrderEntityId;
+
+  return acumaticaPayload;
 }
 
 function unwrapAcumaticaValue(value: unknown) {
@@ -233,6 +238,12 @@ function acumaticaInteger(row: Record<string, unknown> | null, key: string) {
   if (!value) return null;
   const number = Number(value);
   return Number.isInteger(number) ? number : null;
+}
+
+function acumaticaBoolean(row: Record<string, unknown> | null, key: string) {
+  if (!row) return null;
+  const raw = unwrapAcumaticaValue(row[key]);
+  return typeof raw === "boolean" ? raw : null;
 }
 
 function acumaticaDateKey(row: Record<string, unknown> | null, key: string) {
@@ -303,9 +314,27 @@ function resultBase(
 
 function currentOrderIdentity(order: Record<string, unknown>) {
   return {
+    id: acumaticaString(order, "id"),
     orderType: acumaticaString(order, "OrderType")?.toUpperCase() ?? null,
     orderNumber: acumaticaString(order, "OrderNbr")?.toUpperCase() ?? null,
+    hold: acumaticaBoolean(order, "Hold"),
   };
+}
+
+function buildDeliveryRequestedDateHoldPayload(params: {
+  orderType: string;
+  orderNumber: string;
+  orderEntityId?: string | null;
+  hold: boolean;
+}) {
+  const payload: Record<string, unknown> = {
+    OrderType: { value: params.orderType },
+    OrderNbr: { value: params.orderNumber },
+    Hold: { value: params.hold },
+  };
+  const trimmedOrderEntityId = params.orderEntityId?.trim();
+  if (trimmedOrderEntityId) payload.id = trimmedOrderEntityId;
+  return payload;
 }
 
 function targetLineSummary(lines: DeliveryRequestedDateLineState[]) {
@@ -542,8 +571,76 @@ export async function processDeliveryRequestedDateJob(
     };
   }
 
-  const writePayload = buildDeliveryRequestedDateAcumaticaPayload(normalized, targetLines);
-  const putResult = await acumaticaClient.putDeliveryRequestedDateLines(writePayload);
+  const writePayload = buildDeliveryRequestedDateAcumaticaPayload(
+    normalized,
+    targetLines,
+    currentIdentity.id
+  );
+  const originalHold = currentIdentity.hold === true;
+  const shouldRestoreHold = currentIdentity.hold === false;
+  let holdOnResult: { status: number; body: unknown } | null = null;
+  let putResult: { status: number; body: unknown } | null = null;
+  let holdRestoreResult: { status: number; body: unknown } | null = null;
+  let writeError: unknown = null;
+  let holdRestoreError: unknown = null;
+
+  try {
+    if (!originalHold) {
+      holdOnResult = await acumaticaClient.putDeliveryRequestedDateLines(
+        buildDeliveryRequestedDateHoldPayload({
+          orderType: normalized.orderType,
+          orderNumber: normalized.orderNumber,
+          orderEntityId: currentIdentity.id,
+          hold: true,
+        })
+      );
+    }
+
+    putResult = await acumaticaClient.putDeliveryRequestedDateLines(writePayload);
+  } catch (error) {
+    writeError = error;
+  } finally {
+    if (shouldRestoreHold) {
+      try {
+        holdRestoreResult = await acumaticaClient.putDeliveryRequestedDateLines(
+          buildDeliveryRequestedDateHoldPayload({
+            orderType: normalized.orderType,
+            orderNumber: normalized.orderNumber,
+            orderEntityId: currentIdentity.id,
+            hold: false,
+          })
+        );
+      } catch (error) {
+        holdRestoreError = error;
+      }
+    }
+  }
+
+  if (writeError || holdRestoreError || !putResult) {
+    return {
+      status: "failed",
+      reason: holdRestoreError ? "requested_date_hold_restore_failed" : "requested_date_write_failed",
+      wouldWrite: true,
+      dryRun: false,
+      skippedLiveWrite: false,
+      liveWriteEnabled,
+      ...resultBase(normalized, envSource),
+      currentValues: {
+        ...currentIdentity,
+        targetLines: targetLineSummary(targetLines),
+      },
+      acumaticaPayload: writePayload,
+      acumaticaResponse: {
+        holdOnStatus: holdOnResult?.status ?? null,
+        writeStatus: putResult?.status ?? null,
+        holdRestoreStatus: holdRestoreResult?.status ?? null,
+      },
+      error: writeError instanceof Error ? writeError.message : String(writeError),
+      holdRestoreError:
+        holdRestoreError instanceof Error ? holdRestoreError.message : holdRestoreError ? String(holdRestoreError) : null,
+    };
+  }
+
   const verificationRows = await acumaticaClient.fetchDeliverySalesOrderFull(
     normalized.orderNumber,
     normalized.orderType
@@ -575,8 +672,10 @@ export async function processDeliveryRequestedDateJob(
       },
       acumaticaPayload: writePayload,
       acumaticaResponse: {
+        holdOnStatus: holdOnResult?.status ?? null,
         status: putResult.status,
         body: putResult.body,
+        holdRestoreStatus: holdRestoreResult?.status ?? null,
       },
     };
   }
@@ -609,8 +708,10 @@ export async function processDeliveryRequestedDateJob(
       },
       acumaticaPayload: writePayload,
       acumaticaResponse: {
+        holdOnStatus: holdOnResult?.status ?? null,
         status: putResult.status,
         body: putResult.body,
+        holdRestoreStatus: holdRestoreResult?.status ?? null,
       },
     };
   }
@@ -628,8 +729,10 @@ export async function processDeliveryRequestedDateJob(
     },
     acumaticaPayload: writePayload,
     acumaticaResponse: {
+      holdOnStatus: holdOnResult?.status ?? null,
       status: putResult.status,
       body: putResult.body,
+      holdRestoreStatus: holdRestoreResult?.status ?? null,
     },
     verification: {
       verified: true,
