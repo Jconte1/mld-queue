@@ -63,16 +63,8 @@ function normalizeReason(value: string | undefined) {
   return value;
 }
 
-function envFlagEnabled(envSource: EnvSource, name: string) {
-  return envSource[name]?.trim().toLowerCase() !== "false";
-}
-
 function envDryRunEnabled(envSource: EnvSource) {
   return envSource.ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN?.trim().toLowerCase() === "true";
-}
-
-function allowedOrderNumber(envSource: EnvSource) {
-  return envSource.ACUMATICA_TEN_DAY_CONFIRMATION_ALLOWED_ORDER_NUMBER?.trim().toUpperCase() || null;
 }
 
 function cleanErrorMessage(error: unknown) {
@@ -156,11 +148,11 @@ function resultBase(params: {
 }) {
   return {
     dryRun: params.effectiveDryRun,
-    liveWriteEnabled: envFlagEnabled(
-      params.envSource,
-      "ACUMATICA_TEN_DAY_CONFIRMATION_WRITE_ENABLED"
-    ),
-    allowedByOrderAllowlist: params.allowedByOrderAllowlist,
+    liveWriteEnabled: true,
+    allowedByOrderAllowlist: true,
+    liveWriteConfig: {
+      mode: "production_default",
+    },
     orderType: params.payload.orderType,
     orderNumber: params.payload.orderNumber,
     confirmationReason: params.payload.reason,
@@ -181,46 +173,13 @@ export async function processDeliveryTenDayConfirmationJob(
 ) {
   const normalized = normalizeDeliveryTenDayConfirmationPayload(payload);
   const effectiveDryRun = normalized.dryRun || envDryRunEnabled(envSource);
-  const allowlist = allowedOrderNumber(envSource);
-  const allowedByOrderAllowlist = !allowlist || normalized.orderNumber === allowlist;
+  const allowedByOrderAllowlist = true;
 
   if (effectiveDryRun) {
     return {
       status: "dry_run",
       reason: "dry_run",
       wouldWrite: true,
-      stateReadSkipped: true,
-      ...resultBase({
-        payload: normalized,
-        envSource,
-        effectiveDryRun,
-        allowedByOrderAllowlist,
-        current: null,
-      }),
-    };
-  }
-
-  if (!envFlagEnabled(envSource, "ACUMATICA_TEN_DAY_CONFIRMATION_WRITE_ENABLED")) {
-    return {
-      status: "refused",
-      reason: "live_write_disabled",
-      wouldWrite: false,
-      stateReadSkipped: true,
-      ...resultBase({
-        payload: normalized,
-        envSource,
-        effectiveDryRun,
-        allowedByOrderAllowlist,
-        current: null,
-      }),
-    };
-  }
-
-  if (!allowedByOrderAllowlist) {
-    return {
-      status: "refused",
-      reason: "order_not_allowlisted",
-      wouldWrite: false,
       stateReadSkipped: true,
       ...resultBase({
         payload: normalized,

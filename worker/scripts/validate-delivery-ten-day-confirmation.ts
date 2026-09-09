@@ -95,32 +95,52 @@ async function main() {
   assert(envDryResult.status === "dry_run", "env dry-run overrides payload", failures);
   assert(envDry.calls.fetch === 0 && envDry.calls.put === 0, "env dry-run skips reads and writes", failures);
 
-  const disabled = fakeClient({ states: [oneWeekState(false)] });
-  const disabledResult = await processDeliveryTenDayConfirmationJob(
+  const formerDisabledEnv = fakeClient({
+    states: [oneWeekState(false)],
+    verificationStates: [oneWeekState(true)],
+  });
+  const formerDisabledResult = await processDeliveryTenDayConfirmationJob(
     { orderType: "SO", orderNumber: "SO123", dryRun: false },
-    disabled.client,
+    formerDisabledEnv.client,
     {
       ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN: "false",
       ACUMATICA_TEN_DAY_CONFIRMATION_WRITE_ENABLED: "false",
     }
   );
-  assert(disabledResult.status === "refused", "live disabled is refused", failures);
-  assert(disabledResult.reason === "live_write_disabled", "live disabled reason", failures);
-  assert(disabled.calls.fetch === 0 && disabled.calls.put === 0, "live disabled skips Acumatica calls", failures);
+  assert(
+    formerDisabledResult.status === "written",
+    "former write-enabled env blocker no longer disables live write",
+    failures
+  );
+  assert(
+    formerDisabledEnv.calls.fetch === 2 && formerDisabledEnv.calls.put === 1,
+    "former write-enabled env blocker still allows read, put, verify",
+    failures
+  );
 
-  const allowlist = fakeClient({ states: [oneWeekState(false)] });
-  const allowlistResult = await processDeliveryTenDayConfirmationJob(
+  const formerAllowlistMismatch = fakeClient({
+    states: [oneWeekState(false)],
+    verificationStates: [oneWeekState(true)],
+  });
+  const formerAllowlistMismatchResult = await processDeliveryTenDayConfirmationJob(
     { orderType: "SO", orderNumber: "SO123", dryRun: false },
-    allowlist.client,
+    formerAllowlistMismatch.client,
     {
       ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN: "false",
       ACUMATICA_TEN_DAY_CONFIRMATION_WRITE_ENABLED: "true",
       ACUMATICA_TEN_DAY_CONFIRMATION_ALLOWED_ORDER_NUMBER: "SO999",
     }
   );
-  assert(allowlistResult.status === "refused", "order allowlist mismatch is refused", failures);
-  assert(allowlistResult.reason === "order_not_allowlisted", "allowlist reason", failures);
-  assert(allowlist.calls.fetch === 0 && allowlist.calls.put === 0, "allowlist mismatch skips Acumatica calls", failures);
+  assert(
+    formerAllowlistMismatchResult.status === "written",
+    "former order allowlist env blocker no longer disables live write",
+    failures
+  );
+  assert(
+    formerAllowlistMismatch.calls.fetch === 2 && formerAllowlistMismatch.calls.put === 1,
+    "former order allowlist env blocker still allows read, put, verify",
+    failures
+  );
 
   const already = fakeClient({ states: [oneWeekState(true)] });
   const alreadyResult = await processDeliveryTenDayConfirmationJob(
@@ -128,7 +148,6 @@ async function main() {
     already.client,
     {
       ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN: "false",
-      ACUMATICA_TEN_DAY_CONFIRMATION_WRITE_ENABLED: "true",
     }
   );
   assert(alreadyResult.status === "already_true", "already true skips write", failures);
@@ -140,7 +159,6 @@ async function main() {
     missingField.client,
     {
       ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN: "false",
-      ACUMATICA_TEN_DAY_CONFIRMATION_WRITE_ENABLED: "true",
     }
   );
   assert(missingFieldResult.status === "failed", "missing field fails", failures);
@@ -160,7 +178,6 @@ async function main() {
     write.client,
     {
       ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN: "false",
-      ACUMATICA_TEN_DAY_CONFIRMATION_WRITE_ENABLED: "true",
     }
   );
   assert(writeResult.status === "written", "false value writes true and verifies", failures);
@@ -176,7 +193,6 @@ async function main() {
     verifyFail.client,
     {
       ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN: "false",
-      ACUMATICA_TEN_DAY_CONFIRMATION_WRITE_ENABLED: "true",
     }
   );
   assert(verifyFailResult.status === "failed", "verification false fails", failures);
