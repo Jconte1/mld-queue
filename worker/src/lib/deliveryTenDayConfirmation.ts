@@ -10,6 +10,7 @@ export type DeliveryTenDayConfirmationPayload = {
 };
 
 export type DeliveryTenDayConfirmationState = {
+  id: string | null;
   orderType: string | null;
   orderNumber: string | null;
   oneWeekConfirmed: boolean | null;
@@ -123,9 +124,10 @@ export function normalizeDeliveryTenDayConfirmationPayload(
 }
 
 export function buildDeliveryTenDayConfirmationAcumaticaPayload(
-  payload: Pick<DeliveryTenDayConfirmationPayload, "orderType" | "orderNumber">
+  payload: Pick<DeliveryTenDayConfirmationPayload, "orderType" | "orderNumber">,
+  orderEntityId?: string | null
 ) {
-  return {
+  const acumaticaPayload: Record<string, unknown> = {
     OrderType: { value: payload.orderType },
     OrderNbr: { value: payload.orderNumber },
     custom: {
@@ -137,6 +139,9 @@ export function buildDeliveryTenDayConfirmationAcumaticaPayload(
       },
     },
   };
+  const trimmedOrderEntityId = orderEntityId?.trim();
+  if (trimmedOrderEntityId) acumaticaPayload.id = trimmedOrderEntityId;
+  return acumaticaPayload;
 }
 
 function resultBase(params: {
@@ -162,7 +167,10 @@ function resultBase(params: {
     },
     currentOneWeekConfirmed: params.current?.oneWeekConfirmed ?? null,
     intendedOneWeekConfirmed: true,
-    acumaticaPayload: buildDeliveryTenDayConfirmationAcumaticaPayload(params.payload),
+    acumaticaPayload: buildDeliveryTenDayConfirmationAcumaticaPayload(
+      params.payload,
+      params.current?.id
+    ),
   };
 }
 
@@ -261,7 +269,10 @@ export async function processDeliveryTenDayConfirmationJob(
     };
   }
 
-  const acumaticaPayload = buildDeliveryTenDayConfirmationAcumaticaPayload(normalized);
+  const acumaticaPayload = buildDeliveryTenDayConfirmationAcumaticaPayload(
+    normalized,
+    current.id
+  );
   try {
     const putResult = await acumaticaClient.putDeliveryTenDayConfirmation(acumaticaPayload);
     const verificationStates = await acumaticaClient.fetchDeliveryTenDayConfirmationStates(

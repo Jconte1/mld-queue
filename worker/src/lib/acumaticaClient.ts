@@ -1307,6 +1307,7 @@ export class AcumaticaClient {
 
   async fetchDeliveryTenDayConfirmationStates(orderNbr: string, orderType: string): Promise<
     Array<{
+      id: string | null;
       orderType: string | null;
       orderNumber: string | null;
       oneWeekConfirmed: boolean | null;
@@ -1326,6 +1327,7 @@ export class AcumaticaClient {
     return rows.map((row) => {
       const oneWeekConfirmed = readCustomDocumentBooleanAttribute(row, "AttributeONEWEEKCON");
       return {
+        id: getAcumaticaFieldValue(row, "id"),
         orderType: getAcumaticaFieldValue(row, "OrderType"),
         orderNumber: getAcumaticaFieldValue(row, "OrderNbr"),
         oneWeekConfirmed: oneWeekConfirmed.value,

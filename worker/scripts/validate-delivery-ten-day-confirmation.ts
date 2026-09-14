@@ -43,8 +43,13 @@ function fakeClient(params: {
   return { client, calls };
 }
 
-function oneWeekState(value: boolean | null, exposed = true): DeliveryTenDayConfirmationState {
+function oneWeekState(
+  value: boolean | null,
+  exposed = true,
+  id: string | null = "entity-so123"
+): DeliveryTenDayConfirmationState {
   return {
+    id,
     orderType: "SO",
     orderNumber: "SO123",
     oneWeekConfirmed: value,
@@ -183,6 +188,29 @@ async function main() {
   assert(writeResult.status === "written", "false value writes true and verifies", failures);
   assert(write.calls.fetch === 2 && write.calls.put === 1, "write path reads, puts, verifies", failures);
   assert(!JSON.stringify(write.calls.putPayload).includes("\"value\":false"), "write payload contains no false", failures);
+  assert(
+    write.calls.putPayload?.id === "entity-so123",
+    "write payload includes Acumatica entity id from pre-read to avoid ambiguous order PUT",
+    failures
+  );
+
+  const writeWithoutId = fakeClient({
+    states: [oneWeekState(false, true, null)],
+    verificationStates: [oneWeekState(true, true, null)],
+  });
+  const writeWithoutIdResult = await processDeliveryTenDayConfirmationJob(
+    { orderType: "SO", orderNumber: "SO123", dryRun: false },
+    writeWithoutId.client,
+    {
+      ACUMATICA_TEN_DAY_CONFIRMATION_DRY_RUN: "false",
+    }
+  );
+  assert(writeWithoutIdResult.status === "written", "missing entity id still writes through legacy payload", failures);
+  assert(
+    !("id" in (writeWithoutId.calls.putPayload ?? {})),
+    "legacy payload omits id only when pre-read did not expose one",
+    failures
+  );
 
   const verifyFail = fakeClient({
     states: [oneWeekState(false)],
