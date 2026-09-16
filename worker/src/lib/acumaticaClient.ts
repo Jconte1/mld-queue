@@ -257,6 +257,17 @@ function parseAcumaticaBooleanValue(value: unknown): boolean | null {
   return null;
 }
 
+function parseAcumaticaContactOptInValue(value: unknown): boolean | null {
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    if (!normalized || normalized === "1.00000000") return false;
+    if (["opt-in", "opt in", "optin"].includes(normalized)) return true;
+    if (["opt-out", "opt out", "optout"].includes(normalized)) return false;
+  }
+
+  return parseAcumaticaBooleanValue(value);
+}
+
 function readCustomDocumentAttribute(
   row: Record<string, unknown> | null,
   attributeName: string
@@ -344,7 +355,7 @@ function readCustomContactBooleanAttribute(
   if (stringValue.exposed) {
     return {
       exposed: true,
-      value: parseAcumaticaBooleanValue(stringValue.value),
+      value: parseAcumaticaContactOptInValue(stringValue.value),
     };
   }
 

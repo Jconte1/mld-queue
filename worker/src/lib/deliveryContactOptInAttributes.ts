@@ -37,6 +37,8 @@ export type DeliveryContactOptInAttributeState = {
   phoneCallOptIn: DeliveryContactOptInAttributeValueState;
 };
 
+const ACUMATICA_CONTACT_OPT_OUT_VALUE = "Opt-out";
+
 export type DeliveryContactOptInAttributesAcumaticaClient = {
   fetchDeliveryContactOptInAttributeStates(
     contactId: string
@@ -137,12 +139,12 @@ export function buildDeliveryContactOptInAttributesAcumaticaPayload(
   payload: Pick<DeliveryContactOptInAttributesPayload, "contactId">,
   fields: DeliveryContactOptInField[]
 ) {
-  const contactCustom: Record<string, { type: "CustomBooleanField"; value: false }> = {};
+  const contactCustom: Record<string, { type: "CustomStringField"; value: string }> = {};
 
   for (const field of fields) {
     contactCustom[DELIVERY_CONTACT_OPT_IN_ATTRIBUTE_BY_FIELD[field]] = {
-      type: "CustomBooleanField",
-      value: false,
+      type: "CustomStringField",
+      value: ACUMATICA_CONTACT_OPT_OUT_VALUE,
     };
   }
 

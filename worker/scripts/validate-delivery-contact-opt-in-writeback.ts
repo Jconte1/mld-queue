@@ -131,7 +131,9 @@ async function main() {
   assert(serializedPayload.includes("\"AttributeCONEMAIL\""), "payload writes email opt-in field", failures);
   assert(!serializedPayload.includes("\"AttributeCONPHONE\""), "payload omits unrequested field", failures);
   assert(!serializedPayload.includes("DoNotEmail"), "payload does not include DoNotEmail", failures);
-  assert(serializedPayload.includes("\"value\":false"), "payload writes false", failures);
+  assert(serializedPayload.includes("\"type\":\"CustomStringField\""), "payload writes selector field type", failures);
+  assert(serializedPayload.includes("\"value\":\"Opt-out\""), "payload writes Opt-out selector value", failures);
+  assert(!serializedPayload.includes("\"value\":false"), "payload no longer writes boolean false", failures);
   assert(!serializedPayload.includes("\"value\":true"), "payload never writes true", failures);
 
   const dry = fakeClient({ states: [contactState({ sms: true })] });

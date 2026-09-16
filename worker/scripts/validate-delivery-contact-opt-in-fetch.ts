@@ -74,13 +74,13 @@ function main() {
     hasDeliveryContactOptInCustomFields({
       custom: {
         Contact: {
-          AttributeCONTEXT: { type: "CustomBooleanField", value: true },
-          AttributeCONPHONE: { type: "CustomBooleanField", value: false },
-          AttributeCONEMAIL: { type: "CustomBooleanField", value: null },
+          AttributeCONTEXT: { type: "CustomStringField", value: "1.00000000" },
+          AttributeCONPHONE: { type: "CustomStringField", value: "Opt-in" },
+          AttributeCONEMAIL: { type: "CustomStringField", value: "Opt-out" },
         },
       },
     }),
-    "mock Contact row preserves all three custom Contact fields"
+    "mock selector Contact row preserves all three custom Contact fields"
   );
   assert(
     !hasDeliveryContactOptInCustomFields({
