@@ -566,7 +566,13 @@ export class AcumaticaClient {
       throw err;
     }
 
-    return (await response.json()) as T;
+    const raw = await response.text();
+    if (!raw.trim()) return null as T;
+    try {
+      return JSON.parse(raw) as T;
+    } catch {
+      return raw as T;
+    }
   }
 
   async getCustomer(customerId: string): Promise<unknown> {
@@ -1477,6 +1483,95 @@ export class AcumaticaClient {
     const url = `${this.deliveryEntityBase}/Contact?${query.toString()}`;
 
     return toRows(await this.request<unknown>(url, { method: "GET" }));
+  }
+
+  async fetchSalesOrderContactBackfillCandidateKeys(params: {
+    statuses: string[];
+    pageSize: number;
+    maxPages: number;
+    orderType?: string | null;
+    orderNumber?: string | null;
+  }): Promise<Array<{ orderType: string; orderNumber: string }>> {
+    const statusClause = `(${params.statuses.map((status) => `Status eq ${odataString(status)}`).join(" or ")})`;
+    const clauses = [statusClause, "ContactID eq null"];
+    if (params.orderType) clauses.push(`OrderType eq ${odataString(params.orderType)}`);
+    if (params.orderNumber) clauses.push(`OrderNbr eq ${odataString(params.orderNumber)}`);
+
+    const result: Array<{ orderType: string; orderNumber: string }> = [];
+    const seen = new Set<string>();
+    for (let page = 0; page < params.maxPages; page += 1) {
+      const query = new URLSearchParams({
+        $filter: clauses.join(" and "),
+        $select: "OrderType,OrderNbr",
+        $orderby: "OrderType asc,OrderNbr asc",
+        $top: String(params.pageSize),
+        $skip: String(page * params.pageSize),
+      });
+      const pageRows = toRows(
+        await this.request<unknown>(`${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`, {
+          method: "GET",
+        })
+      );
+      for (const row of pageRows) {
+        const orderType = getAcumaticaFieldValue(row, "OrderType")?.trim().toUpperCase() || "";
+        const orderNumber = getAcumaticaFieldValue(row, "OrderNbr")?.trim().toUpperCase() || "";
+        const key = `${orderType}/${orderNumber}`;
+        if (orderType && orderNumber && !seen.has(key)) {
+          seen.add(key);
+          result.push({ orderType, orderNumber });
+        }
+      }
+      if (pageRows.length < params.pageSize) return result;
+    }
+    throw new Error(`Contact backfill discovery reached maxPages=${params.maxPages}`);
+  }
+
+  async fetchSalesOrderContactBackfillOrder(
+    orderType: string,
+    orderNumber: string
+  ): Promise<Record<string, unknown> | null> {
+    const query = new URLSearchParams({
+      $filter: `OrderType eq ${odataString(orderType)} and OrderNbr eq ${odataString(orderNumber)}`,
+      $select: "OrderType,OrderNbr,Status,Hold,CustomerID,ContactID",
+      $custom:
+        "Document.AttributeOSCONTACT,Document.AttributeSITENUMBER,Document.AttributeSMSOPTIN,Document.AttributeEMAILNOTY,Document.AttributeEMAILOPTIN",
+      $top: "1",
+    });
+    return (
+      toRows(
+        await this.request<unknown>(`${this.deliverySalesOrderEntityBase}/SalesOrder?${query.toString()}`, {
+          method: "GET",
+        })
+      )[0] ?? null
+    );
+  }
+
+  async fetchDeliveryContactsForBusinessAccount(
+    customerId: string
+  ): Promise<Record<string, unknown>[]> {
+    const query = new URLSearchParams({
+      $filter: `BusinessAccount eq ${odataString(customerId)}`,
+      $select: "ContactID,BusinessAccount,LastName,DisplayName,Email,Phone1",
+      $custom: DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS,
+      $top: "500",
+    });
+    return toRows(await this.request<unknown>(`${this.deliveryEntityBase}/Contact?${query.toString()}`, {
+      method: "GET",
+    }));
+  }
+
+  async putDeliveryContact(payload: Record<string, unknown>): Promise<unknown> {
+    return this.request<unknown>(`${this.deliveryEntityBase}/Contact`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async putDeliverySalesOrder(payload: Record<string, unknown>): Promise<unknown> {
+    return this.request<unknown>(`${this.deliverySalesOrderEntityBase}/SalesOrder`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
   }
 
   async fetchDeliveryContactOptInAttributeStates(contactId: string): Promise<

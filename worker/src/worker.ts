@@ -1,5 +1,5 @@
 import { ServiceBusClient, ServiceBusReceivedMessage, ProcessErrorArgs } from "@azure/service-bus";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { Prisma } from "../../prisma/generated/client";
 import { prisma } from "./lib/prisma";
 import { env } from "./lib/env";
@@ -11,6 +11,10 @@ import { processDeliveryContactOptInAttributesJob } from "./lib/deliveryContactO
 import { processDeliveryPrepaymentHoldJob } from "./lib/deliveryPrepaymentHold";
 import { processDeliveryTenDayConfirmationJob } from "./lib/deliveryTenDayConfirmation";
 import { processStockItemCleanupRunJob } from "./lib/stockItemCleanup";
+import {
+  processSalesOrderContactBackfillJob,
+  SALES_ORDER_CONTACT_BACKFILL_STATUSES,
+} from "./lib/salesOrderContactBackfill";
 import { Semaphore, TokenBucket } from "./lib/throttle";
 import type { JobMessage } from "./types";
 
@@ -24,6 +28,7 @@ const vendorSemaphore = new Semaphore(env.vendorMaxConcurrency);
 const globalSemaphore = new Semaphore(env.globalMaxConcurrency);
 const vendorBucket = new TokenBucket(env.vendorMaxRpm);
 const globalBucket = new TokenBucket(env.globalMaxRpm);
+const contactBackfillSemaphore = new Semaphore(1);
 const MAX_STORED_ERROR_CHARS = 60000;
 
 type EnrichedRequestError = Error & {
@@ -130,6 +135,118 @@ async function enqueueUpdateFollowUp(opportunityId: string): Promise<void> {
     opportunityId,
     jobId
   });
+}
+
+function contactBackfillChildJobId(parentJobId: string, orderType: string, orderNumber: string): string {
+  const digest = createHash("sha256")
+    .update(`${parentJobId}:${orderType}:${orderNumber}`)
+    .digest("hex")
+    .slice(0, 32);
+  return `contact-backfill-${digest}`;
+}
+
+async function enqueueSalesOrderContactBackfillChildren(
+  parentJobId: string,
+  payload: Record<string, unknown> | undefined
+): Promise<Record<string, unknown>> {
+  const apply = payload?.apply === true;
+  const pageSize = Math.min(Math.max(Number(payload?.pageSize ?? 100), 1), 500);
+  const maxPages = Math.min(Math.max(Number(payload?.maxPages ?? 1000), 1), 10000);
+  const limitValue = Number(payload?.limit ?? 0);
+  const limit = Number.isInteger(limitValue) && limitValue > 0 ? limitValue : null;
+  const spacingValue = Number(payload?.spacingMs ?? 10_000);
+  const spacingMs = Number.isFinite(spacingValue)
+    ? Math.min(Math.max(Math.trunc(spacingValue), 1_000), 60_000)
+    : 10_000;
+  const orderType = String(payload?.orderType ?? "").trim().toUpperCase() || null;
+  const orderNumber = String(payload?.orderNumber ?? "").trim().toUpperCase() || null;
+  const orderTypes = Array.isArray(payload?.orderTypes)
+    ? new Set((payload.orderTypes as unknown[]).map((value) => String(value).trim().toUpperCase()).filter(Boolean))
+    : null;
+
+  if ((orderType && !orderNumber) || (!orderType && orderNumber)) {
+    throw new Error("orderType and orderNumber must be supplied together");
+  }
+
+  let keys = await acumaticaClient.fetchSalesOrderContactBackfillCandidateKeys({
+    statuses: [...SALES_ORDER_CONTACT_BACKFILL_STATUSES],
+    pageSize,
+    maxPages,
+    orderType,
+    orderNumber,
+  });
+  if (orderTypes) keys = keys.filter((key) => orderTypes.has(key.orderType));
+  if (limit !== null) keys = keys.slice(0, limit);
+
+  const children = keys.map((key) => ({
+    ...key,
+    jobId: contactBackfillChildJobId(parentJobId, key.orderType, key.orderNumber),
+  }));
+  const existing = children.length
+    ? await prisma.job.findMany({
+        where: { id: { in: children.map((child) => child.jobId) } },
+        select: { id: true },
+      })
+    : [];
+  const existingIds = new Set(existing.map((job) => job.id));
+  const pending = children.filter((child) => !existingIds.has(child.jobId));
+
+  if (pending.length) {
+    await prisma.job.createMany({
+      data: pending.map((child) => ({
+        id: child.jobId,
+        vendorId: "specbooks",
+        type: "ERP_BACKFILL_SALES_ORDER_CONTACT" as const,
+        status: "queued" as const,
+        entityKey: parentJobId,
+        payload: toPrismaJsonValue({
+          orderType: child.orderType,
+          orderNumber: child.orderNumber,
+          apply,
+          parentJobId,
+        }),
+      })),
+      skipDuplicates: true,
+    });
+
+    const scheduleBase = Date.now();
+    for (let offset = 0; offset < pending.length; offset += 50) {
+      const batch = pending.slice(offset, offset + 50);
+      await sender.sendMessages(
+        batch.map((child, batchIndex) => ({
+          messageId: child.jobId,
+          scheduledEnqueueTimeUtc: new Date(scheduleBase + (offset + batchIndex) * spacingMs),
+          body: {
+            jobId: child.jobId,
+            vendorId: "specbooks" as const,
+            type: "ERP_BACKFILL_SALES_ORDER_CONTACT" as const,
+            payload: {
+              orderType: child.orderType,
+              orderNumber: child.orderNumber,
+              apply,
+              parentJobId,
+            },
+            requestedAt: new Date().toISOString(),
+          } satisfies JobMessage,
+          applicationProperties: {
+            vendorId: "specbooks",
+            type: "ERP_BACKFILL_SALES_ORDER_CONTACT",
+          },
+        }))
+      );
+    }
+  }
+
+  return {
+    status: "children_enqueued",
+    apply,
+    discovered: keys.length,
+    enqueued: pending.length,
+    alreadyEnqueued: children.length - pending.length,
+    spacingMs,
+    estimatedCompletionMinutes: Math.ceil((pending.length * spacingMs) / 60_000),
+    parentJobId,
+  };
 }
 
 async function getLatestDebouncedPayload(opportunityId: string): Promise<{ payload: Record<string, unknown>; updatedAt: Date } | null> {
@@ -434,6 +551,20 @@ async function processJob(message: JobMessage): Promise<unknown> {
 
     case "ERP_STOCK_ITEM_CLEANUP_RUN": {
       return processStockItemCleanupRunJob(message.payload, acumaticaClient);
+    }
+
+    case "ERP_BACKFILL_SALES_ORDER_CONTACTS_RUN": {
+      return enqueueSalesOrderContactBackfillChildren(message.jobId, message.payload);
+    }
+
+    case "ERP_BACKFILL_SALES_ORDER_CONTACT": {
+      await contactBackfillSemaphore.acquire();
+      try {
+        return await processSalesOrderContactBackfillJob(message.payload, acumaticaClient);
+      } finally {
+        await sleep(Math.max(0, Number(process.env.CONTACT_BACKFILL_DELAY_MS ?? 750)));
+        contactBackfillSemaphore.release();
+      }
     }
 
     default:

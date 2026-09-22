@@ -11,7 +11,9 @@
     "validate:delivery-contact-opt-in-fetch": "npm.cmd --prefix worker run validate:delivery-contact-opt-in-fetch",
     "validate:delivery-contact-opt-in-writeback": "npm.cmd --prefix worker run validate:delivery-contact-opt-in-writeback",
     "validate:one-week-confirmation-writeback": "npm.cmd --prefix worker run validate:one-week-confirmation-writeback",
-    "count:sales-orders-with-contact": "npm.cmd --prefix worker run count:sales-orders-with-contact --"
+    "validate:sales-order-contact-backfill": "npm.cmd --prefix worker run validate:sales-order-contact-backfill",
+    "count:sales-orders-with-contact": "npm.cmd --prefix worker run count:sales-orders-with-contact --",
+    "backfill:sales-order-contacts": "npm.cmd --prefix worker run backfill:sales-order-contacts --"
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",

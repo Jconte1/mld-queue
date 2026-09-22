@@ -14,8 +14,10 @@
     "validate:delivery-contact-opt-in-fetch": "tsx scripts/validate-delivery-contact-opt-in-fetch.ts",
     "validate:delivery-contact-opt-in-writeback": "tsx scripts/validate-delivery-contact-opt-in-writeback.ts",
     "validate:one-week-confirmation-writeback": "tsx scripts/validate-delivery-ten-day-confirmation.ts",
+    "validate:sales-order-contact-backfill": "tsx scripts/validate-sales-order-contact-backfill.ts",
     "stock-item-cleanup:run": "tsx scripts/run-stock-item-cleanup.ts",
-    "count:sales-orders-with-contact": "tsx scripts/count-sales-orders-with-contact.ts"
+    "count:sales-orders-with-contact": "tsx scripts/count-sales-orders-with-contact.ts",
+    "backfill:sales-order-contacts": "tsx scripts/run-sales-order-contact-backfill.ts"
   },
   "dependencies": {
     "@azure/service-bus": "^7.9.5",
