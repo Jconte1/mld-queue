@@ -1,0 +1,2 @@
+Manufacturer,ManufacturerKey,PriceClass,ItemClass,CurrentStatus,CurrentVendorID,ExactNameSuggestedVendorID,ExactNameSuggestedVendorName,ExistingItemCount,ItemsWithVendor,ItemsWithoutVendor,CandidateVendorID,CandidateVendorName,CandidateActive,CandidateCount,CandidateShare,CompetingVendors,Classification,SampleInventoryIDs,Decision,ApprovedVendorID
+Thermador,THERMADOR,A007,APLS-RCVD,pending,,,,592,0,592,,,false,0,,,NO_VENDOR_EVIDENCE,00668022; 00774612; 00778241; 10008199; 12024437; 36HFGALBIN; 3DHFGALBIN; CET305TB; CET305YB; CET366TB,,

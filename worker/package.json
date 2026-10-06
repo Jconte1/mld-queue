@@ -17,7 +17,13 @@
     "validate:sales-order-contact-backfill": "tsx scripts/validate-sales-order-contact-backfill.ts",
     "stock-item-cleanup:run": "tsx scripts/run-stock-item-cleanup.ts",
     "count:sales-orders-with-contact": "tsx scripts/count-sales-orders-with-contact.ts",
-    "backfill:sales-order-contacts": "tsx scripts/run-sales-order-contact-backfill.ts"
+    "backfill:sales-order-contacts": "tsx scripts/run-sales-order-contact-backfill.ts",
+    "sync:active-vendors": "tsx scripts/sync-active-vendors.ts",
+    "seed:manufacturer-mappings": "tsx scripts/seed-manufacturer-mappings.ts",
+    "audit:manufacturer-vendors": "tsx scripts/audit-manufacturer-vendors.ts",
+    "apply:manufacturer-vendors": "tsx scripts/apply-manufacturer-vendors.ts",
+    "validate:create-stock-item-mapping": "tsx scripts/validate-create-stock-item-mapping.ts",
+    "test:create-stock-item-mapping-live": "tsx scripts/test-create-stock-item-mapping-live.ts"
   },
   "dependencies": {
     "@azure/service-bus": "^7.9.5",

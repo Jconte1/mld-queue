@@ -1,0 +1,25 @@
+[
+  {
+    "Manufacturer": "Thermador",
+    "ManufacturerKey": "THERMADOR",
+    "PriceClass": "A007",
+    "ItemClass": "APLS-RCVD",
+    "CurrentStatus": "pending",
+    "CurrentVendorID": "",
+    "ExactNameSuggestedVendorID": "",
+    "ExactNameSuggestedVendorName": "",
+    "ExistingItemCount": 592,
+    "ItemsWithVendor": 487,
+    "ItemsWithoutVendor": 105,
+    "CandidateVendorID": "BA0000001",
+    "CandidateVendorName": "BSH Home Appliances",
+    "CandidateActive": true,
+    "CandidateCount": 466,
+    "CandidateShare": "0.9569",
+    "CompetingVendors": "BA0012296:BSH - Thermador Builder Program:13; BA0009150:BSH - Preferred Builder:2; BA0009404:BSH - 1 2 FREE:2; BA0000002:Roth Living:1; BA0012873:Special Event MLD Closeout Sale 2024:1; BA0014844:BSH Journeys End - 2364031545:1; BA0015645:BSH SLC MC - Trapper Ridge - 2364035048:1",
+    "Classification": "CONFLICTING_HISTORY",
+    "SampleInventoryIDs": "00668022; 00774612; 00778241; 10008199; 12024437; 36HFGALBIN; 3DHFGALBIN; CET305TB; CET305YB; CET366TB",
+    "Decision": "",
+    "ApprovedVendorID": ""
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-09-30T17:05:23.945Z",
+  "readOnly": true,
+  "endpoint": "https://acumatica.mld.com/entity/CustomEndpoint/24.200.001/StockItem",
+  "mappingCount": 400,
+  "stockItemEvidenceCount": 94299,
+  "activeVendorCount": 318,
+  "exactNameSuggestionCount": 76,
+  "evidenceSource": "C:\\Users\\james\\Documents\\mld-projects\\mld-queue\\reports\\manufacturer-vendor-mapping-audit-2026-09-30T17-01-55-948Z\\stock-item-evidence.json",
+  "classificationCounts": {
+    "CONFLICTING_HISTORY": 114,
+    "STRONG_HISTORY": 171,
+    "VENDOR_CLASS_MISMATCH": 23,
+    "LEADING_VENDOR_NOT_ACTIVE": 11,
+    "LIMITED_HISTORY": 61,
+    "NO_EXISTING_ITEMS": 9,
+    "NO_VENDOR_EVIDENCE": 6,
+    "STRONG_HISTORY_CONFLICTS_WITH_NAME": 3,
+    "EXACT_SUGGESTION_ONLY": 2
+  },
+  "requestSettings": {
+    "pageSize": 500,
+    "priceClassesPerRequest": 10,
+    "requestTimeoutMs": 180000
+  }
+}

@@ -32,6 +32,18 @@ export type SalesOrderContactCountResult = {
   serverCountError: string | null;
 };
 
+export type AcumaticaActiveVendor = {
+  vendorId: string;
+  vendorName: string;
+  status: string;
+  vendorClass: string;
+};
+
+export type AcumaticaVendorClass = {
+  classId: string;
+  description: string;
+};
+
 class StockItemNotFoundError extends Error {
   status: number;
   inventoryId: string;
@@ -796,6 +808,63 @@ export class AcumaticaClient {
       const url = `${this.entityBase}/${env.acumaticaVendorEntity}?${params.toString()}`;
       return this.request<unknown>(url, { method: "GET" });
     }
+  }
+
+  async getActiveVendors(excludedVendorClasses: readonly string[] = []): Promise<AcumaticaActiveVendor[]> {
+    const filter = [
+      "Status eq 'Active'",
+      ...excludedVendorClasses.map(
+        (vendorClass) => `VendorClass ne '${quoteForOData(vendorClass)}'`
+      ),
+    ].join(" and ");
+    const rows = await this.getPagedEntityRows(
+      env.acumaticaVendorEntity,
+      "VendorID,VendorName,Status,VendorClass",
+      filter
+    );
+
+    return rows.map((row) => ({
+      vendorId: String(getAcumaticaFieldValue(row, "VendorID") || "").trim(),
+      vendorName: String(getAcumaticaFieldValue(row, "VendorName") || "").trim(),
+      status: String(getAcumaticaFieldValue(row, "Status") || "").trim(),
+      vendorClass: String(getAcumaticaFieldValue(row, "VendorClass") || "").trim(),
+    }));
+  }
+
+  async getVendorClasses(): Promise<AcumaticaVendorClass[]> {
+    const rows = await this.getPagedEntityRows("VendorClass", "ClassID,Description");
+
+    return rows.map((row) => ({
+      classId: String(getAcumaticaFieldValue(row, "ClassID") || "").trim(),
+      description: String(getAcumaticaFieldValue(row, "Description") || "").trim(),
+    }));
+  }
+
+  private async getPagedEntityRows(
+    entity: string,
+    select: string,
+    filter?: string
+  ): Promise<Record<string, unknown>[]> {
+    const pageSize = 500;
+    const maxRows = 20_000;
+    const rows: Record<string, unknown>[] = [];
+
+    for (let skip = 0; skip < maxRows; skip += pageSize) {
+      const params = new URLSearchParams({
+        "$select": select,
+        "$top": String(pageSize),
+        "$skip": String(skip),
+      });
+      if (filter) params.set("$filter", filter);
+
+      const url = `${this.entityBase}/${entity}?${params.toString()}`;
+      const page = toRows(await this.request<unknown>(url, { method: "GET" }));
+      rows.push(...page);
+
+      if (page.length < pageSize) return rows;
+    }
+
+    throw new Error(`Acumatica ${entity} query exceeded the ${maxRows}-row safety limit`);
   }
 
   async createOpportunity(payload: Record<string, unknown>): Promise<unknown> {

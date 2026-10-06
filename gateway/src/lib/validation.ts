@@ -81,7 +81,8 @@ const createOpportunitySchema = z
 const createStockItemSchema = z
   .object({
     InventoryID: wrappedString,
-    ItemClass: wrappedString,
+    manufacturer: valueString,
+    ItemClass: wrappedString.optional(),
     Description: wrappedString,
     MSRP: wrappedNumber,
     DefaultPrice: wrappedNumber

@@ -32,7 +32,8 @@ export type JobType =
   | "ERP_VERIFY_CUSTOMER"
   | "ERP_PUT_SALES_INVOICE"
   | "ERP_PUT_CUSTOMER_LOCATION"
-  | "ERP_STOCK_ITEM_CLEANUP_RUN";
+  | "ERP_STOCK_ITEM_CLEANUP_RUN"
+  | "ERP_SYNC_ACTIVE_VENDORS";
 
 export type JobStatus = "queued" | "processing" | "succeeded" | "failed";
 

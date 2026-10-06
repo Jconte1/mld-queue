@@ -11,6 +11,8 @@ import { processDeliveryContactOptInAttributesJob } from "./lib/deliveryContactO
 import { processDeliveryPrepaymentHoldJob } from "./lib/deliveryPrepaymentHold";
 import { processDeliveryTenDayConfirmationJob } from "./lib/deliveryTenDayConfirmation";
 import { processStockItemCleanupRunJob } from "./lib/stockItemCleanup";
+import { processCreateStockItemJob } from "./lib/createStockItem";
+import { syncActiveVendors } from "./lib/vendorSync";
 import {
   processSalesOrderContactBackfillJob,
   SALES_ORDER_CONTACT_BACKFILL_STATUSES,
@@ -374,7 +376,9 @@ async function processJob(message: JobMessage): Promise<unknown> {
 
     case "CREATE_STOCK_ITEM":
       if (!message.payload) throw new Error("payload is required");
-      return acumaticaClient.createStockItem(message.payload);
+      return processCreateStockItemJob(message.payload, acumaticaClient, {
+        jobId: message.jobId,
+      });
 
     case "UPDATE_OPPORTUNITY":
       if (!message.opportunityId) throw new Error("opportunityId is required");
@@ -566,6 +570,9 @@ async function processJob(message: JobMessage): Promise<unknown> {
         contactBackfillSemaphore.release();
       }
     }
+
+    case "ERP_SYNC_ACTIVE_VENDORS":
+      return syncActiveVendors(acumaticaClient);
 
     default:
       throw new Error(`Unsupported job type: ${(message as { type?: string }).type ?? "unknown"}`);

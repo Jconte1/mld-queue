@@ -40,6 +40,7 @@ enum JobType {
   ERP_STOCK_ITEM_CLEANUP_RUN
   ERP_BACKFILL_SALES_ORDER_CONTACTS_RUN
   ERP_BACKFILL_SALES_ORDER_CONTACT
+  ERP_SYNC_ACTIVE_VENDORS
   GET_CONTACT
   GET_STOCK_ITEM
   GET_ITEM_CLASS
@@ -71,6 +72,12 @@ enum StockItemCleanupItemStatus {
   failed_api_transient
   failed_validation_business_rule
   refused_write
+}
+
+enum ManufacturerMappingStatus {
+  pending
+  approved
+  blocked
 }
 
 model Job {
@@ -116,6 +123,38 @@ model RateLimitWindow {
   @@unique([vendorId, routeKey, windowStart])
   @@index([windowStart])
   @@map("rate_limit_windows")
+}
+
+model Vendor {
+  vendorId               String   @id
+  vendorName             String
+  vendorClass            String
+  vendorClassDescription String
+  syncedAt               DateTime
+
+  @@index([vendorClass])
+  @@index([vendorName])
+  @@map("vendors")
+}
+
+model ManufacturerMapping {
+  manufacturerKey       String                    @id
+  manufacturerName      String
+  priceClass            String                    @unique
+  itemClass             String
+  purchaseUnit          String                    @default("EACH")
+  vendorId              String?
+  vendorName            String?
+  suggestedVendorId     String?
+  suggestedVendorName   String?
+  status                ManufacturerMappingStatus @default(pending)
+  matchSource           String?
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+
+  @@index([status])
+  @@index([vendorId])
+  @@map("manufacturer_mappings")
 }
 
 model OpportunityUpdateBuffer {

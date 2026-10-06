@@ -1856,18 +1856,18 @@
       <h3>Required Body Fields</h3>
       <ul>
         <li><code>InventoryID: { "value": string }</code></li>
-        <li><code>ItemClass: { "value": string }</code></li>
+        <li><code>manufacturer: string</code></li>
         <li><code>Description: { "value": string }</code></li>
         <li><code>MSRP: { "value": number }</code></li>
         <li><code>DefaultPrice: { "value": number }</code></li>
       </ul>
 
-      <div class="note">Additional Acumatica StockItem fields are supported in the same payload when needed.</div>
+      <div class="note"><code>manufacturer</code> is a lowercase integration field and is not sent to Acumatica. The approved manufacturer mapping supplies <code>ItemClass</code>, <code>PriceClass</code>, and <code>VendorDetails</code>. Values supplied for those fields are overridden.</div>
 
       <h3>Example Request Body</h3>
       <pre>{
-    "InventoryID": { "value": "JAMES TEST 2" },
-    "ItemClass": { "value": "APLS-LOT" },
+    "InventoryID": { "value": "TEST-THERMADOR-ITEM" },
+    "manufacturer": "Thermador",
     "Description": { "value": "Item Description" },
     "MSRP": { "value": 144 },
     "DefaultPrice": { "value": 146 }
@@ -1922,7 +1922,7 @@
         },
         "CustomURL": {},
         "ItemClass": {
-            "value": "APLS-LOT"
+            "value": "APLS-RCVD"
         },
         "MinMarkup": {
             "value": 25
@@ -1934,7 +1934,9 @@
         "ItemStatus": {
             "value": "Active"
         },
-        "PriceClass": {},
+        "PriceClass": {
+            "value": "A007"
+        },
         "TariffCode": {},
         "Visibility": {
             "value": "Store Default"

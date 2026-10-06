@@ -1,0 +1,25 @@
+[
+  {
+    "Manufacturer": "Thermador",
+    "ManufacturerKey": "THERMADOR",
+    "PriceClass": "A007",
+    "ItemClass": "APLS-RCVD",
+    "CurrentStatus": "pending",
+    "CurrentVendorID": "",
+    "ExactNameSuggestedVendorID": "",
+    "ExactNameSuggestedVendorName": "",
+    "ExistingItemCount": 592,
+    "ItemsWithVendor": 0,
+    "ItemsWithoutVendor": 592,
+    "CandidateVendorID": "",
+    "CandidateVendorName": "",
+    "CandidateActive": false,
+    "CandidateCount": 0,
+    "CandidateShare": "",
+    "CompetingVendors": "",
+    "Classification": "NO_VENDOR_EVIDENCE",
+    "SampleInventoryIDs": "00668022; 00774612; 00778241; 10008199; 12024437; 36HFGALBIN; 3DHFGALBIN; CET305TB; CET305YB; CET366TB",
+    "Decision": "",
+    "ApprovedVendorID": ""
+  }
+]
