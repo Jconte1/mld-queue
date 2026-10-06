@@ -27,6 +27,7 @@ type Candidate = {
   orderNumber: string;
   status: string;
   customerId: string;
+  deliveryContactId: string | null;
   hold: boolean;
   lastName: string;
   phone: string;
@@ -46,6 +47,7 @@ function fieldValue(record: JsonRecord | null | undefined, name: string): unknow
 function stringField(record: JsonRecord | null | undefined, name: string): string | null {
   const value = fieldValue(record, name);
   if (value === null || value === undefined) return null;
+  if (typeof value === "object") return null;
   const normalized = String(value).trim();
   return normalized || null;
 }
@@ -105,6 +107,9 @@ export function salesOrderContactBackfillCandidate(row: JsonRecord | null):
     return { eligible: false, reason: "status_not_allowed" };
   }
   if (contactId) return { eligible: false, reason: "contact_already_attached" };
+  if (!Object.prototype.hasOwnProperty.call(row, "DeliveryContact")) {
+    return { eligible: false, reason: "delivery_contact_field_not_exposed" };
+  }
   if (!customerId) return { eligible: false, reason: "missing_customer_id" };
   if (!phone) return { eligible: false, reason: "missing_site_number" };
 
@@ -115,6 +120,7 @@ export function salesOrderContactBackfillCandidate(row: JsonRecord | null):
       orderNumber,
       status,
       customerId,
+      deliveryContactId: stringField(row, "DeliveryContact"),
       hold: booleanField(row, "Hold"),
       lastName: stringField(custom, "AttributeOSCONTACT") ?? "Site Contact",
       phone,
@@ -182,6 +188,7 @@ async function attachContact(
   contactId: string
 ): Promise<void> {
   let temporaryHoldWritten = false;
+  let assignmentsVerified = false;
   try {
     if (!candidate.hold) {
       await client.putDeliverySalesOrder(orderPayload(candidate, { Hold: { value: true } }));
@@ -191,14 +198,25 @@ async function attachContact(
     }
 
     const value: string | number = /^\d+$/.test(contactId) ? Number(contactId) : contactId;
-    await client.putDeliverySalesOrder(orderPayload(candidate, { ContactID: { value } }));
+    await client.putDeliverySalesOrder(orderPayload(candidate, {
+      ContactID: { value },
+      ...(candidate.deliveryContactId ? {} : { DeliveryContact: { value } }),
+    }));
     const attached = await client.fetchSalesOrderContactBackfillOrder(candidate.orderType, candidate.orderNumber);
     if (stringField(attached, "ContactID") !== contactId) throw new Error("contact_attachment_verification_failed");
+    if (stringField(attached, "DeliveryContact") !== (candidate.deliveryContactId ?? contactId)) {
+      throw new Error("delivery_contact_attachment_verification_failed");
+    }
+    assignmentsVerified = true;
   } finally {
     if (temporaryHoldWritten) {
       await client.putDeliverySalesOrder(orderPayload(candidate, { Hold: { value: false } }));
       const restored = await client.fetchSalesOrderContactBackfillOrder(candidate.orderType, candidate.orderNumber);
       if (!restored || booleanField(restored, "Hold")) throw new Error("original_hold_restore_failed");
+      if (assignmentsVerified && (stringField(restored, "ContactID") !== contactId ||
+          stringField(restored, "DeliveryContact") !== (candidate.deliveryContactId ?? contactId))) {
+        throw new Error("contact_assignments_not_verified_after_hold_restore");
+      }
     }
   }
 }
@@ -231,6 +249,8 @@ export async function processSalesOrderContactBackfillJob(
       customerId: candidate.customerId,
       contactAction,
       existingContactId: contactId,
+      deliveryContactAction: candidate.deliveryContactId ? "preserve" : "assign_primary_contact",
+      existingDeliveryContactId: candidate.deliveryContactId,
       emailFallbackUsed: candidate.email === SALES_ORDER_CONTACT_BACKFILL_DEFAULT_EMAIL,
       smsOptIn: candidate.smsOptIn,
       emailOptIn: candidate.emailOptIn,
@@ -252,6 +272,9 @@ export async function processSalesOrderContactBackfillJob(
     orderNumber: candidate.orderNumber,
     customerId: candidate.customerId,
     contactId,
+    deliveryContactId: candidate.deliveryContactId ?? contactId,
+    deliveryContactAction: candidate.deliveryContactId ? "preserved" : "assigned_primary_contact",
+    contactAssignmentsVerified: true,
     contactAction,
     emailFallbackUsed: candidate.email === SALES_ORDER_CONTACT_BACKFILL_DEFAULT_EMAIL,
     holdRestoredTo: candidate.hold,

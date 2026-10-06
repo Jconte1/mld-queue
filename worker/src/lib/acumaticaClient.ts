@@ -1601,7 +1601,7 @@ export class AcumaticaClient {
   ): Promise<Record<string, unknown> | null> {
     const query = new URLSearchParams({
       $filter: `OrderType eq ${odataString(orderType)} and OrderNbr eq ${odataString(orderNumber)}`,
-      $select: "OrderType,OrderNbr,Status,Hold,CustomerID,ContactID",
+      $select: "OrderType,OrderNbr,Status,Hold,CustomerID,ContactID,DeliveryContact",
       $custom:
         "Document.AttributeOSCONTACT,Document.AttributeSITENUMBER,Document.AttributeSMSOPTIN,Document.AttributeEMAILNOTY,Document.AttributeEMAILOPTIN",
       $top: "1",

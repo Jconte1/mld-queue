@@ -17,6 +17,7 @@ function order(overrides: {
   phone?: string | null;
   email?: string | null;
   contactId?: string | null;
+  deliveryContactId?: string | null;
   hold?: boolean;
 } = {}): JsonRecord {
   return {
@@ -26,6 +27,7 @@ function order(overrides: {
     Hold: { value: overrides.hold ?? false },
     CustomerID: { value: "BA0001318" },
     ContactID: { value: overrides.contactId ?? null },
+    DeliveryContact: overrides.deliveryContactId ? { value: overrides.deliveryContactId } : {},
     custom: {
       Document: {
         AttributeOSCONTACT: { value: "conte" },
@@ -38,8 +40,8 @@ function order(overrides: {
   };
 }
 
-function fakeClient(params: { contacts?: JsonRecord[] } = {}) {
-  let currentOrder = order();
+function fakeClient(params: { contacts?: JsonRecord[]; initialOrder?: JsonRecord; ignoreDeliveryContact?: boolean } = {}) {
+  let currentOrder = params.initialOrder ?? order();
   const contacts = params.contacts ?? [];
   const calls = { contactPuts: [] as JsonRecord[], orderPuts: [] as JsonRecord[] };
   const client: SalesOrderContactBackfillClient = {
@@ -53,10 +55,12 @@ function fakeClient(params: { contacts?: JsonRecord[] } = {}) {
       calls.orderPuts.push(payload);
       const hold = (payload.Hold as { value?: unknown } | undefined)?.value;
       const contactId = (payload.ContactID as { value?: unknown } | undefined)?.value;
+      const deliveryContactId = (payload.DeliveryContact as { value?: unknown } | undefined)?.value;
       currentOrder = {
         ...currentOrder,
         ...(typeof hold === "boolean" ? { Hold: { value: hold } } : {}),
         ...(contactId !== undefined ? { ContactID: { value: String(contactId) } } : {}),
+        ...(deliveryContactId !== undefined && !params.ignoreDeliveryContact ? { DeliveryContact: { value: String(deliveryContactId) } } : {}),
       };
       return null;
     },
@@ -92,6 +96,37 @@ async function main(): Promise<void> {
   assert(serializedContact.includes("AttributeCONPHONE"), "contact payload includes CONPHONE", failures);
   assert(serializedContact.includes("Opt-in"), "CONPHONE defaults Opt-in", failures);
   assert(apply.calls.orderPuts.length === 3, "apply holds, attaches, and restores", failures);
+  assert(JSON.stringify(apply.calls.orderPuts[1].ContactID) === JSON.stringify(apply.calls.orderPuts[1].DeliveryContact), "same contact assigned to both fields", failures);
+  assert(applyResult.deliveryContactId === applyResult.contactId && applyResult.contactAssignmentsVerified === true, "both assignments verified in result", failures);
+  assert(previewResult.deliveryContactAction === "assign_primary_contact", "preview reports delivery assignment", failures);
+
+  const existing = fakeClient({ initialOrder: order({ deliveryContactId: "999" }) });
+  const existingResult = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, existing.client);
+  assert(existingResult.deliveryContactId === "999", "existing delivery contact preserved", failures);
+  assert(existing.calls.orderPuts.every(put => !("DeliveryContact" in put)), "existing delivery assignment never overwritten", failures);
+
+  const missingFieldOrder = order();
+  delete missingFieldOrder.DeliveryContact;
+  const missingField = fakeClient({ initialOrder: missingFieldOrder });
+  const missingResult = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, missingField.client);
+  assert(missingResult.reason === "delivery_contact_field_not_exposed", "unmapped delivery field fails closed", failures);
+  assert(missingField.calls.contactPuts.length === 0 && missingField.calls.orderPuts.length === 0, "unmapped endpoint causes no writes", failures);
+
+  const ignored = fakeClient({ ignoreDeliveryContact: true });
+  let ignoredRejected = false;
+  try {
+    await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, ignored.client);
+  } catch (error) { ignoredRejected = String(error).includes("delivery_contact_attachment_verification_failed"); }
+  assert(ignoredRejected, "HTTP success without persisted delivery contact is rejected", failures);
+  assert(JSON.stringify(ignored.calls.orderPuts.at(-1)?.Hold) === '{"value":false}', "original hold restored after attachment failure", failures);
+
+  const held = fakeClient({ initialOrder: order({ hold: true }), contacts: [{ ContactID: { value: "194581" }, Phone1: { value: "8018335923" } }] });
+  const heldResult = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, held.client);
+  assert(heldResult.contactAction === "reuse" && heldResult.deliveryContactId === "194581", "reused contact fills both fields", failures);
+  assert(held.calls.orderPuts.length === 1 && !("Hold" in held.calls.orderPuts[0]), "already-held order remains held", failures);
+
+  const rerun = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, apply.client);
+  assert(rerun.reason === "contact_already_attached" && apply.calls.orderPuts.length === 3, "rerun skips completed order without writes", failures);
 
   const duplicate = fakeClient({
     contacts: [
@@ -123,7 +158,9 @@ async function main(): Promise<void> {
   }
   console.log(JSON.stringify({
     ok: true,
-    validations: 15,
+    dualContactAssignmentValidated: true,
+    existingDeliveryAssignmentPreserved: true,
+    missingFieldAndIgnoredWriteRejected: true,
     providerCalls: 0,
     acumaticaCalls: 0,
     databaseWrites: 0,
