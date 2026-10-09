@@ -13,6 +13,7 @@ import { processDeliveryTenDayConfirmationJob } from "./lib/deliveryTenDayConfir
 import { processStockItemCleanupRunJob } from "./lib/stockItemCleanup";
 import { processCreateStockItemJob } from "./lib/createStockItem";
 import { syncActiveVendors } from "./lib/vendorSync";
+import { processCustomerStateCorrectionJob } from "./lib/customerStateCorrection";
 import {
   processSalesOrderContactBackfillJob,
   SALES_ORDER_CONTACT_BACKFILL_STATUSES,
@@ -333,6 +334,8 @@ async function processCoalescedOpportunityUpdate(
 
 async function processJob(message: JobMessage): Promise<unknown> {
   switch (message.type) {
+    case "ERP_CORRECT_CUSTOMER_STATE":
+      return processCustomerStateCorrectionJob(message.payload, acumaticaClient);
     case "GET_CUSTOMER":
       if (!message.customerId) throw new Error("customerId is required");
       return acumaticaClient.getCustomer(message.customerId);

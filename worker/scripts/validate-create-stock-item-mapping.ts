@@ -89,7 +89,8 @@ async function main(): Promise<void> {
   });
   assert(writeCount === 1, "approved mapping calls the writer exactly once");
   assert((result as { ok?: boolean }).ok === true, "writer result is returned");
-  assert(capturedPayload?.manufacturer === undefined, "writer never receives manufacturer");
+  assert((capturedPayload as Record<string, unknown> | null)?.manufacturer === undefined,
+    "writer never receives manufacturer");
 
   await expectReject(
     () =>
@@ -121,12 +122,13 @@ async function main(): Promise<void> {
     },
   });
   assert(databaseWriteCount === 1, "real approved database mapping reaches only the fake writer");
+  const writtenDatabasePayload = databasePayload as Record<string, unknown> | null;
   assert(
-    (databasePayload?.PriceClass as { value?: string })?.value === "A007",
+    (writtenDatabasePayload?.PriceClass as { value?: string })?.value === "A007",
     "real Thermador database mapping supplies A007"
   );
   assert(
-    ((databasePayload?.VendorDetails as Array<{ VendorID: { value?: string } }>)[0]?.VendorID.value) ===
+    ((writtenDatabasePayload?.VendorDetails as Array<{ VendorID: { value?: string } }>)[0]?.VendorID.value) ===
       "BA0000001",
     "real Thermador database mapping supplies BA0000001"
   );

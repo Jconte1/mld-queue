@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "correct:customer-states": "npm.cmd --prefix worker run correct:customer-states --",
+    "validate:customer-state-correction": "npm.cmd --prefix worker run validate:customer-state-correction",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

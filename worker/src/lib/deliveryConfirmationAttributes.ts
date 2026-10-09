@@ -55,6 +55,19 @@ function isBlank(value: string | null | undefined) {
   return !value || !value.trim();
 }
 
+function verifyOrderIdentity(
+  current: DeliveryConfirmationAttributesCurrentValues,
+  payload: DeliveryConfirmationAttributesPayload,
+  stage: string
+) {
+  if (
+    current.orderType?.trim().toUpperCase() !== payload.orderType ||
+    current.orderNumber?.trim().toUpperCase() !== payload.orderNumber
+  ) {
+    throw new Error(`Delivery confirmation attributes ${stage}: sales order identity mismatch`);
+  }
+}
+
 type EnvSource = Record<string, string | undefined>;
 
 export function normalizeDeliveryConfirmationAttributesPayload(
@@ -194,6 +207,8 @@ export async function processDeliveryConfirmationAttributesJob(
     };
   }
 
+  verifyOrderIdentity(current, normalized, "preflight");
+
   const fieldsReadable = current.confirmedVia.exposed && current.confirmedWith.exposed;
   if (!fieldsReadable) {
     return {
@@ -230,6 +245,32 @@ export async function processDeliveryConfirmationAttributesJob(
 
   const partialPayload = buildDeliveryConfirmationAttributeAcumaticaPayload(normalized, fieldsToWrite);
   const putResult = await acumaticaClient.putDeliveryConfirmationAttributes(partialPayload);
+  if (putResult.status < 200 || putResult.status >= 300) {
+    throw Object.assign(new Error(`Delivery confirmation attribute writeback failed: ${putResult.status}`), {
+      status: putResult.status,
+      responseBody: putResult.body,
+    });
+  }
+
+  const readback = await acumaticaClient.fetchDeliveryConfirmationAttributes(
+    normalized.orderNumber,
+    normalized.orderType
+  );
+  if (!readback) {
+    throw new Error("Delivery confirmation attributes readback: sales order not found");
+  }
+  verifyOrderIdentity(readback, normalized, "readback");
+
+  // Verify the blank-only writes and that populated fields were preserved.
+  for (const field of ["confirmedVia", "confirmedWith"] as const) {
+    if (!readback[field].exposed) {
+      throw new Error(`Delivery confirmation attributes readback: ${field} not exposed`);
+    }
+    const expected = fieldsToWrite[field] ? normalized[field] : current[field].value;
+    if (readback[field].value !== expected) {
+      throw new Error(`Delivery confirmation attributes readback: ${field} value mismatch`);
+    }
+  }
 
   return {
     status: "written",
@@ -239,6 +280,7 @@ export async function processDeliveryConfirmationAttributesJob(
     liveWriteEnabled: true,
     ...resultBase(normalized),
     currentValues: current,
+    readbackValues: readback,
     fieldsWritten: {
       "Document.AttributeCONFIRMVIA": fieldsToWrite.confirmedVia,
       "Document.AttributeCONFIRMWTH": fieldsToWrite.confirmedWith,

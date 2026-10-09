@@ -1,4 +1,5 @@
 export type JobType =
+  | "ERP_CORRECT_CUSTOMER_STATE"
   | "GET_CUSTOMER"
   | "GET_OPPORTUNITY"
   | "GET_CONTACT"

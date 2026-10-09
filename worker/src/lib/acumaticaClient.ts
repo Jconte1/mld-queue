@@ -593,6 +593,22 @@ export class AcumaticaClient {
     return this.request<unknown>(url, { method: "GET" });
   }
 
+  async fetchCustomerForStateCorrection(customerId: string): Promise<unknown> {
+    const query = new URLSearchParams({
+      $filter: `CustomerID eq '${quoteForOData(customerId)}'`,
+      $expand: "MainContact,MainContact/Address",
+      $select: "CustomerID,MainContact/Address/State,MainContact/Address/AddressLine1,MainContact/Address/AddressLine2,MainContact/Address/City,MainContact/Address/Country,MainContact/Address/PostalCode",
+      $top: "2",
+    });
+    return this.request<unknown>(`${this.entityBase}/${env.acumaticaCustomerEntity}?${query.toString()}`, { method: "GET" });
+  }
+
+  async putCustomerStateCorrection(payload: Record<string, unknown>): Promise<unknown> {
+    return this.request<unknown>(`${this.entityBase}/${env.acumaticaCustomerEntity}`, {
+      method: "PUT", body: JSON.stringify(payload),
+    });
+  }
+
   async getOpportunity(opportunityId: string): Promise<unknown> {
     const filter = encodeURIComponent(`OpportunityID eq '${quoteForOData(opportunityId)}'`);
     const expand = env.acumaticaOpportunityExpand?.trim();

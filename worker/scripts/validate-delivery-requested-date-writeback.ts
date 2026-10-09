@@ -281,8 +281,9 @@ async function main() {
       inventoryId: "ITEM-1",
     },
   ]);
+  const explicitDetails = explicitPayloadShape.Details as Array<Record<string, unknown>>;
   assertEqual(
-    (explicitPayloadShape.Details[0] as Record<string, unknown>).id,
+    explicitDetails[0].id,
     "line-1",
     "explicit payload builder includes detail id"
   );

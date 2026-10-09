@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "correct:customer-states": "tsx scripts/correct-customer-states.ts",
+    "validate:customer-state-correction": "tsx scripts/validate-customer-state-correction.ts",
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
@@ -32,8 +34,14 @@
     "dotenv": "^17.3.1",
     "pg": "^8.13.1"
   },
+  "overrides": {
+    "exceljs": {
+      "uuid": "^11.1.1"
+    }
+  },
   "devDependencies": {
     "@types/node": "^20.17.0",
+    "exceljs": "^4.4.0",
     "prisma": "^6.6.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"

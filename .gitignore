@@ -26,6 +26,7 @@
 **/dist/
 
 # misc
+/worker/reports/customer-state-fix/
 .DS_Store
 *.pem
 
