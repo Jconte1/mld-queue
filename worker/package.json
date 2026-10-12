@@ -25,7 +25,9 @@
     "audit:manufacturer-vendors": "tsx scripts/audit-manufacturer-vendors.ts",
     "apply:manufacturer-vendors": "tsx scripts/apply-manufacturer-vendors.ts",
     "validate:create-stock-item-mapping": "tsx scripts/validate-create-stock-item-mapping.ts",
-    "test:create-stock-item-mapping-live": "tsx scripts/test-create-stock-item-mapping-live.ts"
+    "test:create-stock-item-mapping-live": "tsx scripts/test-create-stock-item-mapping-live.ts",
+    "review:manufacturer-aliases": "tsx scripts/review-manufacturer-aliases.ts",
+    "validate:manufacturer-aliases": "tsx scripts/validate-manufacturer-aliases.ts"
   },
   "dependencies": {
     "@azure/service-bus": "^7.9.5",

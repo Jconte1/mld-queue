@@ -903,6 +903,12 @@ export class AcumaticaClient {
       : result;
   }
 
+  async getStockItemForVerification(entityId: string): Promise<unknown> {
+    const params = new URLSearchParams({ "$expand": "VendorDetails" });
+    const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}/${encodeURIComponent(entityId)}?${params.toString()}`;
+    return this.request<unknown>(url, { method: "GET" });
+  }
+
   async putStockItemForCleanup(payload: Record<string, unknown>): Promise<{ status: number; body: unknown }> {
     const token = await this.getToken();
     const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}`;

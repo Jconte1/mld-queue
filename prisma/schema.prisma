@@ -152,10 +152,29 @@ model ManufacturerMapping {
   matchSource           String?
   createdAt             DateTime                  @default(now())
   updatedAt             DateTime                  @updatedAt
+  aliases               ManufacturerAlias[]
 
   @@index([status])
   @@index([vendorId])
   @@map("manufacturer_mappings")
+}
+
+model ManufacturerAlias {
+  manufacturerKey String @id
+  suppliedName String
+  mappingKey String?
+  status ManufacturerMappingStatus @default(pending)
+  seenCount Int @default(0)
+  lastJobId String?
+  lastInventoryId String?
+  firstSeenAt DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  mapping ManufacturerMapping? @relation(fields: [mappingKey], references: [manufacturerKey], onDelete: Restrict)
+
+  @@index([status, lastSeenAt])
+  @@index([mappingKey])
+  @@map("manufacturer_aliases")
 }
 
 model OpportunityUpdateBuffer {

@@ -15,11 +15,13 @@ export type StockItemMapping = {
 
 export type StockItemWriter = {
   createStockItem(payload: Record<string, unknown>): Promise<unknown>;
+  getStockItemForVerification(inventoryId: string): Promise<unknown>;
 };
 
 export type CreateStockItemDependencies = {
   findMapping?: (manufacturerKey: string) => Promise<StockItemMapping | null>;
   jobId?: string;
+  recordUnresolved?: (key: string, name: string, inventoryId: string, jobId?: string) => Promise<void>;
 };
 
 export class ManufacturerMappingNotFoundError extends Error {
@@ -38,7 +40,7 @@ export class ManufacturerMappingNotApprovedError extends Error {
 
 export class ManufacturerMappingIncompleteError extends Error {
   constructor(manufacturer: string) {
-    super(`Approved manufacturer mapping for '${manufacturer}' is missing a VendorID`);
+    super(`Approved manufacturer mapping for '${manufacturer}' is missing VendorID, ItemClass, PriceClass, or PurchaseUnit`);
     this.name = "ManufacturerMappingIncompleteError";
   }
 }
@@ -66,7 +68,7 @@ function inventoryIdFromPayload(payload: Record<string, unknown>): string {
 export async function findManufacturerMapping(
   manufacturerKey: string
 ): Promise<StockItemMapping | null> {
-  return prisma.manufacturerMapping.findUnique({
+  const canonical = await prisma.manufacturerMapping.findUnique({
     where: { manufacturerKey },
     select: {
       manufacturerKey: true,
@@ -79,6 +81,38 @@ export async function findManufacturerMapping(
       status: true,
     },
   });
+  if (canonical) return canonical;
+  const alias = await prisma.manufacturerAlias.findUnique({
+    where: { manufacturerKey }, include: { mapping: true },
+  });
+  if (alias && alias.status !== "approved") {
+    throw new ManufacturerMappingNotApprovedError(alias.suppliedName, alias.status);
+  }
+  return alias?.mapping ?? null;
+}
+
+async function recordUnresolved(key: string, name: string, inventoryId: string, jobId?: string) {
+  const context = { suppliedName: name, lastInventoryId: inventoryId, lastJobId: jobId ?? null,
+    lastSeenAt: new Date() };
+  await prisma.manufacturerAlias.upsert({
+    where: { manufacturerKey: key },
+    create: { manufacturerKey: key, ...context, seenCount: 1 },
+    update: { ...context, seenCount: { increment: 1 } },
+  });
+}
+
+function value(record: Record<string, unknown>, field: string): unknown {
+  const raw = record[field];
+  return raw && typeof raw === "object" && "value" in raw ? raw.value : raw;
+}
+
+export class StockItemMappingVerificationError extends Error {
+  responseBody: unknown;
+  constructor(inventoryId: string, diagnostics: unknown) {
+    super(`StockItem ${inventoryId} was written but mapping verification failed; inspect Acumatica before retrying`);
+    this.name = "StockItemMappingVerificationError";
+    this.responseBody = diagnostics;
+  }
 }
 
 export function buildMappedStockItemPayload(
@@ -105,15 +139,38 @@ export async function processCreateStockItemJob(
   dependencies: CreateStockItemDependencies = {}
 ): Promise<unknown> {
   const manufacturer = manufacturerFromPayload(payload);
+  if (!inventoryIdFromPayload(payload)) throw new Error("InventoryID.value is required");
   const manufacturerKey = normalizeManufacturerKey(manufacturer);
   const findMapping = dependencies.findMapping ?? findManufacturerMapping;
-  const mapping = await findMapping(manufacturerKey);
+  const recordReview = dependencies.recordUnresolved ?? recordUnresolved;
+  let mapping: StockItemMapping | null;
+  try {
+    mapping = await findMapping(manufacturerKey);
+  } catch (error) {
+    if (error instanceof ManufacturerMappingNotApprovedError) {
+      await recordReview(manufacturerKey, manufacturer, inventoryIdFromPayload(payload), dependencies.jobId);
+      log("warn", "create_stock_item_manufacturer_review_required", {
+        jobId: dependencies.jobId ?? null, manufacturer, manufacturerKey,
+        inventoryId: inventoryIdFromPayload(payload), reason: error.message,
+      });
+    }
+    throw error;
+  }
 
+  if (!mapping || mapping.status !== "approved") {
+    await recordReview(manufacturerKey, manufacturer, inventoryIdFromPayload(payload), dependencies.jobId);
+    log("warn", "create_stock_item_manufacturer_review_required", {
+      jobId: dependencies.jobId ?? null, manufacturer, manufacturerKey,
+      inventoryId: inventoryIdFromPayload(payload), status: mapping?.status ?? "unknown",
+    });
+  }
   if (!mapping) throw new ManufacturerMappingNotFoundError(manufacturer, manufacturerKey);
   if (mapping.status !== "approved") {
     throw new ManufacturerMappingNotApprovedError(manufacturer, mapping.status);
   }
-  if (!mapping.vendorId) throw new ManufacturerMappingIncompleteError(manufacturer);
+  if (!mapping.vendorId || !mapping.priceClass || !mapping.itemClass || !mapping.purchaseUnit) {
+    throw new ManufacturerMappingIncompleteError(manufacturer);
+  }
 
   const acumaticaPayload = buildMappedStockItemPayload(payload, mapping);
   log("info", "create_stock_item_mapping_selected", {
@@ -128,5 +185,39 @@ export async function processCreateStockItemJob(
     itemClass: mapping.itemClass,
     purchaseUnit: mapping.purchaseUnit,
   });
-  return writer.createStockItem(acumaticaPayload);
+  const result = await writer.createStockItem(acumaticaPayload);
+  const resultRow = Array.isArray(result) ? result[0] : result;
+  const lookupKey = resultRow && typeof resultRow === "object" && "id" in resultRow && resultRow.id
+    ? String(resultRow.id) : inventoryIdFromPayload(payload);
+  let actual: unknown;
+  try {
+    const readBack = await writer.getStockItemForVerification(lookupKey);
+    const row = (Array.isArray(readBack) ? readBack[0] : readBack) as Record<string, unknown> | null;
+    const details = Array.isArray(row?.VendorDetails) ? row.VendorDetails as Record<string, unknown>[] : [];
+    actual = { itemClass: row ? value(row, "ItemClass") : null,
+      priceClass: row ? value(row, "PriceClass") : null,
+      vendorIds: details.map(detail => value(detail, "VendorID")) };
+    const fields = actual as { itemClass: unknown; priceClass: unknown; vendorIds: unknown[] };
+    if (fields.itemClass !== mapping.itemClass || fields.priceClass !== mapping.priceClass ||
+      !fields.vendorIds.includes(mapping.vendorId)) {
+      throw new Error("Saved fields differ from approved mapping");
+    }
+  } catch (error) {
+    const diagnostics = { jobId: dependencies.jobId ?? null, manufacturer, manufacturerKey,
+      inventoryId: inventoryIdFromPayload(payload), writePerformed: true,
+      expected: { itemClass: mapping.itemClass, priceClass: mapping.priceClass, vendorId: mapping.vendorId },
+      actual: actual ?? null, cause: error instanceof Error ? error.message : String(error) };
+    log("error", "create_stock_item_mapping_verification_failed", diagnostics);
+    throw new StockItemMappingVerificationError(inventoryIdFromPayload(payload), diagnostics);
+  }
+  log("info", "create_stock_item_mapping_verified", {
+    jobId: dependencies.jobId ?? null, manufacturerKey, inventoryId: inventoryIdFromPayload(payload),
+    ...actual as Record<string, unknown>,
+  });
+  const mappingVerification = { verified: true, suppliedManufacturer: manufacturer,
+    manufacturerKey, canonicalManufacturer: mapping.manufacturerName,
+    expected: { itemClass: mapping.itemClass, priceClass: mapping.priceClass, vendorId: mapping.vendorId },
+    actual };
+  return result && typeof result === "object" && !Array.isArray(result)
+    ? { ...result, mappingVerification } : result;
 }

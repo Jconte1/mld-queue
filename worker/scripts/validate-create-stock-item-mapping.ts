@@ -74,6 +74,10 @@ async function main(): Promise<void> {
   let writeCount = 0;
   let capturedPayload: Record<string, unknown> | null = null;
   const writer = {
+    async getStockItemForVerification() {
+      return { ItemClass: { value: "APLS-RCVD" }, PriceClass: { value: "A007" },
+        VendorDetails: [{ VendorID: { value: "BA0000001" } }] };
+    },
     async createStockItem(payload: Record<string, unknown>): Promise<unknown> {
       writeCount += 1;
       capturedPayload = payload;
@@ -96,6 +100,7 @@ async function main(): Promise<void> {
     () =>
       processCreateStockItemJob(originalPayload, writer, {
         findMapping: async () => null,
+        recordUnresolved: async () => {},
       }),
     ManufacturerMappingNotFoundError,
     "unknown manufacturer"
@@ -106,6 +111,7 @@ async function main(): Promise<void> {
     () =>
       processCreateStockItemJob(originalPayload, writer, {
         findMapping: async () => approvedMapping({ status: "pending" }),
+        recordUnresolved: async () => {},
       }),
     ManufacturerMappingNotApprovedError,
     "pending manufacturer"
@@ -115,6 +121,7 @@ async function main(): Promise<void> {
   let databaseWriteCount = 0;
   let databasePayload: Record<string, unknown> | null = null;
   await processCreateStockItemJob(originalPayload, {
+    getStockItemForVerification: writer.getStockItemForVerification,
     async createStockItem(payload) {
       databaseWriteCount += 1;
       databasePayload = payload;
@@ -139,7 +146,8 @@ async function main(): Promise<void> {
     () =>
       processCreateStockItemJob(
         { ...originalPayload, manufacturer: pending!.manufacturerName },
-        writer
+        writer,
+        { recordUnresolved: async () => {} }
       ),
     ManufacturerMappingNotApprovedError,
     "real pending database mapping"

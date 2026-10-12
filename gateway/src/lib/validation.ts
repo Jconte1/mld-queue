@@ -6,6 +6,12 @@ type BodyResult<T> = { parsed: T; raw: string };
 const valueString = z.string().min(1).max(env.maxStringLength);
 const wrappedString = z.object({ value: valueString }).strict();
 const wrappedNumber = z.object({ value: z.number() }).strict();
+const stockItemPrice = z.union([
+  z.number().finite(),
+  z.string().trim().regex(/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/)
+    .transform(Number).pipe(z.number().finite())
+]);
+const wrappedStockItemPrice = z.object({ value: stockItemPrice }).strict();
 const wrappedBoolean = z.object({ value: z.boolean() }).strict();
 
 const createProductsItemSchema = z
@@ -84,8 +90,8 @@ const createStockItemSchema = z
     manufacturer: valueString,
     ItemClass: wrappedString.optional(),
     Description: wrappedString,
-    MSRP: wrappedNumber,
-    DefaultPrice: wrappedNumber
+    MSRP: wrappedStockItemPrice,
+    DefaultPrice: wrappedStockItemPrice
   })
   .passthrough();
 
