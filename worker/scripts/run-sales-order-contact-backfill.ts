@@ -2,18 +2,22 @@ import "dotenv/config";
 
 import { ServiceBusClient } from "@azure/service-bus";
 import { randomUUID } from "node:crypto";
+import { mkdir, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
 
 import { Prisma } from "../../prisma/generated/client";
 import { env } from "../src/lib/env";
 import { prisma } from "../src/lib/prisma";
 import type { JobMessage } from "../src/types";
 import { salesOrderContactBackfillQueue } from "../src/lib/salesOrderContactBackfill";
+import { csvLine, customerStateErrorSummary } from "./lib/customer-state-report";
 
 const JOB_TYPE = "ERP_BACKFILL_SALES_ORDER_CONTACTS_RUN" as const;
 const CHILD_JOB_TYPE = "ERP_BACKFILL_SALES_ORDER_CONTACT" as const;
 const APPLY_CONFIRMATION = "RUN SALES ORDER CONTACT BACKFILL";
 
 type Args = {
+  reportRunId: string | null;
   apply: boolean;
   confirm: string | null;
   wait: boolean;
@@ -52,6 +56,7 @@ function parseArgs(): Args {
   }
   const orderTypesRaw = argValue("order-types");
   return {
+    reportRunId: argValue("report-run-id"),
     apply: hasFlag("apply"),
     confirm: argValue("confirm"),
     wait: hasFlag("wait"),
@@ -78,6 +83,42 @@ function sleep(ms: number): Promise<void> {
 
 function cleanError(error: unknown): string {
   return (error instanceof Error ? error.message : String(error)).slice(0, 4000);
+}
+
+async function exportRunReport(parentJobId: string) {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(parentJobId)) {
+    throw new Error("--report-run-id must be a parent job UUID");
+  }
+  const parent = await prisma.job.findUnique({ where: { id: parentJobId } });
+  if (!parent || parent.type !== JOB_TYPE) throw new Error("Contact backfill parent job not found");
+  const children = await prisma.job.findMany({
+    where: { type: CHILD_JOB_TYPE, entityKey: parentJobId },
+    select: { id: true, status: true, payload: true, result: true, error: true },
+  });
+  const orders = children.map(child => {
+    const payload = (child.payload ?? {}) as Record<string, unknown>;
+    const result = (child.result ?? {}) as Record<string, unknown>;
+    return {
+      orderType: String(payload.orderType ?? result.orderType ?? ""),
+      orderNumber: String(payload.orderNumber ?? result.orderNumber ?? ""),
+      jobStatus: child.status,
+      outcome: child.status === "failed" ? "failed" : String(result.status ?? child.status),
+      reason: String(result.reason ?? ""),
+      contactId: String(result.contactId ?? payload.createdContactId ?? ""),
+      deliveryContactValue: String(result.deliveryContactValue ?? ""),
+      contactFieldsVerified: result.contactFieldsVerified ?? "",
+      contactAssignmentsVerified: result.contactAssignmentsVerified ?? "",
+      holdRestoredTo: result.holdRestoredTo ?? "",
+      error: customerStateErrorSummary(child.error),
+      jobId: child.id,
+    };
+  }).sort((a, b) => `${a.orderType}/${a.orderNumber}`.localeCompare(`${b.orderType}/${b.orderNumber}`));
+  const headers = ["Order Type", "Order Number", "Job Status", "Outcome", "Skip Reason", "Contact ID",
+    "Delivery Contact Value", "Contact Fields Verified", "Assignments Verified", "Original Hold", "Error", "Job ID"];
+  const report = resolve(process.cwd(), "reports", "sales-order-contact-backfill", `backfill-${parentJobId}.csv`);
+  await mkdir(resolve(process.cwd(), "reports", "sales-order-contact-backfill"), { recursive: true });
+  await writeFile(report, "\uFEFF" + csvLine(headers) + orders.map(row => csvLine(Object.values(row))).join(""), "utf8");
+  return { csvReport: report, orders };
 }
 
 async function waitForRun(parentJobId: string): Promise<void> {
@@ -128,6 +169,7 @@ async function waitForRun(parentJobId: string): Promise<void> {
         parentResult: parent.result,
         childStatusCounts: statusCounts,
         outcomes,
+        ...await exportRunReport(parentJobId),
         sensitiveValuesPrinted: false,
       }, null, 2));
       return;
@@ -138,6 +180,12 @@ async function waitForRun(parentJobId: string): Promise<void> {
 
 async function main(): Promise<void> {
   const args = parseArgs();
+  if (args.reportRunId) {
+    if (args.apply) throw new Error("--report-run-id cannot be combined with --apply");
+    console.log(JSON.stringify({ phase: "report_exported", parentJobId: args.reportRunId,
+      ...await exportRunReport(args.reportRunId), databaseWrites: 0, jobsQueued: 0 }, null, 2));
+    return;
+  }
   const queueName = salesOrderContactBackfillQueue();
   if (args.apply && args.confirm !== APPLY_CONFIRMATION) {
     throw new Error(`--apply requires --confirm "${APPLY_CONFIRMATION}"`);
