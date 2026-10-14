@@ -7,6 +7,20 @@ export const SALES_ORDER_CONTACT_BACKFILL_STATUSES = [
 
 export const SALES_ORDER_CONTACT_BACKFILL_DEFAULT_EMAIL = "NA@NA.com";
 
+export function salesOrderContactBackfillQueue(env: Record<string, string | undefined> = process.env): string {
+  const queue = env.SPECBOOKS_QUEUE_NAME?.trim();
+  if (!queue || queue.toLowerCase() === "mld-delivery-erp-jobs") {
+    throw new Error("Contact backfill requires SPECBOOKS_QUEUE_NAME pointing to the primary worker queue, not the delivery queue");
+  }
+  return queue;
+}
+
+export function assertSalesOrderContactBackfillQueue(queue: string, env: Record<string, string | undefined> = process.env): void {
+  if (queue !== salesOrderContactBackfillQueue(env)) {
+    throw new Error("Contact backfill must run on the primary worker queue");
+  }
+}
+
 type JsonRecord = Record<string, unknown>;
 
 export type SalesOrderContactBackfillClient = {
@@ -29,7 +43,7 @@ type Candidate = {
   customerId: string;
   deliveryContactId: string | null;
   hold: boolean;
-  lastName: string;
+  displayName: string;
   phone: string;
   email: string;
   smsOptIn: boolean;
@@ -122,7 +136,7 @@ export function salesOrderContactBackfillCandidate(row: JsonRecord | null):
       customerId,
       deliveryContactId: stringField(row, "DeliveryContact"),
       hold: booleanField(row, "Hold"),
-      lastName: stringField(custom, "AttributeOSCONTACT") ?? "Site Contact",
+      displayName: stringField(custom, "AttributeOSCONTACT") ?? "Site Contact",
       phone,
       email: stringField(custom, "AttributeEMAILNOTY") ?? SALES_ORDER_CONTACT_BACKFILL_DEFAULT_EMAIL,
       smsOptIn: booleanField(custom, "AttributeSMSOPTIN"),
@@ -135,8 +149,9 @@ function contactPayload(candidate: Candidate, contactId?: string): JsonRecord {
   return {
     ...(contactId ? { ContactID: { value: contactId } } : {}),
     BusinessAccount: { value: candidate.customerId },
-    LastName: { value: candidate.lastName },
-    DisplayName: { value: candidate.lastName },
+    FirstName: { value: "__" },
+    LastName: { value: "site contact" },
+    DisplayName: { value: candidate.displayName },
     Email: { value: candidate.email },
     Phone1: { value: candidate.phone },
     custom: {

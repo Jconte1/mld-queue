@@ -7,6 +7,7 @@ import { Prisma } from "../../prisma/generated/client";
 import { env } from "../src/lib/env";
 import { prisma } from "../src/lib/prisma";
 import type { JobMessage } from "../src/types";
+import { salesOrderContactBackfillQueue } from "../src/lib/salesOrderContactBackfill";
 
 const JOB_TYPE = "ERP_BACKFILL_SALES_ORDER_CONTACTS_RUN" as const;
 const CHILD_JOB_TYPE = "ERP_BACKFILL_SALES_ORDER_CONTACT" as const;
@@ -137,6 +138,7 @@ async function waitForRun(parentJobId: string): Promise<void> {
 
 async function main(): Promise<void> {
   const args = parseArgs();
+  const queueName = salesOrderContactBackfillQueue();
   if (args.apply && args.confirm !== APPLY_CONFIRMATION) {
     throw new Error(`--apply requires --confirm "${APPLY_CONFIRMATION}"`);
   }
@@ -167,7 +169,7 @@ async function main(): Promise<void> {
   });
 
   const serviceBus = new ServiceBusClient(env.serviceBusConnectionString);
-  const sender = serviceBus.createSender(env.queueName);
+  const sender = serviceBus.createSender(queueName);
   try {
     const message: JobMessage = {
       jobId: parentJobId,
@@ -197,7 +199,7 @@ async function main(): Promise<void> {
     phase: "parent_enqueued",
     parentJobId,
     mode: args.apply ? "apply" : "preview",
-    queue: env.queueName,
+    queue: queueName,
     wait: args.wait,
     sensitiveValuesPrinted: false,
   }, null, 2));

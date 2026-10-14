@@ -15,6 +15,7 @@ import { processCreateStockItemJob } from "./lib/createStockItem";
 import { syncActiveVendors } from "./lib/vendorSync";
 import { processCustomerStateCorrectionJob } from "./lib/customerStateCorrection";
 import {
+  assertSalesOrderContactBackfillQueue,
   processSalesOrderContactBackfillJob,
   SALES_ORDER_CONTACT_BACKFILL_STATUSES,
 } from "./lib/salesOrderContactBackfill";
@@ -561,10 +562,12 @@ async function processJob(message: JobMessage): Promise<unknown> {
     }
 
     case "ERP_BACKFILL_SALES_ORDER_CONTACTS_RUN": {
+      assertSalesOrderContactBackfillQueue(env.queueName);
       return enqueueSalesOrderContactBackfillChildren(message.jobId, message.payload);
     }
 
     case "ERP_BACKFILL_SALES_ORDER_CONTACT": {
+      assertSalesOrderContactBackfillQueue(env.queueName);
       await contactBackfillSemaphore.acquire();
       try {
         return await processSalesOrderContactBackfillJob(message.payload, acumaticaClient);

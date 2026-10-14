@@ -1643,7 +1643,6 @@ export class AcumaticaClient {
     const query = new URLSearchParams({
       $filter: `BusinessAccount eq ${odataString(customerId)}`,
       $select: "ContactID,BusinessAccount,LastName,DisplayName,Email,Phone1",
-      $custom: DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS,
       $top: "500",
     });
     return toRows(await this.request<unknown>(`${this.deliveryEntityBase}/Contact?${query.toString()}`, {

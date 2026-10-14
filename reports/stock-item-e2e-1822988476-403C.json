@@ -1,0 +1,263 @@
+{
+  "startedAt": "2026-10-12T16:36:28.476Z",
+  "baseUrl": "https://mld-queue.vercel.app",
+  "knownItem": "MLD-E2E-1822988476-403C",
+  "unknownItem": "MLD-E2EU-1822988476-403C",
+  "knownJobId": "c9341756-084d-4a1c-9f08-72ae30f8aedf",
+  "knownJob": {
+    "jobId": "c9341756-084d-4a1c-9f08-72ae30f8aedf",
+    "vendorId": "specbooks",
+    "type": "CREATE_STOCK_ITEM",
+    "status": "succeeded",
+    "result": {
+      "id": "410ae715-5bc6-f111-9fde-6045bda28239",
+      "MSRP": {
+        "value": 0
+      },
+      "note": null,
+      "IsAKit": {
+        "value": false
+      },
+      "Markup": {
+        "value": 0
+      },
+      "NoteID": {
+        "value": "410ae715-5bc6-f111-9fde-6045bda28239"
+      },
+      "_links": {
+        "self": "/entity/CustomEndpoint/24.200.001/StockItem/410ae715-5bc6-f111-9fde-6045bda28239",
+        "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.IN.InventoryItemMaint/Item/410ae715-5bc6-f111-9fde-6045bda28239/{filename}"
+      },
+      "custom": {},
+      "ABCCode": {},
+      "BaseUOM": {
+        "value": "EACH"
+      },
+      "Content": {},
+      "MaxCost": {
+        "value": 0
+      },
+      "MinCost": {
+        "value": 0
+      },
+      "ImageUrl": {},
+      "ItemType": {
+        "value": "Finished Good"
+      },
+      "LastCost": {
+        "value": 0
+      },
+      "SalesUOM": {
+        "value": "EACH"
+      },
+      "ItemClass": {
+        "value": "PLUMB-LOT"
+      },
+      "MinMarkup": {
+        "value": 42.86
+      },
+      "VolumeUOM": {},
+      "WeightUOM": {},
+      "rowNumber": 1,
+      "ItemStatus": {
+        "value": "Active"
+      },
+      "PriceClass": {
+        "value": "P047"
+      },
+      "TariffCode": {},
+      "Visibility": {
+        "value": "X"
+      },
+      "AverageCost": {
+        "value": 0
+      },
+      "COGSAccount": {
+        "value": "5000"
+      },
+      "Description": {
+        "value": "MLD manufacturer mapping end-to-end test"
+      },
+      "InventoryID": {
+        "value": "MLD-E2E-1822988476-403C"
+      },
+      "LastStdCost": {
+        "value": 0
+      },
+      "PurchaseUOM": {
+        "value": "EACH"
+      },
+      "TaxCategory": {
+        "value": "TAXABLE"
+      },
+      "Availability": {
+        "value": "X"
+      },
+      "DefaultPrice": {
+        "value": 260
+      },
+      "LastModified": {
+        "value": "2026-10-12T11:36:42.827-05:00"
+      },
+      "NotAvailable": {
+        "value": "X"
+      },
+      "PostingClass": {
+        "value": "PLUMBING"
+      },
+      "PriceManager": {},
+      "SalesAccount": {
+        "value": "4000"
+      },
+      "VendorDetails": [],
+      "COGSSubaccount": {
+        "value": "0020"
+      },
+      "CurrentStdCost": {
+        "value": 0
+      },
+      "LotSerialClass": {
+        "value": "LOTNBR"
+      },
+      "PackSeparately": {
+        "value": false
+      },
+      "PendingStdCost": {
+        "value": 0
+      },
+      "PriceWorkgroup": {},
+      "ProductManager": {},
+      "TemplateItemID": {},
+      "CountryOfOrigin": {},
+      "DimensionVolume": {
+        "value": 0
+      },
+      "DimensionWeight": {
+        "value": 0
+      },
+      "DiscountAccount": {},
+      "PackagingOption": {
+        "value": "Manual"
+      },
+      "SalesSubaccount": {
+        "value": "0020"
+      },
+      "ValuationMethod": {
+        "value": "Standard"
+      },
+      "CurySpecificMSRP": {
+        "value": 0
+      },
+      "InventoryAccount": {
+        "value": "1400"
+      },
+      "POAccrualAccount": {
+        "value": "2110"
+      },
+      "ProductWorkgroup": {},
+      "CurySpecificPrice": {
+        "value": 260
+      },
+      "DefaultWarehouseID": {},
+      "DiscountSubaccount": {},
+      "InventorySubaccount": {
+        "value": "0020"
+      },
+      "POAccrualSubaccount": {
+        "value": "0020"
+      },
+      "mappingVerification": {
+        "actual": {
+          "itemClass": "PLUMB-LOT",
+          "vendorIds": [
+            "BA0000739"
+          ],
+          "priceClass": "P047"
+        },
+        "expected": {
+          "vendorId": "BA0000739",
+          "itemClass": "PLUMB-LOT",
+          "priceClass": "P047"
+        },
+        "verified": true,
+        "manufacturerKey": "MOUNTAIN PLUMBING PRODUCTS",
+        "suppliedManufacturer": "Mountain Plumbing Products",
+        "canonicalManufacturer": "Mountain Plumbing"
+      },
+      "AutoIncrementalValue": {
+        "value": "000000"
+      },
+      "LastModifiedDateTime": {
+        "value": "2026-10-12T11:36:42.827-05:00"
+      },
+      "ReasonCodeSubaccount": {
+        "value": "0020"
+      },
+      "PriceClassDescription": {
+        "value": "Mountain Plumbing"
+      },
+      "DefaultIssueLocationID": {},
+      "DefaultReceiptLocationID": {},
+      "LandedCostVarianceAccount": {},
+      "StandardCostVarianceAccount": {
+        "value": "5000"
+      },
+      "LandedCostVarianceSubaccount": {},
+      "PurchasePriceVarianceAccount": {
+        "value": "5999"
+      },
+      "StandardCostRevaluationAccount": {
+        "value": "5000"
+      },
+      "StandardCostVarianceSubaccount": {
+        "value": "0020"
+      },
+      "PurchasePriceVarianceSubaccount": {
+        "value": "0020"
+      },
+      "StandardCostRevaluationSubaccount": {
+        "value": "0020"
+      }
+    },
+    "error": null,
+    "createdAt": "2026-10-12T16:36:29.430Z",
+    "updatedAt": "2026-10-12T16:36:52.567Z"
+  },
+  "savedFields": {
+    "inventoryId": "MLD-E2E-1822988476-403C",
+    "itemClass": "PLUMB-LOT",
+    "priceClass": "P047",
+    "vendorIds": [
+      "BA0000739"
+    ]
+  },
+  "unknownJobId": "80292aaa-2096-4031-bc3c-5d7726695e04",
+  "unknownJob": {
+    "jobId": "80292aaa-2096-4031-bc3c-5d7726695e04",
+    "vendorId": "specbooks",
+    "type": "CREATE_STOCK_ITEM",
+    "status": "failed",
+    "result": {
+      "name": "ManufacturerMappingNotFoundError",
+      "error": "No manufacturer mapping exists for 'MLD Unknown E2E 1822988476-403C' (normalized: 'MLD UNKNOWN E2E 1822988476 403C')"
+    },
+    "error": "No manufacturer mapping exists for 'MLD Unknown E2E 1822988476-403C' (normalized: 'MLD UNKNOWN E2E 1822988476 403C')",
+    "createdAt": "2026-10-12T16:37:15.116Z",
+    "updatedAt": "2026-10-12T16:37:15.714Z"
+  },
+  "review": {
+    "manufacturerKey": "MLD UNKNOWN E2E 1822988476 403C",
+    "suppliedName": "MLD Unknown E2E 1822988476-403C",
+    "mappingKey": null,
+    "status": "pending",
+    "seenCount": 1,
+    "lastJobId": "80292aaa-2096-4031-bc3c-5d7726695e04",
+    "lastInventoryId": "MLD-E2EU-1822988476-403C",
+    "firstSeenAt": "2026-10-12T16:37:15.663Z",
+    "lastSeenAt": "2026-10-12T16:37:15.662Z",
+    "updatedAt": "2026-10-12T16:37:15.663Z"
+  },
+  "unknownItemAbsent": true,
+  "ok": true,
+  "completedAt": "2026-10-12T16:37:22.945Z"
+}

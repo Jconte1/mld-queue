@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
+  assertSalesOrderContactBackfillQueue,
+  salesOrderContactBackfillQueue,
   processSalesOrderContactBackfillJob,
   salesOrderContactBackfillCandidate,
   type SalesOrderContactBackfillClient,
@@ -92,6 +94,9 @@ async function main(): Promise<void> {
   );
   const serializedContact = JSON.stringify(apply.calls.contactPuts[0]);
   assert(applyResult.status === "completed", "apply completes", failures);
+  assert(JSON.stringify(apply.calls.contactPuts[0].FirstName) === '{"value":"__"}', "new contact first name is double underscore", failures);
+  assert(JSON.stringify(apply.calls.contactPuts[0].LastName) === '{"value":"site contact"}', "new contact last name is literal site contact", failures);
+  assert(JSON.stringify(apply.calls.contactPuts[0].DisplayName) === '{"value":"conte"}', "display name still uses OSCONTACT", failures);
   assert(serializedContact.includes("NA@NA.com"), "contact payload uses default email", failures);
   assert(serializedContact.includes("AttributeCONPHONE"), "contact payload includes CONPHONE", failures);
   assert(serializedContact.includes("Opt-in"), "CONPHONE defaults Opt-in", failures);
@@ -123,6 +128,8 @@ async function main(): Promise<void> {
   const held = fakeClient({ initialOrder: order({ hold: true }), contacts: [{ ContactID: { value: "194581" }, Phone1: { value: "8018335923" } }] });
   const heldResult = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, held.client);
   assert(heldResult.contactAction === "reuse" && heldResult.deliveryContactId === "194581", "reused contact fills both fields", failures);
+  assert(JSON.stringify(held.calls.contactPuts[0].FirstName) === '{"value":"__"}' &&
+    JSON.stringify(held.calls.contactPuts[0].LastName) === '{"value":"site contact"}', "reused contact receives same naming rule", failures);
   assert(held.calls.orderPuts.length === 1 && !("Hold" in held.calls.orderPuts[0]), "already-held order remains held", failures);
 
   const rerun = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, apply.client);
@@ -147,6 +154,26 @@ async function main(): Promise<void> {
   assert(duplicate.calls.contactPuts.length === 0 && duplicate.calls.orderPuts.length === 0, "ambiguous match makes no writes", failures);
 
   const producer = readFileSync(join(process.cwd(), "scripts/run-sales-order-contact-backfill.ts"), "utf8");
+  const clientSource = readFileSync(join(process.cwd(), "src/lib/acumaticaClient.ts"), "utf8");
+  const lookupSource = clientSource.split("async fetchDeliveryContactsForBusinessAccount(")[1]?.split("async putDeliveryContact(")[0];
+  assert(lookupSource && !lookupSource.includes("$custom") && lookupSource.includes("Phone1"), "contact matching fetch does not request unused opt-in custom fields", failures);
+  const queueEnv = { SPECBOOKS_QUEUE_NAME: "specbooks-jobs", MLD_QUEUE_WORKER_QUEUE_NAME: "mld-delivery-erp-jobs" };
+  assert(salesOrderContactBackfillQueue(queueEnv) === "specbooks-jobs", "backfill ignores delivery queue override", failures);
+  assertSalesOrderContactBackfillQueue("specbooks-jobs", queueEnv);
+  for (const invalid of [undefined, "", "mld-delivery-erp-jobs"]) {
+    let rejected = false;
+    try { salesOrderContactBackfillQueue({ SPECBOOKS_QUEUE_NAME: invalid }); } catch { rejected = true; }
+    assert(rejected, "missing or delivery primary queue rejected", failures);
+  }
+  let wrongWorkerRejected = false;
+  try { assertSalesOrderContactBackfillQueue("mld-delivery-erp-jobs", queueEnv); } catch { wrongWorkerRejected = true; }
+  assert(wrongWorkerRejected, "delivery worker cannot execute contact backfill", failures);
+  assert(producer.includes("const queueName = salesOrderContactBackfillQueue()") && producer.includes("createSender(queueName)"), "producer sends to primary queue", failures);
+  const worker = readFileSync(join(process.cwd(), "src/worker.ts"), "utf8");
+  for (const type of ["ERP_BACKFILL_SALES_ORDER_CONTACTS_RUN", "ERP_BACKFILL_SALES_ORDER_CONTACT"]) {
+    assert(worker.includes(`case "${type}": {\n      assertSalesOrderContactBackfillQueue(env.queueName);`) ||
+      worker.includes(`case "${type}": {\r\n      assertSalesOrderContactBackfillQueue(env.queueName);`), `${type} checks queue before execution`, failures);
+  }
   assert(producer.includes("ServiceBusClient"), "producer uses Service Bus", failures);
   assert(!producer.includes("AcumaticaClient"), "producer does not call Acumatica directly", failures);
   assert(producer.includes("ERP_BACKFILL_SALES_ORDER_CONTACTS_RUN"), "producer queues parent job", failures);
