@@ -1,5 +1,6 @@
 import { env } from "./env";
 import { DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS } from "./deliveryContactOptInFields";
+import { SALES_ORDER_CONTACT_BACKFILL_EXCLUDED_ORDER_TYPES } from "./salesOrderContactBackfill";
 
 type TokenResponse = {
   access_token?: string;
@@ -1601,7 +1602,8 @@ export class AcumaticaClient {
     orderNumber?: string | null;
   }): Promise<Array<{ orderType: string; orderNumber: string }>> {
     const statusClause = `(${params.statuses.map((status) => `Status eq ${odataString(status)}`).join(" or ")})`;
-    const clauses = [statusClause, "ContactID eq null"];
+    const clauses = [statusClause, "ContactID eq null",
+      ...SALES_ORDER_CONTACT_BACKFILL_EXCLUDED_ORDER_TYPES.map((type) => `OrderType ne ${odataString(type)}`)];
     if (params.orderType) clauses.push(`OrderType eq ${odataString(params.orderType)}`);
     if (params.orderNumber) clauses.push(`OrderNbr eq ${odataString(params.orderNumber)}`);
 
@@ -1624,7 +1626,8 @@ export class AcumaticaClient {
         const orderType = getAcumaticaFieldValue(row, "OrderType")?.trim().toUpperCase() || "";
         const orderNumber = getAcumaticaFieldValue(row, "OrderNbr")?.trim().toUpperCase() || "";
         const key = `${orderType}/${orderNumber}`;
-        if (orderType && orderNumber && !seen.has(key)) {
+        if (orderType && orderNumber && !seen.has(key) &&
+            !(SALES_ORDER_CONTACT_BACKFILL_EXCLUDED_ORDER_TYPES as readonly string[]).includes(orderType)) {
           seen.add(key);
           result.push({ orderType, orderNumber });
         }
@@ -1672,6 +1675,19 @@ export class AcumaticaClient {
       method: "PUT",
       body: JSON.stringify(payload),
     });
+  }
+
+  async fetchSalesOrderContactBackfillContact(contactId: string): Promise<Record<string, unknown> | null> {
+    if (!/^\d+$/.test(contactId)) throw new Error("Invalid backfill ContactID");
+    const query = new URLSearchParams({
+      $filter: `ContactID eq ${contactId}`,
+      $select: "ContactID,BusinessAccount,FirstName,LastName,DisplayName,Email,Phone1",
+      $custom: "Contact.AttributeTEXTCON,Contact.AttributeEMAILCON,Contact.AttributePHONECON",
+      $top: "1",
+    });
+    return toRows(await this.request<unknown>(`${this.deliveryEntityBase}/Contact?${query.toString()}`, {
+      method: "GET",
+    }))[0] ?? null;
   }
 
   async putDeliverySalesOrder(payload: Record<string, unknown>): Promise<unknown> {

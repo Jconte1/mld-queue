@@ -7,6 +7,7 @@ import {
   processSalesOrderContactBackfillJob as processBackfill,
   type ContactCreationCheckpoint,
   salesOrderContactBackfillCandidate,
+  SALES_ORDER_CONTACT_BACKFILL_STATUSES,
   type SalesOrderContactBackfillClient,
 } from "../src/lib/salesOrderContactBackfill";
 
@@ -34,6 +35,7 @@ function assert(condition: unknown, message: string, failures: string[]): void {
 function order(overrides: {
   phone?: string | null;
   email?: string | null;
+  name?: string | null;
   contactId?: string | null;
   deliveryContactId?: string | null;
   hold?: boolean;
@@ -48,7 +50,7 @@ function order(overrides: {
     DeliveryContact: overrides.deliveryContactId ? { value: overrides.deliveryContactId } : {},
     custom: {
       Document: {
-        AttributeOSCONTACT: { value: "conte" },
+        AttributeOSCONTACT: { value: overrides.name === undefined ? "conte" : overrides.name },
         AttributeSITENUMBER: { value: overrides.phone === undefined ? "801-833-5923" : overrides.phone },
         AttributeSMSOPTIN: { value: true },
         AttributeEMAILNOTY: { value: overrides.email === undefined ? null : overrides.email },
@@ -62,11 +64,18 @@ function fakeClient(params: { contacts?: JsonRecord[]; initialOrder?: JsonRecord
   let currentOrder = params.initialOrder ?? order();
   const contacts = params.contacts ?? [];
   const calls = { contactPuts: [] as JsonRecord[], orderPuts: [] as JsonRecord[] };
+  const displayName = (payload: JsonRecord) =>
+    `${(payload.FirstName as { value: string }).value} ${(payload.LastName as { value: string }).value}`;
   const client: SalesOrderContactBackfillClient = {
     fetchSalesOrderContactBackfillOrder: async () => currentOrder,
     fetchDeliveryContactsForBusinessAccount: async () => contacts,
+    fetchSalesOrderContactBackfillContact: async () => ({ ...calls.contactPuts.at(-1), DisplayName: { value: displayName(calls.contactPuts.at(-1)!) }, ContactID: { value: "194581" } }),
     putDeliveryContact: async (payload) => {
       calls.contactPuts.push(payload);
+      if (!contacts.some(row => (row.ContactID as { value?: string })?.value === "194581" &&
+          (row.DisplayName as { value?: string })?.value === displayName(payload))) {
+        contacts.push({ ...payload, ContactID: { value: "194581" }, DisplayName: { value: displayName(payload) } });
+      }
       return { ContactID: { value: "194581" } };
     },
     putDeliverySalesOrder: async (payload) => {
@@ -77,8 +86,8 @@ function fakeClient(params: { contacts?: JsonRecord[]; initialOrder?: JsonRecord
       currentOrder = {
         ...currentOrder,
         ...(typeof hold === "boolean" ? { Hold: { value: hold } } : {}),
-        ...(contactId !== undefined ? { ContactID: { value: String(contactId) } } : {}),
-        ...(deliveryContactId !== undefined && !params.ignoreDeliveryContact ? { DeliveryContact: { value: String(deliveryContactId) } } : {}),
+        ...(contactId !== undefined ? { ContactID: { value: contactId === null ? null : String(contactId) } } : {}),
+        ...(deliveryContactId !== undefined && !params.ignoreDeliveryContact ? { DeliveryContact: { value: deliveryContactId === null ? null : String(deliveryContactId) } } : {}),
       };
       return null;
     },
@@ -92,6 +101,20 @@ async function main(): Promise<void> {
   const missingPhone = salesOrderContactBackfillCandidate(order({ phone: " " }));
   assert(!missingPhone.eligible, "blank SITENUMBER is ineligible", failures);
   assert("reason" in missingPhone && missingPhone.reason === "missing_site_number", "blank phone skip reason", failures);
+  for (const phone of [null, "", "   "]) {
+    const blank = fakeClient({ initialOrder: order({ phone }) });
+    const result = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, blank.client);
+    assert(result.reason === "missing_site_number" && blank.calls.contactPuts.length === 0 &&
+      blank.calls.orderPuts.length === 0, "blank SITENUMBER skips entire order without writes", failures);
+  }
+  for (const type of ["QT", "RA", " qt ", "ra"]) {
+    const source = order();
+    source.OrderType = { value: type };
+    const excluded = fakeClient({ initialOrder: source });
+    const result = await processSalesOrderContactBackfillJob({ orderType: type, orderNumber: "TEST", apply: true }, excluded.client);
+    assert(result.reason === "order_type_excluded" && excluded.calls.contactPuts.length === 0 &&
+      excluded.calls.orderPuts.length === 0, `${type} cannot create a contact or change the order`, failures);
+  }
 
   const preview = fakeClient();
   const previewResult = await processSalesOrderContactBackfillJob(
@@ -110,21 +133,61 @@ async function main(): Promise<void> {
   );
   const serializedContact = JSON.stringify(apply.calls.contactPuts[0]);
   assert(applyResult.status === "completed", "apply completes", failures);
-  assert(JSON.stringify(apply.calls.contactPuts[0].FirstName) === '{"value":"__"}', "new contact first name is double underscore", failures);
-  assert(JSON.stringify(apply.calls.contactPuts[0].LastName) === '{"value":"site contact"}', "new contact last name is literal site contact", failures);
-  assert(JSON.stringify(apply.calls.contactPuts[0].DisplayName) === '{"value":"conte"}', "display name still uses OSCONTACT", failures);
+  assert(JSON.stringify(apply.calls.contactPuts[0].FirstName) === '{"value":"conte"}', "first name uses OSCONTACT", failures);
+  assert(JSON.stringify(apply.calls.contactPuts[0].LastName) === '{"value":"__"}', "last name is double underscore", failures);
+  assert(!("DisplayName" in apply.calls.contactPuts[0]), "ERP computes display name from the actual name fields", failures);
+  for (const name of ["James Conte", "Jane Smith / Site Manager"]) {
+    const named = fakeClient({ initialOrder: order({ name }) });
+    const result = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, named.client);
+    assert((named.calls.contactPuts[0].FirstName as { value: string }).value === name &&
+      result.deliveryContactValue === `${name} __`, "full source name is preserved and used by delivery selector", failures);
+  }
+  const unnamed = fakeClient({ initialOrder: order({ name: " " }) });
+  await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, unnamed.client);
+  assert((unnamed.calls.contactPuts[0].FirstName as { value: string }).value === "Site Contact", "missing source name uses existing fallback", failures);
+  for (const status of SALES_ORDER_CONTACT_BACKFILL_STATUSES) {
+    const source = order();
+    source.Status = { value: status };
+    assert(salesOrderContactBackfillCandidate(source).eligible, `bulk eligibility includes ${status}`, failures);
+  }
+  const closed = order();
+  closed.Status = { value: "Completed" };
+  assert(!salesOrderContactBackfillCandidate(closed).eligible, "completed orders excluded", failures);
   assert(serializedContact.includes("NA@NA.com"), "contact payload uses default email", failures);
-  assert(serializedContact.includes("AttributeCONPHONE"), "contact payload includes CONPHONE", failures);
-  assert(serializedContact.includes("Opt-in"), "CONPHONE defaults Opt-in", failures);
+  const consent = (apply.calls.contactPuts[0].custom as { Contact: JsonRecord }).Contact;
+  assert(JSON.stringify(consent.AttributeTEXTCON) === '{"type":"CustomStringField","value":"Opt-In"}', "SMS uses verified TEXTCON selector", failures);
+  assert(JSON.stringify(consent.AttributeEMAILCON) === '{"type":"CustomStringField","value":"Opt-In"}', "email uses verified EMAILCON selector", failures);
+  assert(JSON.stringify(consent.AttributePHONECON) === '{"type":"CustomStringField","value":"Opt-In"}', "PHONECON defaults Opt-In", failures);
+  assert(applyResult.contactFieldsVerified === true, "created contact fields verified before attachment", failures);
+  const optedOutOrder = order();
+  const sourceAttributes = (optedOutOrder.custom as { Document: JsonRecord }).Document;
+  sourceAttributes.AttributeSMSOPTIN = { value: false };
+  sourceAttributes.AttributeEMAILOPTIN = { value: null };
+  const optedOut = fakeClient({ initialOrder: optedOutOrder });
+  await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, optedOut.client);
+  const optedOutConsent = (optedOut.calls.contactPuts[0].custom as { Contact: JsonRecord }).Contact;
+  assert(JSON.stringify(optedOutConsent.AttributeTEXTCON).includes('"Opt-Out"') &&
+    JSON.stringify(optedOutConsent.AttributeEMAILCON).includes('"Opt-Out"'), "false/blank source consent maps to Opt-Out", failures);
+  const unverified = fakeClient();
+  const fetchCreated = unverified.client.fetchSalesOrderContactBackfillContact;
+  unverified.client.fetchSalesOrderContactBackfillContact = async (id) => {
+    const row = await fetchCreated(id);
+    return row ? { ...row, custom: { Contact: {} } } : null;
+  };
+  let verificationRejected = false;
+  try { await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, unverified.client); }
+  catch (error) { verificationRejected = String(error).includes("fields_verification_failed"); }
+  assert(verificationRejected && unverified.calls.orderPuts.length === 0, "missing persisted opt-ins prevents order attachment", failures);
   assert(apply.calls.orderPuts.length === 3, "apply holds, attaches, and restores", failures);
-  assert(JSON.stringify(apply.calls.orderPuts[1].ContactID) === JSON.stringify(apply.calls.orderPuts[1].DeliveryContact), "same contact assigned to both fields", failures);
+  assert(JSON.stringify(apply.calls.orderPuts[1].ContactID) === '{"value":194581}' &&
+    JSON.stringify(apply.calls.orderPuts[1].DeliveryContact) === '{"value":"conte __"}', "primary uses ID and delivery uses the same contact display selector", failures);
   assert(applyResult.deliveryContactId === applyResult.contactId && applyResult.contactAssignmentsVerified === true, "both assignments verified in result", failures);
   assert(previewResult.deliveryContactAction === "assign_primary_contact", "preview reports delivery assignment", failures);
 
   const existing = fakeClient({ initialOrder: order({ deliveryContactId: "999" }) });
   const existingResult = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, existing.client);
-  assert(existingResult.deliveryContactId === "999", "existing delivery contact preserved", failures);
-  assert(existing.calls.orderPuts.every(put => !("DeliveryContact" in put)), "existing delivery assignment never overwritten", failures);
+  assert(existingResult.deliveryContactValue === "999", "existing delivery contact preserved", failures);
+  assert(existing.calls.orderPuts.every(put => !("DeliveryContact" in put) || JSON.stringify(put.DeliveryContact) === '{"value":"999"}'), "existing delivery assignment preserved during hold restore", failures);
 
   const missingFieldOrder = order();
   delete missingFieldOrder.DeliveryContact;
@@ -144,8 +207,8 @@ async function main(): Promise<void> {
   const held = fakeClient({ initialOrder: order({ hold: true }), contacts: [{ ContactID: { value: "194581" }, Phone1: { value: "8018335923" } }] });
   const heldResult = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, held.client);
   assert(heldResult.contactAction === "create" && heldResult.deliveryContactId === "194581", "new contact fills both fields despite an existing match", failures);
-  assert(JSON.stringify(held.calls.contactPuts[0].FirstName) === '{"value":"__"}' &&
-    JSON.stringify(held.calls.contactPuts[0].LastName) === '{"value":"site contact"}', "new contact receives naming rule", failures);
+  assert(JSON.stringify(held.calls.contactPuts[0].FirstName) === '{"value":"conte"}' &&
+    JSON.stringify(held.calls.contactPuts[0].LastName) === '{"value":"__"}', "new contact receives naming rule", failures);
   assert(!("ContactID" in held.calls.contactPuts[0]), "existing contact is never updated", failures);
   assert(held.calls.orderPuts.length === 1 && !("Hold" in held.calls.orderPuts[0]), "already-held order remains held", failures);
 
@@ -164,6 +227,11 @@ async function main(): Promise<void> {
     );
   assert(duplicateResult.status === "completed" && duplicate.calls.contactPuts.length === 1, "multiple phone matches do not prevent creating a new contact", failures);
   assert(!("ContactID" in duplicate.calls.contactPuts[0]), "multiple matches are not reused", failures);
+  const ambiguousSelector = fakeClient({ contacts: [{ ContactID: { value: "99" }, DisplayName: { value: "conte __" } }] });
+  let selectorRejected = false;
+  try { await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, ambiguousSelector.client); }
+  catch (error) { selectorRejected = String(error).includes("selector_ambiguous"); }
+  assert(selectorRejected && ambiguousSelector.calls.orderPuts.length === 0, "duplicate display selector cannot attach the wrong contact", failures);
 
   const uncertain = fakeClient();
   uncertain.client.putDeliveryContact = async (payload) => { uncertain.calls.contactPuts.push(payload); throw new Error("timeout"); };

@@ -6,6 +6,7 @@ export const SALES_ORDER_CONTACT_BACKFILL_STATUSES = [
 ] as const;
 
 export const SALES_ORDER_CONTACT_BACKFILL_DEFAULT_EMAIL = "NA@NA.com";
+export const SALES_ORDER_CONTACT_BACKFILL_EXCLUDED_ORDER_TYPES = ["QT", "RA"] as const;
 
 export function salesOrderContactBackfillQueue(env: Record<string, string | undefined> = process.env): string {
   const queue = env.SPECBOOKS_QUEUE_NAME?.trim();
@@ -33,6 +34,7 @@ export type ContactCreationCheckpoint = {
 export type SalesOrderContactBackfillClient = {
   fetchSalesOrderContactBackfillOrder(orderType: string, orderNumber: string): Promise<JsonRecord | null>;
   fetchDeliveryContactsForBusinessAccount(customerId: string): Promise<JsonRecord[]>;
+  fetchSalesOrderContactBackfillContact(contactId: string): Promise<JsonRecord | null>;
   putDeliveryContact(payload: JsonRecord): Promise<unknown>;
   putDeliverySalesOrder(payload: JsonRecord): Promise<unknown>;
 };
@@ -124,6 +126,9 @@ export function salesOrderContactBackfillCandidate(row: JsonRecord | null):
   const phone = digits(stringField(custom, "AttributeSITENUMBER"));
 
   if (!orderType || !orderNumber) return { eligible: false, reason: "missing_order_key" };
+  if ((SALES_ORDER_CONTACT_BACKFILL_EXCLUDED_ORDER_TYPES as readonly string[]).includes(orderType)) {
+    return { eligible: false, reason: "order_type_excluded" };
+  }
   if (!(SALES_ORDER_CONTACT_BACKFILL_STATUSES as readonly string[]).includes(status)) {
     return { eligible: false, reason: "status_not_allowed" };
   }
@@ -152,19 +157,18 @@ export function salesOrderContactBackfillCandidate(row: JsonRecord | null):
   };
 }
 
-function contactPayload(candidate: Candidate): JsonRecord {
+export function salesOrderContactBackfillContactPayload(candidate: Candidate): JsonRecord {
   return {
     BusinessAccount: { value: candidate.customerId },
-    FirstName: { value: "__" },
-    LastName: { value: "site contact" },
-    DisplayName: { value: candidate.displayName },
+    FirstName: { value: candidate.displayName },
+    LastName: { value: "__" },
     Email: { value: candidate.email },
     Phone1: { value: candidate.phone },
     custom: {
       Contact: {
-        AttributeCONTEXT: { type: "CustomStringField", value: candidate.smsOptIn ? "Opt-in" : "Opt-out" },
-        AttributeCONEMAIL: { type: "CustomStringField", value: candidate.emailOptIn ? "Opt-in" : "Opt-out" },
-        AttributeCONPHONE: { type: "CustomStringField", value: "Opt-in" },
+        AttributeTEXTCON: { type: "CustomStringField", value: candidate.smsOptIn ? "Opt-In" : "Opt-Out" },
+        AttributeEMAILCON: { type: "CustomStringField", value: candidate.emailOptIn ? "Opt-In" : "Opt-Out" },
+        AttributePHONECON: { type: "CustomStringField", value: "Opt-In" },
       },
     },
   };
@@ -181,7 +185,8 @@ function orderPayload(candidate: Candidate, fields: JsonRecord): JsonRecord {
 async function attachContact(
   client: SalesOrderContactBackfillClient,
   candidate: Candidate,
-  contactId: string
+  contactId: string,
+  contactDisplayName: string
 ): Promise<void> {
   let temporaryHoldWritten = false;
   let assignmentsVerified = false;
@@ -196,21 +201,25 @@ async function attachContact(
     const value: string | number = /^\d+$/.test(contactId) ? Number(contactId) : contactId;
     await client.putDeliverySalesOrder(orderPayload(candidate, {
       ContactID: { value },
-      ...(candidate.deliveryContactId ? {} : { DeliveryContact: { value } }),
+      ...(candidate.deliveryContactId ? {} : { DeliveryContact: { value: contactDisplayName } }),
     }));
     const attached = await client.fetchSalesOrderContactBackfillOrder(candidate.orderType, candidate.orderNumber);
     if (stringField(attached, "ContactID") !== contactId) throw new Error("contact_attachment_verification_failed");
-    if (stringField(attached, "DeliveryContact") !== (candidate.deliveryContactId ?? contactId)) {
+    if (stringField(attached, "DeliveryContact") !== (candidate.deliveryContactId ?? contactDisplayName)) {
       throw new Error("delivery_contact_attachment_verification_failed");
     }
     assignmentsVerified = true;
   } finally {
     if (temporaryHoldWritten) {
-      await client.putDeliverySalesOrder(orderPayload(candidate, { Hold: { value: false } }));
+      await client.putDeliverySalesOrder(orderPayload(candidate, {
+        Hold: { value: false },
+        ContactID: { value: assignmentsVerified ? (/^\d+$/.test(contactId) ? Number(contactId) : contactId) : null },
+        DeliveryContact: { value: candidate.deliveryContactId ?? (assignmentsVerified ? contactDisplayName : null) },
+      }));
       const restored = await client.fetchSalesOrderContactBackfillOrder(candidate.orderType, candidate.orderNumber);
       if (!restored || booleanField(restored, "Hold")) throw new Error("original_hold_restore_failed");
       if (assignmentsVerified && (stringField(restored, "ContactID") !== contactId ||
-          stringField(restored, "DeliveryContact") !== (candidate.deliveryContactId ?? contactId))) {
+          stringField(restored, "DeliveryContact") !== (candidate.deliveryContactId ?? contactDisplayName))) {
         throw new Error("contact_assignments_not_verified_after_hold_restore");
       }
     }
@@ -259,13 +268,34 @@ export async function processSalesOrderContactBackfillJob(
   if (!checkpoint) throw new Error("contact_creation_checkpoint_required");
   if (!contactId) {
     if (checkpoint.started) throw new Error("contact_creation_outcome_unknown_manual_review_required");
-    await checkpoint.saveStarted(contactPayload(candidate));
-    const response = await client.putDeliveryContact(contactPayload(candidate));
+    await checkpoint.saveStarted(salesOrderContactBackfillContactPayload(candidate));
+    const response = await client.putDeliveryContact(salesOrderContactBackfillContactPayload(candidate));
     contactId = rows(response).length ? stringField(rows(response)[0], "ContactID") : null;
     if (!contactId) throw new Error("created_contact_id_missing_manual_review_required");
     await checkpoint.saveContactId(contactId);
   }
-  await attachContact(client, candidate, contactId);
+  const created = await client.fetchSalesOrderContactBackfillContact(contactId);
+  const custom = (created?.custom as { Contact?: JsonRecord } | undefined)?.Contact;
+  if (!created || stringField(created, "ContactID") !== contactId ||
+      stringField(created, "BusinessAccount") !== candidate.customerId ||
+      digits(stringField(created, "Phone1")) !== candidate.phone ||
+      stringField(created, "Email")?.toLowerCase() !== candidate.email.toLowerCase() ||
+      stringField(created, "FirstName") !== candidate.displayName || stringField(created, "LastName") !== "__" ||
+      stringField(custom, "AttributeTEXTCON") !== (candidate.smsOptIn ? "Opt-In" : "Opt-Out") ||
+      stringField(custom, "AttributeEMAILCON") !== (candidate.emailOptIn ? "Opt-In" : "Opt-Out") ||
+      stringField(custom, "AttributePHONECON") !== "Opt-In") {
+    throw new Error("created_contact_fields_verification_failed");
+  }
+  const contactDisplayName = stringField(created, "DisplayName");
+  if (!contactDisplayName) throw new Error("created_contact_display_name_missing");
+  if (!candidate.deliveryContactId) {
+    const contacts = await client.fetchDeliveryContactsForBusinessAccount(candidate.customerId);
+    const matches = contacts.filter((row) => stringField(row, "DisplayName") === contactDisplayName);
+    if (matches.length !== 1 || stringField(matches[0], "ContactID") !== contactId) {
+      throw new Error("delivery_contact_selector_ambiguous_manual_review_required");
+    }
+  }
+  await attachContact(client, candidate, contactId, contactDisplayName);
 
   return {
     status: "completed",
@@ -273,9 +303,11 @@ export async function processSalesOrderContactBackfillJob(
     orderNumber: candidate.orderNumber,
     customerId: candidate.customerId,
     contactId,
-    deliveryContactId: candidate.deliveryContactId ?? contactId,
+    deliveryContactId: candidate.deliveryContactId ? null : contactId,
+    deliveryContactValue: candidate.deliveryContactId ?? contactDisplayName,
     deliveryContactAction: candidate.deliveryContactId ? "preserved" : "assigned_primary_contact",
     contactAssignmentsVerified: true,
+    contactFieldsVerified: true,
     contactAction,
     emailFallbackUsed: candidate.email === SALES_ORDER_CONTACT_BACKFILL_DEFAULT_EMAIL,
     holdRestoredTo: candidate.hold,
