@@ -96,6 +96,41 @@ PriceClass, and VendorID from the Acumatica read-back.
 Alias review catches unresolved manufacturer names. Acumatica validation errors
 and saved-field verification failures may not create pending alias rows.
 
+Repeated create requests check the current Acumatica item first. If the mapped
+fields, vendor purchase unit, and supplied values already match, the worker
+returns success with `alreadyExisted = true` and performs no PUT. Changed values
+are updated while preserving an existing matching vendor row. Concurrent
+requests for the same normalized InventoryID are serialized within each worker;
+after a failed PUT, a matching existing item is checked before declaring failure.
+
+`MAX_JOB_ATTEMPTS` defaults to 10. On the final retryable failure, the worker
+records `status = failed` and `result.retriesExhausted = true` before explicitly
+dead-lettering the message. Keep this setting at or below the Service Bus queue's
+`maxDeliveryCount` (currently 10). Changing the queue's delivery limit requires
+updating the worker limit too.
+
+Older jobs may still say queued despite exhausting Service Bus retries. From
+`worker`, inspect them without consuming or replaying messages:
+
+```powershell
+npm.cmd run reconcile:dead-letter-stock-jobs
+```
+
+To mark confirmed exhausted jobs failed:
+
+```powershell
+$env:RECONCILE_DEAD_LETTER_APPLY = 'true'
+try {
+  npm.cmd run reconcile:dead-letter-stock-jobs
+} finally {
+  Remove-Item Env:RECONCILE_DEAD_LETTER_APPLY -ErrorAction SilentlyContinue
+}
+```
+
+The script only reconciles queued `CREATE_STOCK_ITEM` rows found in the dead-letter
+queue with `MaxDeliveryCountExceeded`; it leaves messages there and preserves
+the original error. Check whether the item already exists before any replay.
+
 ```sql
 SELECT id, payload ->> 'manufacturer' AS manufacturer,
        payload -> 'InventoryID' ->> 'value' AS inventory_id,

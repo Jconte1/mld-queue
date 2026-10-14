@@ -1,6 +1,7 @@
 import { log } from "./logger";
 import { normalizeManufacturerKey } from "./manufacturerMapping";
 import { prisma } from "./prisma";
+import { normalizeStockItemPayloadForRequestedId } from "./acumaticaClient";
 
 export type StockItemMapping = {
   manufacturerKey: string;
@@ -14,9 +15,26 @@ export type StockItemMapping = {
 };
 
 export type StockItemWriter = {
+  findStockItemForCreation(inventoryId: string): Promise<Record<string, unknown> | null>;
   createStockItem(payload: Record<string, unknown>): Promise<unknown>;
   getStockItemForVerification(inventoryId: string): Promise<unknown>;
 };
+
+const inventoryLocks = new Map<string, Promise<void>>();
+
+async function serializeInventory<T>(key: string, action: () => Promise<T>): Promise<T> {
+  const previous = inventoryLocks.get(key) ?? Promise.resolve();
+  let release!: () => void;
+  const current = new Promise<void>(resolve => { release = resolve; });
+  inventoryLocks.set(key, current);
+  await previous;
+  try {
+    return await action();
+  } finally {
+    release();
+    if (inventoryLocks.get(key) === current) inventoryLocks.delete(key);
+  }
+}
 
 export type CreateStockItemDependencies = {
   findMapping?: (manufacturerKey: string) => Promise<StockItemMapping | null>;
@@ -138,6 +156,49 @@ export async function processCreateStockItemJob(
   writer: StockItemWriter,
   dependencies: CreateStockItemDependencies = {}
 ): Promise<unknown> {
+  const key = inventoryIdFromPayload(payload).toUpperCase().replace(/_/g, " ");
+  if (!key) throw new Error("InventoryID.value is required");
+  return serializeInventory(key, () => processMappedStockItem(payload, writer, dependencies));
+}
+
+function mappingFields(row: Record<string, unknown>) {
+  const details = Array.isArray(row.VendorDetails) ? row.VendorDetails as Record<string, unknown>[] : [];
+  return { itemClass: value(row, "ItemClass"), priceClass: value(row, "PriceClass"),
+    vendorIds: details.map(detail => value(detail, "VendorID")) };
+}
+
+function matchesRequestedFields(row: Record<string, unknown>, requested: Record<string, unknown>): boolean {
+  const expectedVendor = (requested.VendorDetails as Record<string, unknown>[])[0];
+  const details = Array.isArray(row.VendorDetails) ? row.VendorDetails as Record<string, unknown>[] : [];
+  if (!details.some(detail => value(detail, "VendorID") === value(expectedVendor, "VendorID") &&
+    value(detail, "PurchaseUnit") === value(expectedVendor, "PurchaseUnit"))) return false;
+  for (const [field, expected] of Object.entries(requested)) {
+    if (["VendorDetails", "InventoryID", "id"].includes(field)) continue;
+    if (!expected || typeof expected !== "object" || !("value" in expected)) return false;
+    const actual = value(row, field);
+    if (["MSRP", "DefaultPrice"].includes(field)) {
+      if (actual == null || Number(actual) !== Number(expected.value)) return false;
+    } else if (actual !== expected.value) return false;
+  }
+  return true;
+}
+
+function existingResult(row: Record<string, unknown>, payload: Record<string, unknown>, mapping: StockItemMapping) {
+  const normalized = normalizeStockItemPayloadForRequestedId(row, inventoryIdFromPayload(payload)) as Record<string, unknown>;
+  return { ...normalized, alreadyExisted: true, mappingVerification: {
+    verified: true, suppliedManufacturer: payload.manufacturer,
+    manufacturerKey: normalizeManufacturerKey(String(payload.manufacturer)),
+    canonicalManufacturer: mapping.manufacturerName,
+    expected: { itemClass: mapping.itemClass, priceClass: mapping.priceClass, vendorId: mapping.vendorId },
+    actual: mappingFields(row),
+  } };
+}
+
+async function processMappedStockItem(
+  payload: Record<string, unknown>,
+  writer: StockItemWriter,
+  dependencies: CreateStockItemDependencies = {}
+): Promise<unknown> {
   const manufacturer = manufacturerFromPayload(payload);
   if (!inventoryIdFromPayload(payload)) throw new Error("InventoryID.value is required");
   const manufacturerKey = normalizeManufacturerKey(manufacturer);
@@ -185,7 +246,41 @@ export async function processCreateStockItemJob(
     itemClass: mapping.itemClass,
     purchaseUnit: mapping.purchaseUnit,
   });
-  const result = await writer.createStockItem(acumaticaPayload);
+  const inventoryId = inventoryIdFromPayload(payload);
+  const existing = await writer.findStockItemForCreation(inventoryId);
+  if (existing && matchesRequestedFields(existing, acumaticaPayload)) {
+    log("info", "create_stock_item_already_correct", {
+      jobId: dependencies.jobId ?? null, inventoryId, ...mappingFields(existing),
+    });
+    return existingResult(existing, payload, mapping);
+  }
+  const writePayload = { ...acumaticaPayload };
+  if (existing) {
+    if (existing.id) writePayload.id = existing.id;
+    writePayload.InventoryID = existing.InventoryID;
+    const vendorRows = Array.isArray(existing.VendorDetails)
+      ? existing.VendorDetails as Record<string, unknown>[] : [];
+    const vendorRow = vendorRows.find(row => value(row, "VendorID") === mapping.vendorId);
+    if (vendorRow && value(vendorRow, "PurchaseUnit") === mapping.purchaseUnit) {
+      delete writePayload.VendorDetails;
+    } else if (vendorRow) {
+      if (!vendorRow.id) throw new Error(`Existing vendor row for ${inventoryId} has no child ID; review before updating`);
+      writePayload.VendorDetails = [{ id: vendorRow.id,
+        VendorID: { value: mapping.vendorId }, PurchaseUnit: { value: mapping.purchaseUnit } }];
+    }
+  }
+  let result: unknown;
+  try {
+    result = await writer.createStockItem(writePayload);
+  } catch (error) {
+    // Another replica or a lost response may have completed this create.
+    const recovered = await writer.findStockItemForCreation(inventoryId).catch(() => null);
+    if (recovered && matchesRequestedFields(recovered, acumaticaPayload)) {
+      log("info", "create_stock_item_recovered_existing", { jobId: dependencies.jobId ?? null, inventoryId });
+      return existingResult(recovered, payload, mapping);
+    }
+    throw error;
+  }
   const resultRow = Array.isArray(result) ? result[0] : result;
   const lookupKey = resultRow && typeof resultRow === "object" && "id" in resultRow && resultRow.id
     ? String(resultRow.id) : inventoryIdFromPayload(payload);
@@ -218,6 +313,7 @@ export async function processCreateStockItemJob(
     manufacturerKey, canonicalManufacturer: mapping.manufacturerName,
     expected: { itemClass: mapping.itemClass, priceClass: mapping.priceClass, vendorId: mapping.vendorId },
     actual };
-  return result && typeof result === "object" && !Array.isArray(result)
-    ? { ...result, mappingVerification } : result;
+  const normalizedResult = normalizeStockItemPayloadForRequestedId(result, inventoryId);
+  return normalizedResult && typeof normalizedResult === "object" && !Array.isArray(normalizedResult)
+    ? { ...normalizedResult, mappingVerification } : normalizedResult;
 }

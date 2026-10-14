@@ -27,7 +27,9 @@
     "validate:create-stock-item-mapping": "tsx scripts/validate-create-stock-item-mapping.ts",
     "test:create-stock-item-mapping-live": "tsx scripts/test-create-stock-item-mapping-live.ts",
     "review:manufacturer-aliases": "tsx scripts/review-manufacturer-aliases.ts",
-    "validate:manufacturer-aliases": "tsx scripts/validate-manufacturer-aliases.ts"
+    "validate:manufacturer-aliases": "tsx scripts/validate-manufacturer-aliases.ts",
+    "validate:stock-item-retries": "tsx scripts/validate-stock-item-retries.ts",
+    "reconcile:dead-letter-stock-jobs": "tsx scripts/reconcile-dead-letter-stock-jobs.ts"
   },
   "dependencies": {
     "@azure/service-bus": "^7.9.5",

@@ -909,6 +909,23 @@ export class AcumaticaClient {
     return this.request<unknown>(url, { method: "GET" });
   }
 
+  async findStockItemForCreation(inventoryId: string): Promise<Record<string, unknown> | null> {
+    const id = inventoryId.trim().toUpperCase();
+    const candidates = Array.from(new Set([id, stockItemMatchKey(id)]));
+    const params = new URLSearchParams({
+      "$filter": candidates.map(candidate => `InventoryID eq '${quoteForOData(candidate)}'`).join(" or "),
+      "$expand": "VendorDetails",
+      "$top": "2",
+    });
+    const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}?${params.toString()}`;
+    const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+    if (rows.length > 1) throw new Error(`Ambiguous existing StockItem lookup for ${id}`);
+    if (rows[0] && stockItemMatchKey(getStockItemRowId(rows[0]) ?? "") !== stockItemMatchKey(id)) {
+      throw new Error(`Acumatica returned a different StockItem for ${id}`);
+    }
+    return rows[0] ?? null;
+  }
+
   async putStockItemForCleanup(payload: Record<string, unknown>): Promise<{ status: number; body: unknown }> {
     const token = await this.getToken();
     const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}`;

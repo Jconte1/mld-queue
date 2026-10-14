@@ -23,6 +23,13 @@ export function assertSalesOrderContactBackfillQueue(queue: string, env: Record<
 
 type JsonRecord = Record<string, unknown>;
 
+export type ContactCreationCheckpoint = {
+  started: boolean;
+  contactId: string | null;
+  saveStarted(payload: JsonRecord): Promise<void>;
+  saveContactId(contactId: string): Promise<void>;
+};
+
 export type SalesOrderContactBackfillClient = {
   fetchSalesOrderContactBackfillOrder(orderType: string, orderNumber: string): Promise<JsonRecord | null>;
   fetchDeliveryContactsForBusinessAccount(customerId: string): Promise<JsonRecord[]>;
@@ -145,9 +152,8 @@ export function salesOrderContactBackfillCandidate(row: JsonRecord | null):
   };
 }
 
-function contactPayload(candidate: Candidate, contactId?: string): JsonRecord {
+function contactPayload(candidate: Candidate): JsonRecord {
   return {
-    ...(contactId ? { ContactID: { value: contactId } } : {}),
     BusinessAccount: { value: candidate.customerId },
     FirstName: { value: "__" },
     LastName: { value: "site contact" },
@@ -170,31 +176,6 @@ function orderPayload(candidate: Candidate, fields: JsonRecord): JsonRecord {
     OrderNbr: { value: candidate.orderNumber },
     ...fields,
   };
-}
-
-async function findMatchingContact(
-  client: SalesOrderContactBackfillClient,
-  candidate: Candidate
-): Promise<string | null> {
-  const contacts = await client.fetchDeliveryContactsForBusinessAccount(candidate.customerId);
-  const matches = contacts.filter((contact) => digits(stringField(contact, "Phone1")) === candidate.phone);
-  if (matches.length > 1) throw new Error("ambiguous_existing_contacts_for_customer_and_phone");
-  if (matches.length === 0) return null;
-  const contactId = stringField(matches[0], "ContactID");
-  if (!contactId) throw new Error("matching_contact_missing_contact_id");
-  return contactId;
-}
-
-async function verifyCreatedContact(
-  client: SalesOrderContactBackfillClient,
-  candidate: Candidate
-): Promise<string> {
-  for (let attempt = 0; attempt < 4; attempt += 1) {
-    const contactId = await findMatchingContact(client, candidate);
-    if (contactId) return contactId;
-    await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
-  }
-  throw new Error("created_contact_could_not_be_uniquely_verified");
 }
 
 async function attachContact(
@@ -238,7 +219,8 @@ async function attachContact(
 
 export async function processSalesOrderContactBackfillJob(
   rawPayload: Record<string, unknown> | undefined,
-  client: SalesOrderContactBackfillClient
+  client: SalesOrderContactBackfillClient,
+  checkpoint?: ContactCreationCheckpoint
 ): Promise<Record<string, unknown>> {
   const payload = normalizedPayload(rawPayload);
   const row = await client.fetchSalesOrderContactBackfillOrder(payload.orderType, payload.orderNumber);
@@ -254,8 +236,8 @@ export async function processSalesOrderContactBackfillJob(
   }
 
   const candidate = evaluation.candidate;
-  let contactId = await findMatchingContact(client, candidate);
-  const contactAction = contactId ? "reuse" : "create";
+  let contactId = checkpoint?.contactId ?? null;
+  const contactAction = contactId ? "resume_created" : "create";
   if (!payload.apply) {
     return {
       status: "preview",
@@ -274,10 +256,14 @@ export async function processSalesOrderContactBackfillJob(
     };
   }
 
-  const response = await client.putDeliveryContact(contactPayload(candidate, contactId ?? undefined));
+  if (!checkpoint) throw new Error("contact_creation_checkpoint_required");
   if (!contactId) {
+    if (checkpoint.started) throw new Error("contact_creation_outcome_unknown_manual_review_required");
+    await checkpoint.saveStarted(contactPayload(candidate));
+    const response = await client.putDeliveryContact(contactPayload(candidate));
     contactId = rows(response).length ? stringField(rows(response)[0], "ContactID") : null;
-    contactId = contactId ?? (await verifyCreatedContact(client, candidate));
+    if (!contactId) throw new Error("created_contact_id_missing_manual_review_required");
+    await checkpoint.saveContactId(contactId);
   }
   await attachContact(client, candidate, contactId);
 

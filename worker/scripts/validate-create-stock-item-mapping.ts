@@ -74,6 +74,7 @@ async function main(): Promise<void> {
   let writeCount = 0;
   let capturedPayload: Record<string, unknown> | null = null;
   const writer = {
+    async findStockItemForCreation() { return null; },
     async getStockItemForVerification() {
       return { ItemClass: { value: "APLS-RCVD" }, PriceClass: { value: "A007" },
         VendorDetails: [{ VendorID: { value: "BA0000001" } }] };
@@ -121,6 +122,7 @@ async function main(): Promise<void> {
   let databaseWriteCount = 0;
   let databasePayload: Record<string, unknown> | null = null;
   await processCreateStockItemJob(originalPayload, {
+    findStockItemForCreation: writer.findStockItemForCreation,
     getStockItemForVerification: writer.getStockItemForVerification,
     async createStockItem(payload) {
       databaseWriteCount += 1;

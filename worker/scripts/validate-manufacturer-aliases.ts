@@ -16,6 +16,7 @@ async function main() {
   const saved = { id: "mock-item", ItemClass: { value: "PLUMB-LOT" }, PriceClass: { value: "P047" },
     VendorDetails: [{ VendorID: { value: "BA0000739" } }] };
   const writer = {
+    async findStockItemForCreation() { return null; },
     async createStockItem(data: Record<string, unknown>) {
       writes++;
       assert.equal(data.manufacturer, undefined);

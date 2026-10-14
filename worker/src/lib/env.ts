@@ -29,9 +29,18 @@ function endpointVersion(name: string) {
   return optionalEnv(name) || optionalEnv("ACUMATICA_ENDPOINT_VERSION") || "24.200.001";
 }
 
+function maxJobAttempts(): number {
+  const value = Number(optionalEnv("MAX_JOB_ATTEMPTS") ?? 10);
+  if (!Number.isInteger(value) || value < 1 || value > 10) {
+    throw new Error("MAX_JOB_ATTEMPTS must be an integer between 1 and 10");
+  }
+  return value;
+}
+
 export const env = {
   serviceBusConnectionString: getEnv("AZURE_SERVICEBUS_CONNECTION_STRING"),
   queueName: process.env.MLD_QUEUE_WORKER_QUEUE_NAME?.trim() || getEnv("SPECBOOKS_QUEUE_NAME"),
+  maxJobAttempts: maxJobAttempts(),
   acumaticaBaseUrl: getEnv("ACUMATICA_BASE_URL"),
   acumaticaClientId: getEnv("ACUMATICA_CLIENT_ID"),
   acumaticaClientSecret: getEnv("ACUMATICA_CLIENT_SECRET"),

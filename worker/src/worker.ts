@@ -4,6 +4,7 @@ import { Prisma } from "../../prisma/generated/client";
 import { prisma } from "./lib/prisma";
 import { env } from "./lib/env";
 import { log } from "./lib/logger";
+import { jobRetryDecision } from "./lib/jobRetry";
 import { AcumaticaClient, isTransientError } from "./lib/acumaticaClient";
 import { processDeliveryConfirmationAttributesJob } from "./lib/deliveryConfirmationAttributes";
 import { processDeliveryRequestedDateJob } from "./lib/deliveryRequestedDate";
@@ -66,10 +67,11 @@ async function markSuccess(jobId: string, result: unknown) {
   });
 }
 
-async function markFailure(jobId: string, error: unknown) {
+async function markFailure(jobId: string, error: unknown, metadata: Record<string, unknown> = {}) {
   const message = error instanceof Error ? error.message : String(error);
   const failureDetails: Record<string, unknown> = {
     error: message,
+    ...metadata,
   };
 
   if (error instanceof Error) {
@@ -570,7 +572,21 @@ async function processJob(message: JobMessage): Promise<unknown> {
       assertSalesOrderContactBackfillQueue(env.queueName);
       await contactBackfillSemaphore.acquire();
       try {
-        return await processSalesOrderContactBackfillJob(message.payload, acumaticaClient);
+        const job = await prisma.job.findUniqueOrThrow({ where: { id: message.jobId } });
+        const payload = (job.payload ?? {}) as Record<string, unknown>;
+        return await processSalesOrderContactBackfillJob(payload, acumaticaClient, {
+          started: payload.contactCreationStarted === true,
+          contactId: typeof payload.createdContactId === "string" ? payload.createdContactId : null,
+          saveStarted: async (contactPayload) => {
+            payload.contactCreationStarted = true;
+            payload.contactCreationPayload = contactPayload;
+            await prisma.job.update({ where: { id: message.jobId }, data: { payload: toPrismaJsonValue(payload) } });
+          },
+          saveContactId: async (contactId) => {
+            payload.createdContactId = contactId;
+            await prisma.job.update({ where: { id: message.jobId }, data: { payload: toPrismaJsonValue(payload) } });
+          },
+        });
       } finally {
         await sleep(Math.max(0, Number(process.env.CONTACT_BACKFILL_DELAY_MS ?? 750)));
         contactBackfillSemaphore.release();
@@ -664,7 +680,9 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
     });
   } catch (error) {
     const transient = isTransientError(error);
-    const allowRetry = transient && message.type !== "ERP_PUT_SALES_INVOICE";
+    const retryDecision = jobRetryDecision(transient, message.type,
+      received.deliveryCount ?? 0, env.maxJobAttempts);
+    const allowRetry = retryDecision.retry;
     const errorMessage = error instanceof Error ? error.message : String(error);
 
     if (allowRetry) {
@@ -683,7 +701,11 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
       });
       await receiver.abandonMessage(received);
     } else {
-      await markFailure(message.jobId, error);
+      await markFailure(message.jobId, error, {
+        attempt: retryDecision.attempt,
+        maxAttempts: env.maxJobAttempts,
+        retriesExhausted: retryDecision.exhausted,
+      });
 
       if (message.type === "UPDATE_OPPORTUNITY" && message.opportunityId) {
         await prisma.opportunityUpdateBuffer.updateMany({
@@ -692,7 +714,14 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
         });
       }
 
-      await receiver.completeMessage(received);
+      if (retryDecision.exhausted) {
+        await receiver.deadLetterMessage(received, {
+          deadLetterReason: "JobRetriesExhausted",
+          deadLetterErrorDescription: errorMessage.slice(0, 1024),
+        });
+      } else {
+        await receiver.completeMessage(received);
+      }
     }
 
     log("error", "job_failed", {
@@ -702,6 +731,8 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
       durationMs: Date.now() - startedAt,
       outcome: "failed",
       retryable: allowRetry,
+      attempt: retryDecision.attempt,
+      retriesExhausted: retryDecision.exhausted,
       error: errorMessage
     });
   } finally {
@@ -732,6 +763,7 @@ export async function startWorker(): Promise<void> {
 
   log("info", "worker_started", {
     queue: env.queueName,
+    maxJobAttempts: env.maxJobAttempts,
     vendorMaxConcurrency: env.vendorMaxConcurrency,
     vendorMaxRpm: env.vendorMaxRpm,
     globalMaxConcurrency: env.globalMaxConcurrency,

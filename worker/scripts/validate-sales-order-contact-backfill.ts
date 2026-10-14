@@ -4,12 +4,28 @@ import { join } from "node:path";
 import {
   assertSalesOrderContactBackfillQueue,
   salesOrderContactBackfillQueue,
-  processSalesOrderContactBackfillJob,
+  processSalesOrderContactBackfillJob as processBackfill,
+  type ContactCreationCheckpoint,
   salesOrderContactBackfillCandidate,
   type SalesOrderContactBackfillClient,
 } from "../src/lib/salesOrderContactBackfill";
 
 type JsonRecord = Record<string, unknown>;
+
+const checkpoints = new WeakMap<SalesOrderContactBackfillClient, ContactCreationCheckpoint>();
+function processSalesOrderContactBackfillJob(payload: JsonRecord, client: SalesOrderContactBackfillClient) {
+  let checkpoint = checkpoints.get(client);
+  if (!checkpoint) {
+    const state: ContactCreationCheckpoint = {
+      started: false, contactId: null,
+      saveStarted: async () => { state.started = true; },
+      saveContactId: async (id) => { state.contactId = id; },
+    };
+    checkpoint = state;
+    checkpoints.set(client, state);
+  }
+  return processBackfill(payload, client, checkpoint);
+}
 
 function assert(condition: unknown, message: string, failures: string[]): void {
   if (!condition) failures.push(message);
@@ -127,9 +143,10 @@ async function main(): Promise<void> {
 
   const held = fakeClient({ initialOrder: order({ hold: true }), contacts: [{ ContactID: { value: "194581" }, Phone1: { value: "8018335923" } }] });
   const heldResult = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, held.client);
-  assert(heldResult.contactAction === "reuse" && heldResult.deliveryContactId === "194581", "reused contact fills both fields", failures);
+  assert(heldResult.contactAction === "create" && heldResult.deliveryContactId === "194581", "new contact fills both fields despite an existing match", failures);
   assert(JSON.stringify(held.calls.contactPuts[0].FirstName) === '{"value":"__"}' &&
-    JSON.stringify(held.calls.contactPuts[0].LastName) === '{"value":"site contact"}', "reused contact receives same naming rule", failures);
+    JSON.stringify(held.calls.contactPuts[0].LastName) === '{"value":"site contact"}', "new contact receives naming rule", failures);
+  assert(!("ContactID" in held.calls.contactPuts[0]), "existing contact is never updated", failures);
   assert(held.calls.orderPuts.length === 1 && !("Hold" in held.calls.orderPuts[0]), "already-held order remains held", failures);
 
   const rerun = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, apply.client);
@@ -141,17 +158,32 @@ async function main(): Promise<void> {
       { ContactID: { value: "2" }, Phone1: { value: "(801) 833-5923" } },
     ],
   });
-  let duplicateRejected = false;
-  try {
-    await processSalesOrderContactBackfillJob(
+  const duplicateResult = await processSalesOrderContactBackfillJob(
       { orderType: "SO", orderNumber: "SO38056", apply: true },
       duplicate.client
     );
-  } catch (error) {
-    duplicateRejected = String(error).includes("ambiguous_existing_contacts");
+  assert(duplicateResult.status === "completed" && duplicate.calls.contactPuts.length === 1, "multiple phone matches do not prevent creating a new contact", failures);
+  assert(!("ContactID" in duplicate.calls.contactPuts[0]), "multiple matches are not reused", failures);
+
+  const uncertain = fakeClient();
+  uncertain.client.putDeliveryContact = async (payload) => { uncertain.calls.contactPuts.push(payload); throw new Error("timeout"); };
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try { await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, uncertain.client); }
+    catch (error) { if (attempt === 1) assert(String(error).includes("outcome_unknown"), "unknown creation outcome requires review", failures); }
   }
-  assert(duplicateRejected, "ambiguous phone matches fail closed", failures);
-  assert(duplicate.calls.contactPuts.length === 0 && duplicate.calls.orderPuts.length === 0, "ambiguous match makes no writes", failures);
+  assert(uncertain.calls.contactPuts.length === 1, "uncertain creation is not retried blindly", failures);
+
+  // The earlier ignored assignment has a persisted created ID but no complete attachment.
+  const partial = fakeClient();
+  const putOrder = partial.client.putDeliverySalesOrder;
+  let failAttach = true;
+  partial.client.putDeliverySalesOrder = async (payload) => {
+    if (payload.ContactID && failAttach) { failAttach = false; throw new Error("attachment failure"); }
+    return putOrder(payload);
+  };
+  try { await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, partial.client); } catch { /* Retry below. */ }
+  const resumed = await processSalesOrderContactBackfillJob({ orderType: "SO", orderNumber: "SO38056", apply: true }, partial.client);
+  assert(resumed.status === "completed" && resumed.contactAction === "resume_created" && partial.calls.contactPuts.length === 1, "attachment retry uses recorded new contact without duplicate creation", failures);
 
   const producer = readFileSync(join(process.cwd(), "scripts/run-sales-order-contact-backfill.ts"), "utf8");
   const clientSource = readFileSync(join(process.cwd(), "src/lib/acumaticaClient.ts"), "utf8");
