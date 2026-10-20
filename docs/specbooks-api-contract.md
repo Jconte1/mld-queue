@@ -170,13 +170,18 @@ Response shape:
   "jobId": "uuid",
   "vendorId": "specbooks",
   "type": "GET_CUSTOMER | GET_OPPORTUNITY | CREATE_OPPORTUNITY | UPDATE_OPPORTUNITY",
-  "status": "queued | processing | succeeded | failed",
+  "status": "queued | processing | succeeded | failed | resolved",
   "result": {},
   "error": "string | null",
   "createdAt": "ISO timestamp",
   "updatedAt": "ISO timestamp"
 }
 ```
+
+`resolved` is terminal: a previously failed job has been reviewed and its
+issue addressed. Its original error and result are retained; this does not
+mean the original operation succeeded. Stop polling it and do not interpret
+its result as a successful ERP response. See [Resolved Jobs](job-resolution.md).
 
 ## Error Model
 

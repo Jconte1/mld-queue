@@ -52,6 +52,7 @@ enum JobStatus {
   processing
   succeeded
   failed
+  resolved
 }
 
 enum StockItemCleanupRunStatus {

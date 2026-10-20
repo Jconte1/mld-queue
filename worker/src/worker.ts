@@ -48,12 +48,15 @@ function toPrismaJsonValue(value: unknown): Prisma.InputJsonValue | Prisma.JsonN
 }
 
 async function markProcessing(jobId: string) {
-  await prisma.job.update({
-    where: { id: jobId },
+  const transition = await prisma.job.updateMany({
+    where: { id: jobId, status: { not: "resolved" } },
     data: {
       status: "processing"
     }
   });
+  if (transition.count === 1) return true;
+  await prisma.job.findUniqueOrThrow({ where: { id: jobId } });
+  return false;
 }
 
 async function markSuccess(jobId: string, result: unknown) {
@@ -616,7 +619,15 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
     deliveryCount: received.deliveryCount ?? null
   });
 
-  await markProcessing(message.jobId);
+  if (!(await markProcessing(message.jobId))) {
+    await receiver.completeMessage(received);
+    log("info", "job_skipped_resolved", {
+      jobId: message.jobId,
+      type: message.type,
+      vendorId: message.vendorId,
+    });
+    return;
+  }
 
   const globalSemaphoreWaitStart = Date.now();
   await globalSemaphore.acquire();

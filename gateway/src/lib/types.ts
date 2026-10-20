@@ -35,7 +35,7 @@ export type JobType =
   | "ERP_STOCK_ITEM_CLEANUP_RUN"
   | "ERP_SYNC_ACTIVE_VENDORS";
 
-export type JobStatus = "queued" | "processing" | "succeeded" | "failed";
+export type JobStatus = "queued" | "processing" | "succeeded" | "failed" | "resolved";
 
 export type JobMessage = {
   jobId: string;
