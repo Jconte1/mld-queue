@@ -1,0 +1,66 @@
+{
+  "plans": [
+    {
+      "inventoryId": "RO4",
+      "originalJob": {
+        "id": "9328195a-6516-4fa9-95f4-ddc455a23d47",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 951.75
+          },
+          "Description": {
+            "value": "Under Sink 4 Stage Reverse Osmosis System With 4 Stage Process, Reverse Osmosis And Contaminant Protection And Dispenser - Chrome"
+          },
+          "InventoryID": {
+            "value": "RO4"
+          },
+          "DefaultPrice": {
+            "value": 1269
+          },
+          "manufacturer": "Environmental Water Systems"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotFoundError",
+          "error": "No manufacturer mapping exists for 'Environmental Water Systems' (normalized: 'ENVIRONMENTAL WATER SYSTEMS')",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "No manufacturer mapping exists for 'Environmental Water Systems' (normalized: 'ENVIRONMENTAL WATER SYSTEMS')",
+        "createdAt": "2026-10-16T22:45:50.572Z",
+        "updatedAt": "2026-10-16T22:45:50.821Z"
+      },
+      "mapping": {
+        "manufacturerKey": "EWS ENVIRONMENTAL WATER SYSTEMS",
+        "manufacturerName": "EWS-Environmental Water Systems",
+        "priceClass": "P119",
+        "itemClass": "PLUMB-LOT",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0015315",
+        "vendorName": "EWS, Inc. dba Environmental Water Systems",
+        "suggestedVendorId": null,
+        "suggestedVendorName": null,
+        "status": "approved",
+        "matchSource": "historical_price_class_strong",
+        "createdAt": "2026-09-29T21:15:53.863Z",
+        "updatedAt": "2026-09-30T17:08:36.980Z"
+      }
+    }
+  ],
+  "results": [
+    {
+      "inventoryId": "RO4",
+      "jobId": "9328195a-6516-4fa9-95f4-ddc455a23d47",
+      "status": "succeeded",
+      "itemClass": "PLUMB-LOT",
+      "priceClass": "P119",
+      "vendorIds": [
+        "BA0015315"
+      ]
+    }
+  ]
+}

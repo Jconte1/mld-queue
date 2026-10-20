@@ -1,0 +1,66 @@
+{
+  "plans": [
+    {
+      "inventoryId": "F6IRT365S1",
+      "originalJob": {
+        "id": "de8e1977-309f-41e9-b652-7fac549aad54",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5999
+          },
+          "Description": {
+            "value": "Sofia 36\" Induction Rangetop, 5 Zones - Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "F6IRT365S1"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Fulgor Milano"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Fulgor Milano' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Fulgor Milano' is not approved (status: pending)",
+        "createdAt": "2026-10-15T16:05:58.863Z",
+        "updatedAt": "2026-10-15T16:05:59.167Z"
+      },
+      "mapping": {
+        "manufacturerKey": "FULGOR",
+        "manufacturerName": "Fulgor",
+        "priceClass": "A054",
+        "itemClass": "APLS-RCVD",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0000788",
+        "vendorName": "Pacific Specialty Brands",
+        "suggestedVendorId": null,
+        "suggestedVendorName": null,
+        "status": "approved",
+        "matchSource": "user_reviewed_candidate",
+        "createdAt": "2026-09-29T21:15:53.863Z",
+        "updatedAt": "2026-09-30T17:31:57.298Z"
+      }
+    }
+  ],
+  "results": [
+    {
+      "inventoryId": "F6IRT365S1",
+      "jobId": "de8e1977-309f-41e9-b652-7fac549aad54",
+      "status": "succeeded",
+      "itemClass": "APLS-RCVD",
+      "priceClass": "A054",
+      "vendorIds": [
+        "BA0000788"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "plans": [
+    {
+      "inventoryId": "FS313SB",
+      "originalJob": {
+        "id": "771ca96d-9cb1-4701-9b0b-7c8587d74a7f",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 438.4
+          },
+          "Description": {
+            "value": "Harmony Single Hole Faucet - Satin Brass"
+          },
+          "InventoryID": {
+            "value": "FS313SB"
+          },
+          "DefaultPrice": {
+            "value": 548
+          },
+          "manufacturer": "Artos - Westover"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Artos - Westover' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Artos - Westover' is not approved (status: pending)",
+        "createdAt": "2026-10-15T15:24:58.565Z",
+        "updatedAt": "2026-10-15T15:24:58.871Z"
+      },
+      "mapping": {
+        "manufacturerKey": "ARTOS",
+        "manufacturerName": "Artos",
+        "priceClass": "P004",
+        "itemClass": "PLUMB-LOT",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0013051",
+        "vendorName": "Westover, Inc.",
+        "suggestedVendorId": null,
+        "suggestedVendorName": null,
+        "status": "approved",
+        "matchSource": "historical_price_class_strong",
+        "createdAt": "2026-09-29T21:15:53.863Z",
+        "updatedAt": "2026-09-30T17:08:36.980Z"
+      }
+    },
+    {
+      "inventoryId": "KOEC930SJP",
+      "originalJob": {
+        "id": "1193555b-5e3e-40d5-b4ac-31e47c6821d4",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5554
+          },
+          "Description": {
+            "value": "30\" Double Combination Electric Wall Oven - Juniper"
+          },
+          "InventoryID": {
+            "value": "KOEC930SJP"
+          },
+          "DefaultPrice": {
+            "value": 5554
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+        "createdAt": "2026-10-14T18:11:35.861Z",
+        "updatedAt": "2026-10-14T18:11:36.101Z"
+      },
+      "mapping": {
+        "manufacturerKey": "KITCHEN AID",
+        "manufacturerName": "Kitchen Aid",
+        "priceClass": "A065",
+        "itemClass": "APLS-RCVD",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0000003",
+        "vendorName": "Whirlpool Corporation",
+        "suggestedVendorId": null,
+        "suggestedVendorName": null,
+        "status": "approved",
+        "matchSource": "user_reviewed_candidate",
+        "createdAt": "2026-09-29T21:15:53.863Z",
+        "updatedAt": "2026-09-30T17:31:57.298Z"
+      }
+    },
+    {
+      "inventoryId": "KSES330SPS",
+      "originalJob": {
+        "id": "f33ea724-939b-45d7-b90f-d68b4718b98e",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2221
+          },
+          "Description": {
+            "value": "30\" 4 Element Electric Slide In Convection Range - PrintShield Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "KSES330SPS"
+          },
+          "DefaultPrice": {
+            "value": 2221
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+        "createdAt": "2026-10-15T01:53:37.429Z",
+        "updatedAt": "2026-10-15T01:53:38.049Z"
+      },
+      "mapping": {
+        "manufacturerKey": "KITCHEN AID",
+        "manufacturerName": "Kitchen Aid",
+        "priceClass": "A065",
+        "itemClass": "APLS-RCVD",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0000003",
+        "vendorName": "Whirlpool Corporation",
+        "suggestedVendorId": null,
+        "suggestedVendorName": null,
+        "status": "approved",
+        "matchSource": "user_reviewed_candidate",
+        "createdAt": "2026-09-29T21:15:53.863Z",
+        "updatedAt": "2026-09-30T17:31:57.298Z"
+      }
+    }
+  ],
+  "results": [
+    {
+      "inventoryId": "FS313SB",
+      "jobId": "771ca96d-9cb1-4701-9b0b-7c8587d74a7f",
+      "status": "succeeded",
+      "itemClass": "PLUMB-LOT",
+      "priceClass": "P004",
+      "vendorIds": [
+        "BA0013051"
+      ]
+    },
+    {
+      "inventoryId": "KOEC930SJP",
+      "jobId": "1193555b-5e3e-40d5-b4ac-31e47c6821d4",
+      "status": "succeeded",
+      "itemClass": "APLS-RCVD",
+      "priceClass": "A065",
+      "vendorIds": [
+        "BA0000003"
+      ]
+    },
+    {
+      "inventoryId": "KSES330SPS",
+      "jobId": "f33ea724-939b-45d7-b90f-d68b4718b98e",
+      "status": "succeeded",
+      "itemClass": "APLS-RCVD",
+      "priceClass": "A065",
+      "vendorIds": [
+        "BA0000003"
+      ]
+    }
+  ]
+}

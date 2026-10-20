@@ -1,0 +1,66 @@
+{
+  "plans": [
+    {
+      "inventoryId": "AEL361INRTABSS",
+      "originalJob": {
+        "id": "136b3962-9dfd-464d-a248-f82ac554b64c",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5349
+          },
+          "Description": {
+            "value": "Elise 36\" Induction Range Range Top With Antique Brass Trim - Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "AEL361INRTABSS"
+          },
+          "DefaultPrice": {
+            "value": 6159
+          },
+          "manufacturer": "AGA Range"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'AGA Range' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'AGA Range' is not approved (status: pending)",
+        "createdAt": "2026-10-19T21:10:38.251Z",
+        "updatedAt": "2026-10-19T21:10:38.503Z"
+      },
+      "mapping": {
+        "manufacturerKey": "AGA",
+        "manufacturerName": "Aga",
+        "priceClass": "A010",
+        "itemClass": "APLS-RCVD",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0000799",
+        "vendorName": "Viking Range-M, LLC",
+        "suggestedVendorId": null,
+        "suggestedVendorName": null,
+        "status": "approved",
+        "matchSource": "user_reviewed_candidate",
+        "createdAt": "2026-09-29T21:15:53.863Z",
+        "updatedAt": "2026-09-30T17:31:57.298Z"
+      }
+    }
+  ],
+  "results": [
+    {
+      "inventoryId": "AEL361INRTABSS",
+      "jobId": "136b3962-9dfd-464d-a248-f82ac554b64c",
+      "status": "succeeded",
+      "itemClass": "APLS-RCVD",
+      "priceClass": "A010",
+      "vendorIds": [
+        "BA0000799"
+      ]
+    }
+  ]
+}
