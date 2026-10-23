@@ -1,0 +1,126 @@
+{
+  "plans": [
+    {
+      "inventoryId": "HARKBN36",
+      "originalJob": {
+        "id": "0c03683c-4f24-4b18-bc74-7e4c54087a89",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 139
+          },
+          "Description": {
+            "value": "Non-Duct Kit For Hbn1 36\" Built-In"
+          },
+          "InventoryID": {
+            "value": "HARKBN36"
+          },
+          "DefaultPrice": {
+            "value": 159
+          },
+          "manufacturer": "Best Hoods"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Best Hoods' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Best Hoods' is not approved (status: pending)",
+        "createdAt": "2026-10-20T21:07:52.970Z",
+        "updatedAt": "2026-10-20T21:07:53.246Z"
+      },
+      "mapping": {
+        "manufacturerKey": "BEST",
+        "manufacturerName": "Best",
+        "priceClass": "A003",
+        "itemClass": "APLS-RCVD",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0000002",
+        "vendorName": "Roth Living",
+        "suggestedVendorId": null,
+        "suggestedVendorName": null,
+        "status": "approved",
+        "matchSource": "historical_price_class_strong",
+        "createdAt": "2026-09-29T21:15:53.863Z",
+        "updatedAt": "2026-09-30T17:08:36.980Z"
+      }
+    },
+    {
+      "inventoryId": "01048875",
+      "originalJob": {
+        "id": "730cfc90-a694-4900-9f1f-84356ddaff28",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:20:17.635Z",
+        "updatedAt": "2026-10-21T16:20:17.958Z"
+      },
+      "mapping": {
+        "manufacturerKey": "ZIP WATER",
+        "manufacturerName": "Zip Water",
+        "priceClass": "P074",
+        "itemClass": "PLUMB-LOT",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0000785",
+        "vendorName": "MILESTONE DISTRIBUTORS",
+        "suggestedVendorId": "BA0014832",
+        "suggestedVendorName": "Zip Water",
+        "status": "approved",
+        "matchSource": "user_reviewed_candidate",
+        "createdAt": "2026-09-29T21:15:53.863Z",
+        "updatedAt": "2026-09-30T17:31:57.298Z"
+      }
+    }
+  ],
+  "results": [
+    {
+      "inventoryId": "HARKBN36",
+      "jobId": "0c03683c-4f24-4b18-bc74-7e4c54087a89",
+      "status": "succeeded",
+      "itemClass": "APLS-RCVD",
+      "priceClass": "A003",
+      "vendorIds": [
+        "BA0000002"
+      ]
+    },
+    {
+      "inventoryId": "01048875",
+      "jobId": "730cfc90-a694-4900-9f1f-84356ddaff28",
+      "status": "succeeded",
+      "itemClass": "PLUMB-LOT",
+      "priceClass": "P074",
+      "vendorIds": [
+        "BA0000785"
+      ]
+    }
+  ]
+}

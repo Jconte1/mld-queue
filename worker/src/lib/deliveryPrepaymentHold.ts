@@ -1,3 +1,5 @@
+import { readFreshDeliveryPaymentBalance, type DeliveryPaymentBalanceClient } from "./deliveryPaymentBalance";
+
 export const DELIVERY_PREPAYMENT_HOLD_REASON = "payment_not_received_by_deadline" as const;
 
 export type DeliveryPrepaymentHoldPayload = {
@@ -18,7 +20,7 @@ export type DeliveryPrepaymentHoldState = {
   holdExposed: boolean;
 };
 
-export type DeliveryPrepaymentHoldAcumaticaClient = {
+export type DeliveryPrepaymentHoldAcumaticaClient = DeliveryPaymentBalanceClient & {
   fetchDeliveryPrepaymentHoldStates(
     orderNumber: string,
     orderType: string
@@ -227,6 +229,11 @@ export async function processDeliveryPrepaymentHoldJob(
     };
   }
 
+  const freshPayment = await readFreshDeliveryPaymentBalance(acumaticaClient,
+    normalized.orderType, normalized.orderNumber, normalized.deliveryDate);
+  if (!freshPayment.isPrepayment || freshPayment.unpaidBalance <= 2) {
+    return { status: "skipped", reason: "payment_cleared_at_write", wouldWrite: false, freshPayment };
+  }
   const states = await acumaticaClient.fetchDeliveryPrepaymentHoldStates(
     normalized.orderNumber,
     normalized.orderType
@@ -281,6 +288,7 @@ export async function processDeliveryPrepaymentHoldJob(
   if (isAlreadyOnHold(current)) {
     return {
       status: "already_on_hold",
+      freshPayment,
       reason: "already_on_hold",
       wouldWrite: false,
       ...resultBase({
@@ -335,6 +343,7 @@ export async function processDeliveryPrepaymentHoldJob(
 
     return {
       status: "succeeded",
+      freshPayment,
       reason: "hold_written",
       wouldWrite: true,
       ...resultBase({

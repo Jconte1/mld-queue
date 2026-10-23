@@ -11,6 +11,7 @@
     "prisma:generate": "prisma generate --schema ../prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev --schema ../prisma/schema.prisma",
     "validate:delivery-prepayment-hold": "tsx scripts/validate-delivery-prepayment-hold.ts",
+    "validate:fresh-payment-writebacks": "tsx scripts/validate-fresh-payment-writebacks.ts",
     "validate:delivery-confirmation-writeback": "tsx scripts/validate-delivery-confirmation-attributes-dry-run.ts",
     "validate:delivery-requested-date-writeback": "tsx scripts/validate-delivery-requested-date-writeback.ts",
     "validate:delivery-contact-opt-in-fetch": "tsx scripts/validate-delivery-contact-opt-in-fetch.ts",

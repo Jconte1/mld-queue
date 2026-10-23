@@ -35,6 +35,10 @@ function assertThrows(fn: () => unknown, message: string) {
 }
 
 class MockAcumaticaClient {
+  async fetchDeliverySalesOrderFull(number: string, type: string) {
+    return [{ OrderType: { value: type }, OrderNbr: { value: number }, Status: { value: "Open" },
+      Terms: { value: "PP" }, Totals: { UnpaidBalance: { value: "100.00" } } }];
+  }
   states: DeliveryPrepaymentHoldState[];
   statesAfterPut: DeliveryPrepaymentHoldState[];
   putCalls = 0;
@@ -70,6 +74,7 @@ class MockAcumaticaClient {
 }
 
 class HangingAcumaticaClient {
+  async fetchDeliverySalesOrderFull(): Promise<Record<string, unknown>[]> { throw new Error("dry-run must not read payment"); }
   readCalls = 0;
   putCalls = 0;
 

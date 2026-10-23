@@ -1,3 +1,5 @@
+import { readFreshDeliveryPaymentBalance, type DeliveryPaymentBalanceClient } from "./deliveryPaymentBalance";
+
 export const DELIVERY_TEN_DAY_CONFIRMATION_REASON = "delivery_group_cleared" as const;
 
 export type DeliveryTenDayConfirmationPayload = {
@@ -17,7 +19,7 @@ export type DeliveryTenDayConfirmationState = {
   oneWeekConfirmedExposed: boolean;
 };
 
-export type DeliveryTenDayConfirmationAcumaticaClient = {
+export type DeliveryTenDayConfirmationAcumaticaClient = DeliveryPaymentBalanceClient & {
   fetchDeliveryTenDayConfirmationStates(
     orderNumber: string,
     orderType: string
@@ -199,6 +201,11 @@ export async function processDeliveryTenDayConfirmationJob(
     };
   }
 
+  const freshPayment = await readFreshDeliveryPaymentBalance(acumaticaClient,
+    normalized.orderType, normalized.orderNumber, normalized.deliveryDate);
+  if (freshPayment.isPrepayment && freshPayment.unpaidBalance > 2) {
+    return { status: "refused", reason: "prepay_balance_due_at_write", wouldWrite: false, freshPayment };
+  }
   const states = await acumaticaClient.fetchDeliveryTenDayConfirmationStates(
     normalized.orderNumber,
     normalized.orderType
@@ -253,6 +260,7 @@ export async function processDeliveryTenDayConfirmationJob(
   if (current.oneWeekConfirmed === true) {
     return {
       status: "already_true",
+      freshPayment,
       reason: "one_week_confirmation_already_true",
       wouldWrite: false,
       ...resultBase({
@@ -306,6 +314,7 @@ export async function processDeliveryTenDayConfirmationJob(
 
     return {
       status: "written",
+      freshPayment,
       reason: "one_week_confirmation_written",
       wouldWrite: true,
       ...resultBase({

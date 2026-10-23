@@ -5,6 +5,7 @@ import { prisma } from "./lib/prisma";
 import { env } from "./lib/env";
 import { log } from "./lib/logger";
 import { jobRetryDecision } from "./lib/jobRetry";
+import { jobFailureStatus } from "./lib/jobFailureStatus";
 import { AcumaticaClient, isTransientError } from "./lib/acumaticaClient";
 import { processDeliveryConfirmationAttributesJob } from "./lib/deliveryConfirmationAttributes";
 import { processDeliveryRequestedDateJob } from "./lib/deliveryRequestedDate";
@@ -70,7 +71,7 @@ async function markSuccess(jobId: string, result: unknown) {
   });
 }
 
-async function markFailure(jobId: string, error: unknown, metadata: Record<string, unknown> = {}) {
+async function markFailure(jobId: string, error: unknown, metadata: Record<string, unknown> = {}, jobType?: string) {
   const message = error instanceof Error ? error.message : String(error);
   const failureDetails: Record<string, unknown> = {
     error: message,
@@ -94,7 +95,7 @@ async function markFailure(jobId: string, error: unknown, metadata: Record<strin
   await prisma.job.update({
     where: { id: jobId },
     data: {
-      status: "failed",
+      status: jobFailureStatus(jobType, error),
       error: message.slice(0, MAX_STORED_ERROR_CHARS),
       result: toPrismaJsonValue(failureDetails)
     }
@@ -716,7 +717,7 @@ async function handleMessage(received: ServiceBusReceivedMessage): Promise<void>
         attempt: retryDecision.attempt,
         maxAttempts: env.maxJobAttempts,
         retriesExhausted: retryDecision.exhausted,
-      });
+      }, message.type);
 
       if (message.type === "UPDATE_OPPORTUNITY" && message.opportunityId) {
         await prisma.opportunityUpdateBuffer.updateMany({

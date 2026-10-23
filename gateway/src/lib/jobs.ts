@@ -4,6 +4,7 @@ import { log } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { env } from "@/lib/env";
 import { getQueueSender } from "@/lib/serviceBus";
+import { isStockItemNotFoundResult, jobForPolling } from "@/lib/stockItemLookupOutcome";
 import type { EnqueueInput, JobMessage, VendorId } from "@/lib/types";
 
 const VENDOR_ID: VendorId = "specbooks";
@@ -130,11 +131,13 @@ export async function findRecentReusableStockItemJob(
       id: true,
       status: true,
       payload: true,
+      result: true,
       createdAt: true
     }
   });
 
-  const match = candidates.find((job) => stockItemPayloadKey(job.payload) === requestedKey);
+  const match = candidates.find((job) => stockItemPayloadKey(job.payload) === requestedKey &&
+    !isStockItemNotFoundResult("GET_STOCK_ITEM", job.result));
   if (!match) return null;
 
   log("info", "gateway_stock_item_job_reused", {
@@ -452,7 +455,7 @@ export async function enqueueCoalescedOpportunityUpdate(
 }
 
 export async function getJobById(jobId: string) {
-  return prisma.job.findUnique({
+  const job = await prisma.job.findUnique({
     where: { id: jobId },
     select: {
       id: true,
@@ -465,4 +468,5 @@ export async function getJobById(jobId: string) {
       updatedAt: true
     }
   });
+  return job ? jobForPolling(job) : null;
 }

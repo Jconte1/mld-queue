@@ -1,0 +1,2969 @@
+{
+  "plannedAt": "2026-10-20T17:09:33.148Z",
+  "plan": [
+    {
+      "job": {
+        "id": "contact-backfill-966fb98ddd136150f8abc8c064829bd3",
+        "vendorId": "specbooks",
+        "type": "ERP_BACKFILL_SALES_ORDER_CONTACT",
+        "status": "failed",
+        "entityKey": "a0f92c2f-c24d-4991-81da-5c7e17452e00",
+        "payload": {
+          "apply": true,
+          "orderType": "SO",
+          "orderNumber": "SO38056",
+          "parentJobId": "a0f92c2f-c24d-4991-81da-5c7e17452e00",
+          "contactCreationPayload": {
+            "Email": {
+              "value": "james@mld.com"
+            },
+            "Phone1": {
+              "value": "8018335923"
+            },
+            "custom": {
+              "Contact": {
+                "AttributeCONTEXT": {
+                  "type": "CustomStringField",
+                  "value": "Opt-in"
+                },
+                "AttributeCONEMAIL": {
+                  "type": "CustomStringField",
+                  "value": "Opt-in"
+                },
+                "AttributeCONPHONE": {
+                  "type": "CustomStringField",
+                  "value": "Opt-in"
+                }
+              }
+            },
+            "LastName": {
+              "value": "site contact"
+            },
+            "FirstName": {
+              "value": "__"
+            },
+            "DisplayName": {
+              "value": "james"
+            },
+            "BusinessAccount": {
+              "value": "BA0001318"
+            }
+          },
+          "contactCreationStarted": true
+        },
+        "result": {
+          "name": "Error",
+          "error": "ambiguous_existing_contacts_for_customer_and_phone",
+          "attempt": 2,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "ambiguous_existing_contacts_for_customer_and_phone",
+        "createdAt": "2026-10-14T16:42:53.735Z",
+        "updatedAt": "2026-10-14T16:43:05.272Z"
+      },
+      "reason": "Later backfill for the same order completed with contact fields and assignments verified",
+      "replacementJobId": "contact-backfill-598a3a34f6ee62e56582a0acb5bc54fa"
+    },
+    {
+      "job": {
+        "id": "contact-backfill-833e452afb9c08e815448db56e9b5c84",
+        "vendorId": "specbooks",
+        "type": "ERP_BACKFILL_SALES_ORDER_CONTACT",
+        "status": "failed",
+        "entityKey": "842e36a1-5390-42bf-8dc4-86185ab406bd",
+        "payload": {
+          "apply": true,
+          "orderType": "SO",
+          "orderNumber": "SO38056",
+          "parentJobId": "842e36a1-5390-42bf-8dc4-86185ab406bd",
+          "contactCreationPayload": {
+            "Email": {
+              "value": "james@mld.com"
+            },
+            "Phone1": {
+              "value": "8018335923"
+            },
+            "custom": {
+              "Contact": {
+                "AttributeCONTEXT": {
+                  "type": "CustomStringField",
+                  "value": "Opt-in"
+                },
+                "AttributeCONEMAIL": {
+                  "type": "CustomStringField",
+                  "value": "Opt-in"
+                },
+                "AttributeCONPHONE": {
+                  "type": "CustomStringField",
+                  "value": "Opt-in"
+                }
+              }
+            },
+            "LastName": {
+              "value": "site contact"
+            },
+            "FirstName": {
+              "value": "__"
+            },
+            "DisplayName": {
+              "value": "james"
+            },
+            "BusinessAccount": {
+              "value": "BA0001318"
+            }
+          },
+          "contactCreationStarted": true
+        },
+        "result": {
+          "name": "Error",
+          "error": "contact_creation_outcome_unknown_manual_review_required",
+          "attempt": 2,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "contact_creation_outcome_unknown_manual_review_required",
+        "createdAt": "2026-10-14T16:46:05.903Z",
+        "updatedAt": "2026-10-14T16:46:12.218Z"
+      },
+      "reason": "Later backfill for the same order completed with contact fields and assignments verified",
+      "replacementJobId": "contact-backfill-598a3a34f6ee62e56582a0acb5bc54fa"
+    },
+    {
+      "job": {
+        "id": "cabb6485-eb40-49ee-acd3-271410ea7195",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5554
+          },
+          "Description": {
+            "value": "30\" Double Combination Electric Wall Oven - Juniper"
+          },
+          "InventoryID": {
+            "value": "KOEC930SJP"
+          },
+          "DefaultPrice": {
+            "value": 5554
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotFoundError",
+          "error": "No manufacturer mapping exists for 'Kitchenaid' (normalized: 'KITCHENAID')",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "No manufacturer mapping exists for 'Kitchenaid' (normalized: 'KITCHENAID')",
+        "createdAt": "2026-10-14T18:07:45.465Z",
+        "updatedAt": "2026-10-14T18:07:45.734Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "1193555b-5e3e-40d5-b4ac-31e47c6821d4"
+    },
+    {
+      "job": {
+        "id": "df233e16-6043-4be1-9d55-e6c5c1a7ecaf",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5554
+          },
+          "Description": {
+            "value": "30\" Double Combination Electric Wall Oven - Juniper"
+          },
+          "InventoryID": {
+            "value": "KOEC930SJP"
+          },
+          "DefaultPrice": {
+            "value": 5554
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+        "createdAt": "2026-10-14T18:08:14.931Z",
+        "updatedAt": "2026-10-14T18:08:15.158Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "1193555b-5e3e-40d5-b4ac-31e47c6821d4"
+    },
+    {
+      "job": {
+        "id": "55016b80-86c7-4169-811e-45b1f052c627",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5554
+          },
+          "Description": {
+            "value": "30\" Double Combination Electric Wall Oven - Juniper"
+          },
+          "InventoryID": {
+            "value": "KOEC930SJP"
+          },
+          "DefaultPrice": {
+            "value": 5554
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+        "createdAt": "2026-10-14T18:09:27.738Z",
+        "updatedAt": "2026-10-14T18:09:27.959Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "1193555b-5e3e-40d5-b4ac-31e47c6821d4"
+    },
+    {
+      "job": {
+        "id": "26ca86f5-feee-4dd3-b5ae-e56659096fc5",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5554
+          },
+          "Description": {
+            "value": "30\" Double Combination Electric Wall Oven - Juniper"
+          },
+          "InventoryID": {
+            "value": "KOEC930SJP"
+          },
+          "DefaultPrice": {
+            "value": 5554
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+        "createdAt": "2026-10-14T18:11:04.924Z",
+        "updatedAt": "2026-10-14T18:11:05.148Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "1193555b-5e3e-40d5-b4ac-31e47c6821d4"
+    },
+    {
+      "job": {
+        "id": "b9055ed3-46c2-408a-aabd-8831b14e5e20",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5554
+          },
+          "Description": {
+            "value": "30\" Double Combination Electric Wall Oven - Juniper"
+          },
+          "InventoryID": {
+            "value": "KOEC930SJP"
+          },
+          "DefaultPrice": {
+            "value": 5554
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+        "createdAt": "2026-10-14T18:11:24.553Z",
+        "updatedAt": "2026-10-14T18:11:25.190Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "1193555b-5e3e-40d5-b4ac-31e47c6821d4"
+    },
+    {
+      "job": {
+        "id": "contact-backfill-add77c81ad82e8b16d633d7ed5947eba",
+        "vendorId": "specbooks",
+        "type": "ERP_BACKFILL_SALES_ORDER_CONTACT",
+        "status": "failed",
+        "entityKey": "545af4e3-a448-406f-a616-efb0ca674a63",
+        "payload": {
+          "apply": true,
+          "orderType": "AF",
+          "orderNumber": "ARFS00000411",
+          "parentJobId": "545af4e3-a448-406f-a616-efb0ca674a63",
+          "createdContactId": "195266",
+          "contactCreationPayload": {
+            "Email": {
+              "value": "NA@NA.com"
+            },
+            "Phone1": {
+              "value": "8018221573"
+            },
+            "custom": {
+              "Contact": {
+                "AttributeTEXTCON": {
+                  "type": "CustomStringField",
+                  "value": "Opt-Out"
+                },
+                "AttributeEMAILCON": {
+                  "type": "CustomStringField",
+                  "value": "Opt-Out"
+                },
+                "AttributePHONECON": {
+                  "type": "CustomStringField",
+                  "value": "Opt-In"
+                }
+              }
+            },
+            "LastName": {
+              "value": "site contact"
+            },
+            "FirstName": {
+              "value": "__"
+            },
+            "DisplayName": {
+              "value": "Greg"
+            },
+            "BusinessAccount": {
+              "value": "BA0000031"
+            }
+          },
+          "contactCreationStarted": true
+        },
+        "result": {
+          "name": "Error",
+          "error": "delivery_contact_selector_ambiguous_manual_review_required",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "delivery_contact_selector_ambiguous_manual_review_required",
+        "createdAt": "2026-10-14T18:35:01.285Z",
+        "updatedAt": "2026-10-14T18:35:25.831Z"
+      },
+      "reason": "Later backfill for the same order completed with contact fields and assignments verified",
+      "replacementJobId": "contact-backfill-70afb99d316e092adffc9f3e0bcc94d8"
+    },
+    {
+      "job": {
+        "id": "494cafbf-a38b-4630-bbe3-2d01c8a5c485",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2221
+          },
+          "Description": {
+            "value": "30\" 4 Element Electric Slide In Convection Range - PrintShield Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "KSES330SPS"
+          },
+          "DefaultPrice": {
+            "value": 2221
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+        "createdAt": "2026-10-15T01:48:19.280Z",
+        "updatedAt": "2026-10-15T01:48:19.586Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "f33ea724-939b-45d7-b90f-d68b4718b98e"
+    },
+    {
+      "job": {
+        "id": "445149ca-f3e5-4dd2-b596-09c6cc426791",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2221
+          },
+          "Description": {
+            "value": "30\" 4 Element Electric Slide In Convection Range - PrintShield Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "KSES330SPS"
+          },
+          "DefaultPrice": {
+            "value": 2221
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+        "createdAt": "2026-10-15T01:48:46.787Z",
+        "updatedAt": "2026-10-15T01:48:47.053Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "f33ea724-939b-45d7-b90f-d68b4718b98e"
+    },
+    {
+      "job": {
+        "id": "dd3dd303-8a40-403c-9efd-0fe8d27000fd",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2221
+          },
+          "Description": {
+            "value": "30\" 4 Element Electric Slide In Convection Range - PrintShield Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "KSES330SPS"
+          },
+          "DefaultPrice": {
+            "value": 2221
+          },
+          "manufacturer": "Kitchenaid"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Kitchenaid' is not approved (status: pending)",
+        "createdAt": "2026-10-15T01:52:19.136Z",
+        "updatedAt": "2026-10-15T01:52:19.363Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "f33ea724-939b-45d7-b90f-d68b4718b98e"
+    },
+    {
+      "job": {
+        "id": "d2561976-cb1b-496d-bea3-f9fb63d3e09f",
+        "vendorId": "service_fusion",
+        "type": "ERP_PUT_SALES_INVOICE",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "payload": {
+            "custom": {
+              "Document": {
+                "UsrExtRefNbr": {
+                  "value": "38556709"
+                }
+              }
+            },
+            "Details": [
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 250
+                },
+                "LineNbr": {
+                  "value": 1
+                },
+                "UnitPrice": {
+                  "value": 250
+                },
+                "InventoryID": {
+                  "value": "INS-BUILTINREFRIGERATOR"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel 30\" Built-In Refrigerator"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 198
+                },
+                "LineNbr": {
+                  "value": 2
+                },
+                "UnitPrice": {
+                  "value": 198
+                },
+                "InventoryID": {
+                  "value": "INS-BIFRIDGEPANELS"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Built-In Refrigerator Panels (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 250
+                },
+                "LineNbr": {
+                  "value": 3
+                },
+                "UnitPrice": {
+                  "value": 250
+                },
+                "InventoryID": {
+                  "value": "INS-BUILTINFREEZER"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel 30\" Built-In Freezer"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 198
+                },
+                "LineNbr": {
+                  "value": 4
+                },
+                "UnitPrice": {
+                  "value": 198
+                },
+                "InventoryID": {
+                  "value": "INS-BUILTINFREEZERPANEL"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Built-In Freezer Panels (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 132
+                },
+                "LineNbr": {
+                  "value": 5
+                },
+                "UnitPrice": {
+                  "value": 132
+                },
+                "InventoryID": {
+                  "value": "INS-DUALINSTALLKITFORBUILTINRE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Dual Kit for Built-In Refrigerator"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 205
+                },
+                "LineNbr": {
+                  "value": 6
+                },
+                "UnitPrice": {
+                  "value": 205
+                },
+                "InventoryID": {
+                  "value": "INS-PRORANGEUPTO59INCH"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel 48\" Pro Range (range cord supplied by sales)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 420
+                },
+                "LineNbr": {
+                  "value": 7
+                },
+                "UnitPrice": {
+                  "value": 420
+                },
+                "InventoryID": {
+                  "value": "INS-WALLMNTPROHOOD46INCHPLUS"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel 48\" Wall Mount Pro Hood (includes 3' of pipe to connect to to existing venting, venting ran to interior or exterior of home not included)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 180
+                },
+                "LineNbr": {
+                  "value": 8
+                },
+                "UnitPrice": {
+                  "value": 180
+                },
+                "InventoryID": {
+                  "value": "INS-DISHWASHER"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel Dishwasher (includes elbow)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 77
+                },
+                "LineNbr": {
+                  "value": 9
+                },
+                "UnitPrice": {
+                  "value": 77
+                },
+                "InventoryID": {
+                  "value": "INS-DISHWASHERPANEL"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Dishwasher Panel (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 88
+                },
+                "LineNbr": {
+                  "value": 10
+                },
+                "UnitPrice": {
+                  "value": 88
+                },
+                "InventoryID": {
+                  "value": "INS-U/C FRIDGE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel Under Counter Refrigerator"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 82.5
+                },
+                "LineNbr": {
+                  "value": 11
+                },
+                "UnitPrice": {
+                  "value": 82.5
+                },
+                "InventoryID": {
+                  "value": "INS-UNDERCOUNTERREFERATPANEL"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Under Counter Refrigerator Panel (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 276
+                },
+                "LineNbr": {
+                  "value": 12
+                },
+                "UnitPrice": {
+                  "value": 276
+                },
+                "InventoryID": {
+                  "value": "INS-ICEMAKER"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "U-Line Icemaker"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 66
+                },
+                "LineNbr": {
+                  "value": 13
+                },
+                "UnitPrice": {
+                  "value": 66
+                },
+                "InventoryID": {
+                  "value": "INS-ICEMAKERPANEL"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Icemaker Panel (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 2
+                },
+                "Amount": {
+                  "value": 160
+                },
+                "LineNbr": {
+                  "value": 14
+                },
+                "UnitPrice": {
+                  "value": 80
+                },
+                "InventoryID": {
+                  "value": "INS-TRIPCHARGEHEBERMIDWAYOAKLE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Trip Charge - Heber (this is a per-day charge)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 93.5
+                },
+                "LineNbr": {
+                  "value": 15
+                },
+                "UnitPrice": {
+                  "value": 93.5
+                },
+                "InventoryID": {
+                  "value": "INS-MICROWAVEDRAWER"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel Microwave Drawer"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 25
+                },
+                "LineNbr": {
+                  "value": 16
+                },
+                "Location": {
+                  "value": "INSTALL"
+                },
+                "UnitPrice": {
+                  "value": 25
+                },
+                "InventoryID": {
+                  "value": "01-Y648-01"
+                },
+                "TaxCategory": {
+                  "value": "TAXABLE"
+                },
+                "WarehouseID": {
+                  "value": "SALT LAKE INSTALL"
+                },
+                "TransactionDescr": {
+                  "value": "Arrow Industries 5/8 Inch OD Gas Line"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 4
+                },
+                "LineNbr": {
+                  "value": 17
+                },
+                "Location": {
+                  "value": "INSTALL"
+                },
+                "UnitPrice": {
+                  "value": 4
+                },
+                "InventoryID": {
+                  "value": "42-401208"
+                },
+                "TaxCategory": {
+                  "value": "TAXABLE"
+                },
+                "WarehouseID": {
+                  "value": "SALT LAKE INSTALL"
+                },
+                "TransactionDescr": {
+                  "value": "Arrow Industries Hex Bushing, Black, 3/4 Inch x 1/2 Inch"
+                }
+              }
+            ],
+            "CustomerID": {
+              "value": "BA0002374"
+            },
+            "IsTaxValid": {
+              "value": true
+            },
+            "LocationID": {
+              "value": "Lot 218"
+            },
+            "TaxDetails": [
+              {
+                "TaxID": {
+                  "value": "SLC"
+                },
+                "TaxRate": {
+                  "value": 7.66
+                },
+                "TaxAmount": {
+                  "value": 2.22
+                },
+                "TaxableAmount": {
+                  "value": 29
+                }
+              }
+            ],
+            "Description": {
+              "value": "Service Fusion Install Invoice"
+            },
+            "ExternalRef": {
+              "value": "38556709"
+            }
+          }
+        },
+        "result": {
+          "name": "Error",
+          "error": "SalesInvoice PUT failed: 422 Unprocessable Entity {\"id\":\"a89b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'AR Invoice/Memo' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":2707.22},\"Balance\":{\"value\":2707.22},\"CashDiscount\":{\"value\":0.0},\"CreatedDate\":{\"value\":\"2026-10-15T00:00:42.9952151-05:00\"},\"CreditHold\":{\"value\":false},\"Currency\":{\"value\":\"USD\"},\"CustomerID\":{\"value\":\"BA0002374\"},\"CustomerOrder\":{},\"Date\":{\"value\":\"2026-10-15T00:00:00-05:00\"},\"Description\":{\"value\":\"Service Fusion Install Invoice\"},\"Details\":[{\"id\":\"af9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":250.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BUILTINREFRIGERATOR\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":1},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"af9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 30\\\" Built-In Refrigerator\"},\"UnitPrice\":{\"value\":250.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/af9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b09b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":2,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":198.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BIFRIDGEPANELS\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":2},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b09b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Built-In Refrigerator Panels (handle installation will be extra)\"},\"UnitPrice\":{\"value\":198.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b09b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b19b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":3,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":250.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BUILTINFREEZER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":3},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b19b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 30\\\" Built-In Freezer\"},\"UnitPrice\":{\"value\":250.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b19b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b29b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":4,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":198.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BUILTINFREEZERPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":4},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b29b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Built-In Freezer Panels (handle installation will be extra)\"},\"UnitPrice\":{\"value\":198.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b29b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b39b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":5,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":132.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-DUALINSTALLKITFORBUILTINRE\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":5},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b39b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Dual Kit for Built-In Refrigerator\"},\"UnitPrice\":{\"value\":132.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b39b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b49b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":6,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":205.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-PRORANGEUPTO59INCH\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":6},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b49b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 48\\\" Pro Range (range cord supplied by sales)\"},\"UnitPrice\":{\"value\":205.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b49b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b59b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":7,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":420.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-WALLMNTPROHOOD46INCHPLUS\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":7},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b59b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 48\\\" Wall Mount Pro Hood (includes 3' of pipe to connect to to existing venting, venting ran to interior or exterior of home not included)\"},\"UnitPrice\":{\"value\":420.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b59b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b69b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":8,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":180.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-DISHWASHER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":8},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b69b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel Dishwasher (includes elbow)\"},\"UnitPrice\":{\"value\":180.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b69b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b79b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":9,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":77.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-DISHWASHERPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":9},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b79b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Dishwasher Panel (handle installation will be extra)\"},\"UnitPrice\":{\"value\":77.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b79b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b89b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":10,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":88.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-U/C FRIDGE\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":10},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b89b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel Under Counter Refrigerator\"},\"UnitPrice\":{\"value\":88.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b89b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b99b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":11,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":82.5},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-UNDERCOUNTERREFERATPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":11},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b99b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Under Counter Refrigerator Panel (handle installation will be extra)\"},\"UnitPrice\":{\"value\":82.5000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b99b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"ba9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":12,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":276.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-ICEMAKER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":12},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"ba9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"U-Line Icemaker\"},\"UnitPrice\":{\"value\":276.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/ba9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bb9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":13,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":66.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-ICEMAKERPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":13},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"bb9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Icemaker Panel (handle installation will be extra)\"},\"UnitPrice\":{\"value\":66.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bb9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bc9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":14,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":160.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-TRIPCHARGEHEBERMIDWAYOAKLE\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":14},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"bc9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":2.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Trip Charge - Heber (this is a per-day charge)\"},\"UnitPrice\":{\"value\":80.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bc9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bd9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":15,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":93.5},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-MICROWAVEDRAWER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":15},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"bd9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel Microwave Drawer\"},\"UnitPrice\":{\"value\":93.5000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bd9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"be9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":16,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4000\"},\"Amount\":{\"value\":25.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Sales\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"01-Y648-01\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":16},\"Location\":{\"value\":\"INSTALL\"},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"be9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"TAXABLE\"},\"TransactionDescr\":{\"value\":\"Arrow Industries 5/8 Inch OD Gas Line\"},\"UnitPrice\":{\"value\":25.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/be9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bf9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":17,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4000\"},\"Amount\":{\"value\":4.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Sales\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"42-401208\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":17},\"Location\":{\"value\":\"INSTALL\"},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":true},\"NoteID\":{\"value\":\"bf9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"TAXABLE\"},\"TransactionDescr\":{\"value\":\"Arrow Industries Hex Bushing, Black, 3/4 Inch x 1/2 Inch\"},\"UnitPrice\":{\"value\":4.0},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bf9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}}],\"DetailTotal\":{\"value\":2705.0},\"DiscountTotal\":{\"value\":0.0},\"DueDate\":{\"value\":\"2026-11-14T00:00:00-06:00\"},\"ExternalRef\":{\"value\":\"38556709\"},\"FreightPrice\":{\"value\":0.0},\"Hold\":{\"value\":true},\"IsTaxValid\":{\"value\":true},\"LastModifiedDate\":{\"value\":\"2026-10-15T00:00:42.9952151-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-15T00:00:42.9952151-05:00\"},\"LocationID\":{\"value\":\"LOT 218\",\"error\":\"Location 'LOT 218   ' cannot be found in the system.\"},\"PaymentTotal\":{\"value\":0.0},\"Project\":{\"value\":\"X\"},\"ReferenceNbr\":{\"value\":\"<NEW>\"},\"ShipToAddressOverride\":{\"value\":false},\"ShipToContactOverride\":{\"value\":false},\"Status\":{\"value\":\"On Hold\"},\"TaxCalcMode\":{\"value\":\"Tax Settings\"},\"TaxDetails\":[{\"id\":\"b116b279-2293-4d18-aaab-258371e4ccb6\",\"rowNumber\":1,\"note\":null,\"TaxableAmount\":{\"value\":29.00},\"TaxAmount\":{\"value\":2.22},\"TaxID\":{\"value\":\"SLC\"},\"custom\":{}}],\"TaxTotal\":{\"value\":2.22},\"Type\":{\"value\":\"Invoice\"},\"custom\":{\"Document\":{\"UsrExtRefNbr\":{\"type\":\"CustomStringField\",\"value\":\"38556709\"}}},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/SalesInvoice/a89b2d5f-55c8-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Document/a89b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}}",
+          "status": 422,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "responseBody": {
+            "id": "a89b2d5f-55c8-f111-9fe1-6045bda28239",
+            "Date": {
+              "value": "2026-10-15T00:00:00-05:00"
+            },
+            "Hold": {
+              "value": true
+            },
+            "Type": {
+              "value": "Invoice"
+            },
+            "note": {
+              "value": ""
+            },
+            "error": "Inserting  'AR Invoice/Memo' record raised at least one error. Please review the errors.",
+            "Amount": {
+              "value": 2707.22
+            },
+            "Status": {
+              "value": "On Hold"
+            },
+            "_links": {
+              "self": "/entity/CustomEndpoint/24.200.001/SalesInvoice/a89b2d5f-55c8-f111-9fe1-6045bda28239",
+              "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Document/a89b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+            },
+            "custom": {
+              "Document": {
+                "UsrExtRefNbr": {
+                  "type": "CustomStringField",
+                  "value": "38556709"
+                }
+              }
+            },
+            "Balance": {
+              "value": 2707.22
+            },
+            "Details": [
+              {
+                "id": "af9b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 250
+                },
+                "NoteID": {
+                  "value": "af9b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/af9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 1
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 250
+                },
+                "rowNumber": 1,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-BUILTINREFRIGERATOR"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel 30\" Built-In Refrigerator"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b09b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 198
+                },
+                "NoteID": {
+                  "value": "b09b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b09b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 2
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 198
+                },
+                "rowNumber": 2,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-BIFRIDGEPANELS"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {
+                  "value": "SALT LAKE INSTALL"
+                },
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Built-In Refrigerator Panels (handle installation will be extra)"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b19b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 250
+                },
+                "NoteID": {
+                  "value": "b19b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b19b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 3
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 250
+                },
+                "rowNumber": 3,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-BUILTINFREEZER"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel 30\" Built-In Freezer"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b29b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 198
+                },
+                "NoteID": {
+                  "value": "b29b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b29b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 4
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 198
+                },
+                "rowNumber": 4,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-BUILTINFREEZERPANEL"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Built-In Freezer Panels (handle installation will be extra)"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b39b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 132
+                },
+                "NoteID": {
+                  "value": "b39b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b39b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 5
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 132
+                },
+                "rowNumber": 5,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-DUALINSTALLKITFORBUILTINRE"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Dual Kit for Built-In Refrigerator"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b49b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 205
+                },
+                "NoteID": {
+                  "value": "b49b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b49b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 6
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 205
+                },
+                "rowNumber": 6,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-PRORANGEUPTO59INCH"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel 48\" Pro Range (range cord supplied by sales)"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b59b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 420
+                },
+                "NoteID": {
+                  "value": "b59b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b59b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 7
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 420
+                },
+                "rowNumber": 7,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-WALLMNTPROHOOD46INCHPLUS"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel 48\" Wall Mount Pro Hood (includes 3' of pipe to connect to to existing venting, venting ran to interior or exterior of home not included)"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b69b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 180
+                },
+                "NoteID": {
+                  "value": "b69b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b69b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 8
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 180
+                },
+                "rowNumber": 8,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-DISHWASHER"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel Dishwasher (includes elbow)"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b79b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 77
+                },
+                "NoteID": {
+                  "value": "b79b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b79b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 9
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 77
+                },
+                "rowNumber": 9,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-DISHWASHERPANEL"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Dishwasher Panel (handle installation will be extra)"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b89b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 88
+                },
+                "NoteID": {
+                  "value": "b89b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b89b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 10
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 88
+                },
+                "rowNumber": 10,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-U/C FRIDGE"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel Under Counter Refrigerator"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "b99b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 82.5
+                },
+                "NoteID": {
+                  "value": "b99b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b99b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 11
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 82.5
+                },
+                "rowNumber": 11,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-UNDERCOUNTERREFERATPANEL"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Under Counter Refrigerator Panel (handle installation will be extra)"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "ba9b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 276
+                },
+                "NoteID": {
+                  "value": "ba9b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/ba9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 12
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 276
+                },
+                "rowNumber": 12,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-ICEMAKER"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "U-Line Icemaker"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "bb9b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 66
+                },
+                "NoteID": {
+                  "value": "bb9b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bb9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 13
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 66
+                },
+                "rowNumber": 13,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-ICEMAKERPANEL"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Icemaker Panel (handle installation will be extra)"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "bc9b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 2
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 160
+                },
+                "NoteID": {
+                  "value": "bc9b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bc9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 14
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 80
+                },
+                "rowNumber": 14,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-TRIPCHARGEHEBERMIDWAYOAKLE"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Trip Charge - Heber (this is a per-day charge)"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "bd9b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 93.5
+                },
+                "NoteID": {
+                  "value": "bd9b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bd9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4500"
+                },
+                "LineNbr": {
+                  "value": 15
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {},
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 93.5
+                },
+                "rowNumber": 15,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Install Revenue - Internal"
+                },
+                "InventoryID": {
+                  "value": "INS-MICROWAVEDRAWER"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "WarehouseID": {},
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Fisher & Paykel Microwave Drawer"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "be9b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 25
+                },
+                "NoteID": {
+                  "value": "be9b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/be9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4000"
+                },
+                "LineNbr": {
+                  "value": 16
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {
+                  "value": "INSTALL"
+                },
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 25
+                },
+                "rowNumber": 16,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Sales"
+                },
+                "InventoryID": {
+                  "value": "01-Y648-01"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "TAXABLE"
+                },
+                "WarehouseID": {
+                  "value": "SALT LAKE INSTALL"
+                },
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Arrow Industries 5/8 Inch OD Gas Line"
+                },
+                "CalculateDiscountsOnImport": {}
+              },
+              {
+                "id": "bf9b2d5f-55c8-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 1
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 4
+                },
+                "NoteID": {
+                  "value": "bf9b2d5f-55c8-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bf9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4000"
+                },
+                "LineNbr": {
+                  "value": 17
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {
+                  "value": "INSTALL"
+                },
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 4
+                },
+                "rowNumber": 17,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0100"
+                },
+                "Description": {
+                  "value": "Sales"
+                },
+                "InventoryID": {
+                  "value": "42-401208"
+                },
+                "ManualPrice": {
+                  "value": true
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "TAXABLE"
+                },
+                "WarehouseID": {
+                  "value": "SALT LAKE INSTALL"
+                },
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Arrow Industries Hex Bushing, Black, 3/4 Inch x 1/2 Inch"
+                },
+                "CalculateDiscountsOnImport": {}
+              }
+            ],
+            "DueDate": {
+              "value": "2026-11-14T00:00:00-06:00"
+            },
+            "Project": {
+              "value": "X"
+            },
+            "Currency": {
+              "value": "USD"
+            },
+            "TaxTotal": {
+              "value": 2.22
+            },
+            "rowNumber": 1,
+            "CreditHold": {
+              "value": false
+            },
+            "CustomerID": {
+              "value": "BA0002374"
+            },
+            "IsTaxValid": {
+              "value": true
+            },
+            "LocationID": {
+              "error": "Location 'LOT 218   ' cannot be found in the system.",
+              "value": "LOT 218"
+            },
+            "TaxDetails": [
+              {
+                "id": "b116b279-2293-4d18-aaab-258371e4ccb6",
+                "note": null,
+                "TaxID": {
+                  "value": "SLC"
+                },
+                "custom": {},
+                "TaxAmount": {
+                  "value": 2.22
+                },
+                "rowNumber": 1,
+                "TaxableAmount": {
+                  "value": 29
+                }
+              }
+            ],
+            "CreatedDate": {
+              "value": "2026-10-15T00:00:42.9952151-05:00"
+            },
+            "Description": {
+              "value": "Service Fusion Install Invoice"
+            },
+            "DetailTotal": {
+              "value": 2705
+            },
+            "ExternalRef": {
+              "value": "38556709"
+            },
+            "TaxCalcMode": {
+              "value": "Tax Settings"
+            },
+            "CashDiscount": {
+              "value": 0
+            },
+            "FreightPrice": {
+              "value": 0
+            },
+            "PaymentTotal": {
+              "value": 0
+            },
+            "ReferenceNbr": {
+              "value": "<NEW>"
+            },
+            "CustomerOrder": {},
+            "DiscountTotal": {
+              "value": 0
+            },
+            "LastModifiedDate": {
+              "value": "2026-10-15T00:00:42.9952151-05:00"
+            },
+            "LastModifiedDateTime": {
+              "value": "2026-10-15T00:00:42.9952151-05:00"
+            },
+            "ShipToAddressOverride": {
+              "value": false
+            },
+            "ShipToContactOverride": {
+              "value": false
+            }
+          },
+          "responseText": "{\"id\":\"a89b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'AR Invoice/Memo' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":2707.22},\"Balance\":{\"value\":2707.22},\"CashDiscount\":{\"value\":0.0},\"CreatedDate\":{\"value\":\"2026-10-15T00:00:42.9952151-05:00\"},\"CreditHold\":{\"value\":false},\"Currency\":{\"value\":\"USD\"},\"CustomerID\":{\"value\":\"BA0002374\"},\"CustomerOrder\":{},\"Date\":{\"value\":\"2026-10-15T00:00:00-05:00\"},\"Description\":{\"value\":\"Service Fusion Install Invoice\"},\"Details\":[{\"id\":\"af9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":250.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BUILTINREFRIGERATOR\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":1},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"af9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 30\\\" Built-In Refrigerator\"},\"UnitPrice\":{\"value\":250.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/af9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b09b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":2,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":198.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BIFRIDGEPANELS\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":2},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b09b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Built-In Refrigerator Panels (handle installation will be extra)\"},\"UnitPrice\":{\"value\":198.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b09b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b19b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":3,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":250.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BUILTINFREEZER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":3},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b19b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 30\\\" Built-In Freezer\"},\"UnitPrice\":{\"value\":250.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b19b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b29b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":4,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":198.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BUILTINFREEZERPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":4},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b29b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Built-In Freezer Panels (handle installation will be extra)\"},\"UnitPrice\":{\"value\":198.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b29b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b39b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":5,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":132.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-DUALINSTALLKITFORBUILTINRE\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":5},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b39b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Dual Kit for Built-In Refrigerator\"},\"UnitPrice\":{\"value\":132.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b39b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b49b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":6,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":205.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-PRORANGEUPTO59INCH\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":6},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b49b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 48\\\" Pro Range (range cord supplied by sales)\"},\"UnitPrice\":{\"value\":205.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b49b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b59b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":7,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":420.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-WALLMNTPROHOOD46INCHPLUS\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":7},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b59b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 48\\\" Wall Mount Pro Hood (includes 3' of pipe to connect to to existing venting, venting ran to interior or exterior of home not included)\"},\"UnitPrice\":{\"value\":420.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b59b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b69b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":8,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":180.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-DISHWASHER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":8},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b69b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel Dishwasher (includes elbow)\"},\"UnitPrice\":{\"value\":180.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b69b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b79b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":9,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":77.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-DISHWASHERPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":9},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b79b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Dishwasher Panel (handle installation will be extra)\"},\"UnitPrice\":{\"value\":77.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b79b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b89b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":10,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":88.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-U/C FRIDGE\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":10},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b89b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel Under Counter Refrigerator\"},\"UnitPrice\":{\"value\":88.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b89b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b99b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":11,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":82.5},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-UNDERCOUNTERREFERATPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":11},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b99b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Under Counter Refrigerator Panel (handle installation will be extra)\"},\"UnitPrice\":{\"value\":82.5000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b99b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"ba9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":12,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":276.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-ICEMAKER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":12},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"ba9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"U-Line Icemaker\"},\"UnitPrice\":{\"value\":276.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/ba9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bb9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":13,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":66.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-ICEMAKERPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":13},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"bb9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Icemaker Panel (handle installation will be extra)\"},\"UnitPrice\":{\"value\":66.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bb9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bc9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":14,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":160.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-TRIPCHARGEHEBERMIDWAYOAKLE\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":14},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"bc9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":2.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Trip Charge - Heber (this is a per-day charge)\"},\"UnitPrice\":{\"value\":80.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bc9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bd9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":15,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":93.5},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-MICROWAVEDRAWER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":15},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"bd9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel Microwave Drawer\"},\"UnitPrice\":{\"value\":93.5000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bd9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"be9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":16,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4000\"},\"Amount\":{\"value\":25.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Sales\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"01-Y648-01\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":16},\"Location\":{\"value\":\"INSTALL\"},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"be9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"TAXABLE\"},\"TransactionDescr\":{\"value\":\"Arrow Industries 5/8 Inch OD Gas Line\"},\"UnitPrice\":{\"value\":25.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/be9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bf9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":17,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4000\"},\"Amount\":{\"value\":4.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Sales\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"42-401208\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":17},\"Location\":{\"value\":\"INSTALL\"},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":true},\"NoteID\":{\"value\":\"bf9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"TAXABLE\"},\"TransactionDescr\":{\"value\":\"Arrow Industries Hex Bushing, Black, 3/4 Inch x 1/2 Inch\"},\"UnitPrice\":{\"value\":4.0},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bf9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}}],\"DetailTotal\":{\"value\":2705.0},\"DiscountTotal\":{\"value\":0.0},\"DueDate\":{\"value\":\"2026-11-14T00:00:00-06:00\"},\"ExternalRef\":{\"value\":\"38556709\"},\"FreightPrice\":{\"value\":0.0},\"Hold\":{\"value\":true},\"IsTaxValid\":{\"value\":true},\"LastModifiedDate\":{\"value\":\"2026-10-15T00:00:42.9952151-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-15T00:00:42.9952151-05:00\"},\"LocationID\":{\"value\":\"LOT 218\",\"error\":\"Location 'LOT 218   ' cannot be found in the system.\"},\"PaymentTotal\":{\"value\":0.0},\"Project\":{\"value\":\"X\"},\"ReferenceNbr\":{\"value\":\"<NEW>\"},\"ShipToAddressOverride\":{\"value\":false},\"ShipToContactOverride\":{\"value\":false},\"Status\":{\"value\":\"On Hold\"},\"TaxCalcMode\":{\"value\":\"Tax Settings\"},\"TaxDetails\":[{\"id\":\"b116b279-2293-4d18-aaab-258371e4ccb6\",\"rowNumber\":1,\"note\":null,\"TaxableAmount\":{\"value\":29.00},\"TaxAmount\":{\"value\":2.22},\"TaxID\":{\"value\":\"SLC\"},\"custom\":{}}],\"TaxTotal\":{\"value\":2.22},\"Type\":{\"value\":\"Invoice\"},\"custom\":{\"Document\":{\"UsrExtRefNbr\":{\"type\":\"CustomStringField\",\"value\":\"38556709\"}}},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/SalesInvoice/a89b2d5f-55c8-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Document/a89b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}}",
+          "retriesExhausted": false
+        },
+        "error": "SalesInvoice PUT failed: 422 Unprocessable Entity {\"id\":\"a89b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'AR Invoice/Memo' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":2707.22},\"Balance\":{\"value\":2707.22},\"CashDiscount\":{\"value\":0.0},\"CreatedDate\":{\"value\":\"2026-10-15T00:00:42.9952151-05:00\"},\"CreditHold\":{\"value\":false},\"Currency\":{\"value\":\"USD\"},\"CustomerID\":{\"value\":\"BA0002374\"},\"CustomerOrder\":{},\"Date\":{\"value\":\"2026-10-15T00:00:00-05:00\"},\"Description\":{\"value\":\"Service Fusion Install Invoice\"},\"Details\":[{\"id\":\"af9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":250.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BUILTINREFRIGERATOR\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":1},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"af9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 30\\\" Built-In Refrigerator\"},\"UnitPrice\":{\"value\":250.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/af9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b09b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":2,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":198.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BIFRIDGEPANELS\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":2},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b09b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Built-In Refrigerator Panels (handle installation will be extra)\"},\"UnitPrice\":{\"value\":198.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b09b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b19b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":3,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":250.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BUILTINFREEZER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":3},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b19b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 30\\\" Built-In Freezer\"},\"UnitPrice\":{\"value\":250.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b19b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b29b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":4,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":198.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-BUILTINFREEZERPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":4},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b29b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Built-In Freezer Panels (handle installation will be extra)\"},\"UnitPrice\":{\"value\":198.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b29b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b39b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":5,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":132.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-DUALINSTALLKITFORBUILTINRE\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":5},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b39b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Dual Kit for Built-In Refrigerator\"},\"UnitPrice\":{\"value\":132.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b39b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b49b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":6,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":205.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-PRORANGEUPTO59INCH\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":6},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b49b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 48\\\" Pro Range (range cord supplied by sales)\"},\"UnitPrice\":{\"value\":205.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b49b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b59b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":7,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":420.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-WALLMNTPROHOOD46INCHPLUS\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":7},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b59b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel 48\\\" Wall Mount Pro Hood (includes 3' of pipe to connect to to existing venting, venting ran to interior or exterior of home not included)\"},\"UnitPrice\":{\"value\":420.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b59b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b69b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":8,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":180.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-DISHWASHER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":8},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b69b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel Dishwasher (includes elbow)\"},\"UnitPrice\":{\"value\":180.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b69b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b79b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":9,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":77.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-DISHWASHERPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":9},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b79b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Dishwasher Panel (handle installation will be extra)\"},\"UnitPrice\":{\"value\":77.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b79b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b89b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":10,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":88.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-U/C FRIDGE\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":10},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b89b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel Under Counter Refrigerator\"},\"UnitPrice\":{\"value\":88.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b89b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"b99b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":11,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":82.5},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-UNDERCOUNTERREFERATPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":11},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"b99b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Under Counter Refrigerator Panel (handle installation will be extra)\"},\"UnitPrice\":{\"value\":82.5000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/b99b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"ba9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":12,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":276.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-ICEMAKER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":12},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"ba9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"U-Line Icemaker\"},\"UnitPrice\":{\"value\":276.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/ba9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bb9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":13,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":66.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-ICEMAKERPANEL\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":13},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"bb9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Icemaker Panel (handle installation will be extra)\"},\"UnitPrice\":{\"value\":66.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bb9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bc9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":14,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":160.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-TRIPCHARGEHEBERMIDWAYOAKLE\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":14},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"bc9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":2.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Trip Charge - Heber (this is a per-day charge)\"},\"UnitPrice\":{\"value\":80.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bc9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bd9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":15,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4500\"},\"Amount\":{\"value\":93.5},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Install Revenue - Internal\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"INS-MICROWAVEDRAWER\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":15},\"Location\":{},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"bd9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"EXEMPT\"},\"TransactionDescr\":{\"value\":\"Fisher & Paykel Microwave Drawer\"},\"UnitPrice\":{\"value\":93.5000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bd9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"be9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":16,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4000\"},\"Amount\":{\"value\":25.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Sales\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"01-Y648-01\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":16},\"Location\":{\"value\":\"INSTALL\"},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"be9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"TAXABLE\"},\"TransactionDescr\":{\"value\":\"Arrow Industries 5/8 Inch OD Gas Line\"},\"UnitPrice\":{\"value\":25.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/be9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}},{\"id\":\"bf9b2d5f-55c8-f111-9fe1-6045bda28239\",\"rowNumber\":17,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4000\"},\"Amount\":{\"value\":4.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Sales\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"42-401208\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":17},\"Location\":{\"value\":\"INSTALL\"},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":true},\"NoteID\":{\"value\":\"bf9b2d5f-55c8-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0100\"},\"TaxCategory\":{\"value\":\"TAXABLE\"},\"TransactionDescr\":{\"value\":\"Arrow Industries Hex Bushing, Black, 3/4 Inch x 1/2 Inch\"},\"UnitPrice\":{\"value\":4.0},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/bf9b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}}],\"DetailTotal\":{\"value\":2705.0},\"DiscountTotal\":{\"value\":0.0},\"DueDate\":{\"value\":\"2026-11-14T00:00:00-06:00\"},\"ExternalRef\":{\"value\":\"38556709\"},\"FreightPrice\":{\"value\":0.0},\"Hold\":{\"value\":true},\"IsTaxValid\":{\"value\":true},\"LastModifiedDate\":{\"value\":\"2026-10-15T00:00:42.9952151-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-15T00:00:42.9952151-05:00\"},\"LocationID\":{\"value\":\"LOT 218\",\"error\":\"Location 'LOT 218   ' cannot be found in the system.\"},\"PaymentTotal\":{\"value\":0.0},\"Project\":{\"value\":\"X\"},\"ReferenceNbr\":{\"value\":\"<NEW>\"},\"ShipToAddressOverride\":{\"value\":false},\"ShipToContactOverride\":{\"value\":false},\"Status\":{\"value\":\"On Hold\"},\"TaxCalcMode\":{\"value\":\"Tax Settings\"},\"TaxDetails\":[{\"id\":\"b116b279-2293-4d18-aaab-258371e4ccb6\",\"rowNumber\":1,\"note\":null,\"TaxableAmount\":{\"value\":29.00},\"TaxAmount\":{\"value\":2.22},\"TaxID\":{\"value\":\"SLC\"},\"custom\":{}}],\"TaxTotal\":{\"value\":2.22},\"Type\":{\"value\":\"Invoice\"},\"custom\":{\"Document\":{\"UsrExtRefNbr\":{\"type\":\"CustomStringField\",\"value\":\"38556709\"}}},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/SalesInvoice/a89b2d5f-55c8-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Document/a89b2d5f-55c8-f111-9fe1-6045bda28239/{filename}\"}}",
+        "createdAt": "2026-10-15T05:00:42.379Z",
+        "updatedAt": "2026-10-15T05:00:48.002Z"
+      },
+      "reason": "Same Service Fusion reference 38556709 later created invoice INV138358; replacement uses corrected CustomerID BA0011948",
+      "replacementJobId": "db50244a-84be-4070-ac1a-23cc46b692db"
+    },
+    {
+      "job": {
+        "id": "c9b763f4-03bd-4d03-a034-dcf36b40e3e7",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 438.4
+          },
+          "Description": {
+            "value": "Harmony Single Hole Faucet - Satin Brass"
+          },
+          "InventoryID": {
+            "value": "FS313SB"
+          },
+          "DefaultPrice": {
+            "value": 548
+          },
+          "manufacturer": "Artos - Westover"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotFoundError",
+          "error": "No manufacturer mapping exists for 'Artos - Westover' (normalized: 'ARTOS WESTOVER')",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "No manufacturer mapping exists for 'Artos - Westover' (normalized: 'ARTOS WESTOVER')",
+        "createdAt": "2026-10-15T15:14:35.290Z",
+        "updatedAt": "2026-10-15T15:14:35.607Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "771ca96d-9cb1-4701-9b0b-7c8587d74a7f"
+    },
+    {
+      "job": {
+        "id": "f70015d6-b2e9-4f22-a010-37356a2d2642",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 438.4
+          },
+          "Description": {
+            "value": "Harmony Single Hole Faucet - Satin Brass"
+          },
+          "InventoryID": {
+            "value": "FS313SB"
+          },
+          "DefaultPrice": {
+            "value": 548
+          },
+          "manufacturer": "Artos - Westover"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Artos - Westover' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Artos - Westover' is not approved (status: pending)",
+        "createdAt": "2026-10-15T15:16:36.125Z",
+        "updatedAt": "2026-10-15T15:16:36.366Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "771ca96d-9cb1-4701-9b0b-7c8587d74a7f"
+    },
+    {
+      "job": {
+        "id": "aad7292c-9a06-4e6a-9246-6a2d89caed95",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 438.4
+          },
+          "Description": {
+            "value": "Harmony Single Hole Faucet - Satin Brass"
+          },
+          "InventoryID": {
+            "value": "FS313SB"
+          },
+          "DefaultPrice": {
+            "value": 548
+          },
+          "manufacturer": "Artos - Westover"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Artos - Westover' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Artos - Westover' is not approved (status: pending)",
+        "createdAt": "2026-10-15T15:17:37.120Z",
+        "updatedAt": "2026-10-15T15:17:37.399Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "771ca96d-9cb1-4701-9b0b-7c8587d74a7f"
+    },
+    {
+      "job": {
+        "id": "f2525b8a-7d84-461b-9830-f8cdd7a297d9",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 438.4
+          },
+          "Description": {
+            "value": "Harmony Single Hole Faucet - Satin Brass"
+          },
+          "InventoryID": {
+            "value": "FS313SB"
+          },
+          "DefaultPrice": {
+            "value": 548
+          },
+          "manufacturer": "Artos - Westover"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Artos - Westover' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Artos - Westover' is not approved (status: pending)",
+        "createdAt": "2026-10-15T15:17:54.695Z",
+        "updatedAt": "2026-10-15T15:17:54.957Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "771ca96d-9cb1-4701-9b0b-7c8587d74a7f"
+    },
+    {
+      "job": {
+        "id": "9e75c4d7-a3f8-4b19-8b95-68b311cf6695",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5999
+          },
+          "Description": {
+            "value": "Sofia 36\" Induction Rangetop, 5 Zones - Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "F6IRT365S1"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Fulgor Milano"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotFoundError",
+          "error": "No manufacturer mapping exists for 'Fulgor Milano' (normalized: 'FULGOR MILANO')",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "No manufacturer mapping exists for 'Fulgor Milano' (normalized: 'FULGOR MILANO')",
+        "createdAt": "2026-10-15T15:51:50.724Z",
+        "updatedAt": "2026-10-15T15:51:51.031Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "de8e1977-309f-41e9-b652-7fac549aad54"
+    },
+    {
+      "job": {
+        "id": "76849a4a-fbce-472b-9093-913df41b751e",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5999
+          },
+          "Description": {
+            "value": "Sofia 36\" Induction Rangetop, 5 Zones - Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "F6IRT365S1"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Fulgor Milano"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Fulgor Milano' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Fulgor Milano' is not approved (status: pending)",
+        "createdAt": "2026-10-15T15:52:48.226Z",
+        "updatedAt": "2026-10-15T15:52:48.482Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "de8e1977-309f-41e9-b652-7fac549aad54"
+    },
+    {
+      "job": {
+        "id": "dd126047-aa9c-4cbf-8d22-ee791898cf85",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5999
+          },
+          "Description": {
+            "value": "Sofia 36\" Induction Rangetop, 5 Zones - Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "F6IRT365S1"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Fulgor Milano"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Fulgor Milano' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Fulgor Milano' is not approved (status: pending)",
+        "createdAt": "2026-10-15T15:53:09.779Z",
+        "updatedAt": "2026-10-15T15:53:10.157Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "de8e1977-309f-41e9-b652-7fac549aad54"
+    },
+    {
+      "job": {
+        "id": "ef6ccfe4-9340-40bb-8128-f58843b57100",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5999
+          },
+          "Description": {
+            "value": "Sofia 36\" Induction Rangetop, 5 Zones - Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "F6IRT365S1"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Fulgor Milano"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Fulgor Milano' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Fulgor Milano' is not approved (status: pending)",
+        "createdAt": "2026-10-15T15:53:29.917Z",
+        "updatedAt": "2026-10-15T15:53:30.183Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "de8e1977-309f-41e9-b652-7fac549aad54"
+    },
+    {
+      "job": {
+        "id": "39a1b971-cda8-406e-b397-a26147d45046",
+        "vendorId": "specbooks",
+        "type": "GET_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "inventoryIds": [
+            "B36CT84SNS"
+          ]
+        },
+        "result": {
+          "name": "StockItemNotFoundError",
+          "error": "Stock item not found: B36CT84SNS",
+          "status": 404,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Stock item not found: B36CT84SNS",
+        "createdAt": "2026-10-16T17:54:38.573Z",
+        "updatedAt": "2026-10-16T17:54:40.414Z"
+      },
+      "reason": "Subsequent identical lookup returned B36CT84SNS successfully",
+      "replacementJobId": "9b33b8da-ba24-4909-80f1-d70b7cf8fc9c"
+    },
+    {
+      "job": {
+        "id": "a68a8c03-ca0c-462a-b67b-b6441ed8da97",
+        "vendorId": "specbooks",
+        "type": "CREATE_OPPORTUNITY",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "Stage": {
+            "value": "Prospect"
+          },
+          "Branch": {
+            "value": "BA0016568"
+          },
+          "Source": {
+            "value": "Web"
+          },
+          "Status": {
+            "value": "New"
+          },
+          "ClassID": {
+            "value": "APP"
+          },
+          "Subject": {
+            "value": "2/1 SPURWING ACRES FILTER FAUCET"
+          },
+          "Products": [
+            {
+              "Qty": {
+                "value": 1
+              },
+              "Category": {
+                "value": "KITCHEN"
+              },
+              "UnitPrice": {
+                "value": "860.56"
+              },
+              "InventoryID": {
+                "value": "MT1841-NL/CHBRZ"
+              },
+              "ManualPrice": {
+                "value": true
+              }
+            }
+          ],
+          "ContactID": {},
+          "BusinessAccount": {
+            "value": "BA0024637"
+          },
+          "ContactDisplayName": {}
+        },
+        "result": {
+          "name": "Error",
+          "error": "Acumatica request failed: 422 Unprocessable Entity {\"id\":\"0ca80886-f2cb-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'Opportunity Products' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":860.56},\"Branch\":{\"value\":\"BA0016568\"},\"BusinessAccount\":{\"value\":\"BA0024637\"},\"ClassID\":{\"value\":\"APP\"},\"ContactDisplayName\":{},\"ContactID\":{},\"ConvertedLeadDisplayName\":{},\"ConvertedLeadID\":{},\"CurrencyID\":{\"value\":\"USD\"},\"CurrencyViewState\":{\"value\":false},\"Details\":{},\"Discount\":{\"value\":0.0},\"Estimation\":{\"value\":\"2026-10-19T00:00:00-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-19T14:23:18.573-05:00\"},\"Location\":{\"value\":\"MAIN\"},\"ManualAmount\":{\"value\":false},\"NoteID\":{\"value\":\"0ca80886-f2cb-f111-9fe1-6045bda28239\"},\"OpportunityID\":{\"value\":\"<NEW>\"},\"Override\":{\"value\":false},\"Owner\":{},\"OwnerEmployeeName\":{},\"ParentAccount\":{},\"Products\":[{\"id\":\"28a80886-f2cb-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Amount\":{\"value\":860.56},\"Category\":{\"value\":\"KITCHEN\"},\"Discount\":{\"value\":0.0},\"DiscountAmount\":{\"value\":0.0},\"DiscountCode\":{},\"DiscountSequence\":{},\"ExternalPrice\":{\"value\":860.56},\"FreeItem\":{\"value\":false},\"InventoryID\":{\"value\":\"MT1841-NL/CHBRZ\",\"error\":\"The inventory item is Inactive.\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":true},\"OpportunityProductID\":{\"value\":1},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"SkipLineDiscounts\":{\"value\":false},\"TaxCategory\":{},\"TransactionDescription\":{},\"UnitPrice\":{\"value\":860.56},\"UOM\":{},\"Warehouse\":{\"value\":\"BOISE WAREHOUSE\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Products/28a80886-f2cb-f111-9fe1-6045bda28239/{filename}\"}}],\"Project\":{\"value\":\"X\"},\"Reason\":{\"value\":\"Created\"},\"Source\":{\"value\":\"Web\"},\"SourceCampaign\":{},\"Stage\":{\"value\":\"Prospect\"},\"Status\":{\"value\":\"New\"},\"Subject\":{\"value\":\"2/1 SPURWING ACRES FILTER FAUCET\"},\"TaxZone\":{\"value\":\"IDAHO\"},\"Total\":{\"value\":860.56},\"WeightTotal\":{\"value\":0.00},\"WorkgroupDescription\":{},\"WorkgroupID\":{},\"custom\":{},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/Opportunity/0ca80886-f2cb-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Opportunity/0ca80886-f2cb-f111-9fe1-6045bda28239/{filename}\"}}",
+          "status": 422,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Acumatica request failed: 422 Unprocessable Entity {\"id\":\"0ca80886-f2cb-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'Opportunity Products' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":860.56},\"Branch\":{\"value\":\"BA0016568\"},\"BusinessAccount\":{\"value\":\"BA0024637\"},\"ClassID\":{\"value\":\"APP\"},\"ContactDisplayName\":{},\"ContactID\":{},\"ConvertedLeadDisplayName\":{},\"ConvertedLeadID\":{},\"CurrencyID\":{\"value\":\"USD\"},\"CurrencyViewState\":{\"value\":false},\"Details\":{},\"Discount\":{\"value\":0.0},\"Estimation\":{\"value\":\"2026-10-19T00:00:00-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-19T14:23:18.573-05:00\"},\"Location\":{\"value\":\"MAIN\"},\"ManualAmount\":{\"value\":false},\"NoteID\":{\"value\":\"0ca80886-f2cb-f111-9fe1-6045bda28239\"},\"OpportunityID\":{\"value\":\"<NEW>\"},\"Override\":{\"value\":false},\"Owner\":{},\"OwnerEmployeeName\":{},\"ParentAccount\":{},\"Products\":[{\"id\":\"28a80886-f2cb-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Amount\":{\"value\":860.56},\"Category\":{\"value\":\"KITCHEN\"},\"Discount\":{\"value\":0.0},\"DiscountAmount\":{\"value\":0.0},\"DiscountCode\":{},\"DiscountSequence\":{},\"ExternalPrice\":{\"value\":860.56},\"FreeItem\":{\"value\":false},\"InventoryID\":{\"value\":\"MT1841-NL/CHBRZ\",\"error\":\"The inventory item is Inactive.\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":true},\"OpportunityProductID\":{\"value\":1},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"SkipLineDiscounts\":{\"value\":false},\"TaxCategory\":{},\"TransactionDescription\":{},\"UnitPrice\":{\"value\":860.56},\"UOM\":{},\"Warehouse\":{\"value\":\"BOISE WAREHOUSE\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Products/28a80886-f2cb-f111-9fe1-6045bda28239/{filename}\"}}],\"Project\":{\"value\":\"X\"},\"Reason\":{\"value\":\"Created\"},\"Source\":{\"value\":\"Web\"},\"SourceCampaign\":{},\"Stage\":{\"value\":\"Prospect\"},\"Status\":{\"value\":\"New\"},\"Subject\":{\"value\":\"2/1 SPURWING ACRES FILTER FAUCET\"},\"TaxZone\":{\"value\":\"IDAHO\"},\"Total\":{\"value\":860.56},\"WeightTotal\":{\"value\":0.00},\"WorkgroupDescription\":{},\"WorkgroupID\":{},\"custom\":{},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/Opportunity/0ca80886-f2cb-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Opportunity/0ca80886-f2cb-f111-9fe1-6045bda28239/{filename}\"}}",
+        "createdAt": "2026-10-19T19:23:16.150Z",
+        "updatedAt": "2026-10-19T19:23:18.808Z"
+      },
+      "reason": "User confirmed this inactive-item opportunity issue was fixed manually on October 19, 2026; no queue retry performed"
+    },
+    {
+      "job": {
+        "id": "5b1cd398-c787-4c45-ba22-f38821ffbf9f",
+        "vendorId": "specbooks",
+        "type": "CREATE_OPPORTUNITY",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "Stage": {
+            "value": "Prospect"
+          },
+          "Branch": {
+            "value": "BA0016568"
+          },
+          "Source": {
+            "value": "Web"
+          },
+          "Status": {
+            "value": "New"
+          },
+          "ClassID": {
+            "value": "APP"
+          },
+          "Subject": {
+            "value": "2/1 SPURWING ACRES FILTER FAUCET"
+          },
+          "Products": [
+            {
+              "Qty": {
+                "value": 1
+              },
+              "Category": {
+                "value": "KITCHEN"
+              },
+              "UnitPrice": {
+                "value": "860.56"
+              },
+              "InventoryID": {
+                "value": "MT1841-NL/CHBRZ"
+              },
+              "ManualPrice": {
+                "value": true
+              }
+            }
+          ],
+          "ContactID": {},
+          "BusinessAccount": {
+            "value": "BA0024637"
+          },
+          "ContactDisplayName": {}
+        },
+        "result": {
+          "name": "Error",
+          "error": "Acumatica request failed: 422 Unprocessable Entity {\"id\":\"83038d92-f2cb-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'Opportunity Products' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":860.56},\"Branch\":{\"value\":\"BA0016568\"},\"BusinessAccount\":{\"value\":\"BA0024637\"},\"ClassID\":{\"value\":\"APP\"},\"ContactDisplayName\":{},\"ContactID\":{},\"ConvertedLeadDisplayName\":{},\"ConvertedLeadID\":{},\"CurrencyID\":{\"value\":\"USD\"},\"CurrencyViewState\":{\"value\":false},\"Details\":{},\"Discount\":{\"value\":0.0},\"Estimation\":{\"value\":\"2026-10-19T00:00:00-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-19T14:23:41.373-05:00\"},\"Location\":{\"value\":\"MAIN\"},\"ManualAmount\":{\"value\":false},\"NoteID\":{\"value\":\"83038d92-f2cb-f111-9fe1-6045bda28239\"},\"OpportunityID\":{\"value\":\"<NEW>\"},\"Override\":{\"value\":false},\"Owner\":{},\"OwnerEmployeeName\":{},\"ParentAccount\":{},\"Products\":[{\"id\":\"a2038d92-f2cb-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Amount\":{\"value\":860.56},\"Category\":{\"value\":\"KITCHEN\"},\"Discount\":{\"value\":0.0},\"DiscountAmount\":{\"value\":0.0},\"DiscountCode\":{},\"DiscountSequence\":{},\"ExternalPrice\":{\"value\":860.56},\"FreeItem\":{\"value\":false},\"InventoryID\":{\"value\":\"MT1841-NL/CHBRZ\",\"error\":\"The inventory item is Inactive.\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":true},\"OpportunityProductID\":{\"value\":1},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"SkipLineDiscounts\":{\"value\":false},\"TaxCategory\":{},\"TransactionDescription\":{},\"UnitPrice\":{\"value\":860.56},\"UOM\":{},\"Warehouse\":{\"value\":\"BOISE WAREHOUSE\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Products/a2038d92-f2cb-f111-9fe1-6045bda28239/{filename}\"}}],\"Project\":{\"value\":\"X\"},\"Reason\":{\"value\":\"Created\"},\"Source\":{\"value\":\"Web\"},\"SourceCampaign\":{},\"Stage\":{\"value\":\"Prospect\"},\"Status\":{\"value\":\"New\"},\"Subject\":{\"value\":\"2/1 SPURWING ACRES FILTER FAUCET\"},\"TaxZone\":{\"value\":\"IDAHO\"},\"Total\":{\"value\":860.56},\"WeightTotal\":{\"value\":0.00},\"WorkgroupDescription\":{},\"WorkgroupID\":{},\"custom\":{},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/Opportunity/83038d92-f2cb-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Opportunity/83038d92-f2cb-f111-9fe1-6045bda28239/{filename}\"}}",
+          "status": 422,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Acumatica request failed: 422 Unprocessable Entity {\"id\":\"83038d92-f2cb-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'Opportunity Products' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":860.56},\"Branch\":{\"value\":\"BA0016568\"},\"BusinessAccount\":{\"value\":\"BA0024637\"},\"ClassID\":{\"value\":\"APP\"},\"ContactDisplayName\":{},\"ContactID\":{},\"ConvertedLeadDisplayName\":{},\"ConvertedLeadID\":{},\"CurrencyID\":{\"value\":\"USD\"},\"CurrencyViewState\":{\"value\":false},\"Details\":{},\"Discount\":{\"value\":0.0},\"Estimation\":{\"value\":\"2026-10-19T00:00:00-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-19T14:23:41.373-05:00\"},\"Location\":{\"value\":\"MAIN\"},\"ManualAmount\":{\"value\":false},\"NoteID\":{\"value\":\"83038d92-f2cb-f111-9fe1-6045bda28239\"},\"OpportunityID\":{\"value\":\"<NEW>\"},\"Override\":{\"value\":false},\"Owner\":{},\"OwnerEmployeeName\":{},\"ParentAccount\":{},\"Products\":[{\"id\":\"a2038d92-f2cb-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Amount\":{\"value\":860.56},\"Category\":{\"value\":\"KITCHEN\"},\"Discount\":{\"value\":0.0},\"DiscountAmount\":{\"value\":0.0},\"DiscountCode\":{},\"DiscountSequence\":{},\"ExternalPrice\":{\"value\":860.56},\"FreeItem\":{\"value\":false},\"InventoryID\":{\"value\":\"MT1841-NL/CHBRZ\",\"error\":\"The inventory item is Inactive.\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":true},\"OpportunityProductID\":{\"value\":1},\"ProjectTask\":{},\"Qty\":{\"value\":1.0},\"SkipLineDiscounts\":{\"value\":false},\"TaxCategory\":{},\"TransactionDescription\":{},\"UnitPrice\":{\"value\":860.56},\"UOM\":{},\"Warehouse\":{\"value\":\"BOISE WAREHOUSE\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Products/a2038d92-f2cb-f111-9fe1-6045bda28239/{filename}\"}}],\"Project\":{\"value\":\"X\"},\"Reason\":{\"value\":\"Created\"},\"Source\":{\"value\":\"Web\"},\"SourceCampaign\":{},\"Stage\":{\"value\":\"Prospect\"},\"Status\":{\"value\":\"New\"},\"Subject\":{\"value\":\"2/1 SPURWING ACRES FILTER FAUCET\"},\"TaxZone\":{\"value\":\"IDAHO\"},\"Total\":{\"value\":860.56},\"WeightTotal\":{\"value\":0.00},\"WorkgroupDescription\":{},\"WorkgroupID\":{},\"custom\":{},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/Opportunity/83038d92-f2cb-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.CR.OpportunityMaint/Opportunity/83038d92-f2cb-f111-9fe1-6045bda28239/{filename}\"}}",
+        "createdAt": "2026-10-19T19:23:39.795Z",
+        "updatedAt": "2026-10-19T19:23:41.531Z"
+      },
+      "reason": "User confirmed this inactive-item opportunity issue was fixed manually on October 19, 2026; no queue retry performed"
+    },
+    {
+      "job": {
+        "id": "af99e5ca-15b0-44a4-9995-42bc7c6e98ef",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5349
+          },
+          "Description": {
+            "value": "Elise 36\" Induction Range Range Top With Antique Brass Trim - Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "AEL361INRTABSS"
+          },
+          "DefaultPrice": {
+            "value": 6159
+          },
+          "manufacturer": "AGA Range"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotFoundError",
+          "error": "No manufacturer mapping exists for 'AGA Range' (normalized: 'AGA RANGE')",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "No manufacturer mapping exists for 'AGA Range' (normalized: 'AGA RANGE')",
+        "createdAt": "2026-10-19T21:09:24.157Z",
+        "updatedAt": "2026-10-19T21:09:24.466Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "136b3962-9dfd-464d-a248-f82ac554b64c"
+    },
+    {
+      "job": {
+        "id": "99a18ab9-76c3-47d8-8e17-037813d2ac50",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 5349
+          },
+          "Description": {
+            "value": "Elise 36\" Induction Range Range Top With Antique Brass Trim - Stainless Steel"
+          },
+          "InventoryID": {
+            "value": "AEL361INRTABSS"
+          },
+          "DefaultPrice": {
+            "value": 6159
+          },
+          "manufacturer": "AGA Range"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'AGA Range' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'AGA Range' is not approved (status: pending)",
+        "createdAt": "2026-10-19T21:10:09.749Z",
+        "updatedAt": "2026-10-19T21:10:09.999Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "136b3962-9dfd-464d-a248-f82ac554b64c"
+    }
+  ],
+  "applied": true
+}

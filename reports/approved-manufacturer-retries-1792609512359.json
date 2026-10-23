@@ -1,0 +1,171 @@
+{
+  "plans": [
+    {
+      "inventoryId": "PBSET01-GM",
+      "originalJob": {
+        "id": "c5762a24-5f91-4ca6-a882-ed5161d44c5e",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:20:18.356Z",
+        "updatedAt": "2026-10-21T16:20:18.643Z"
+      },
+      "mapping": {
+        "manufacturerKey": "COCOON",
+        "manufacturerName": "Cocoon",
+        "priceClass": "P146",
+        "itemClass": "PLUMB-LOT",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0024083",
+        "vendorName": "By Cocoon LTD",
+        "status": "approved"
+      }
+    },
+    {
+      "inventoryId": "BOX02-L-316",
+      "originalJob": {
+        "id": "00809b90-dfeb-4692-bc97-3e1f86b179f2",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:20:19.094Z",
+        "updatedAt": "2026-10-21T16:20:19.363Z"
+      },
+      "mapping": {
+        "manufacturerKey": "COCOON",
+        "manufacturerName": "Cocoon",
+        "priceClass": "P146",
+        "itemClass": "PLUMB-LOT",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0024083",
+        "vendorName": "By Cocoon LTD",
+        "status": "approved"
+      }
+    },
+    {
+      "inventoryId": "PB SET01.1 INOX",
+      "originalJob": {
+        "id": "64a32b5a-e3f3-407f-ae4f-23c344305bb6",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:20:19.826Z",
+        "updatedAt": "2026-10-21T16:20:20.149Z"
+      },
+      "mapping": {
+        "manufacturerKey": "COCOON",
+        "manufacturerName": "Cocoon",
+        "priceClass": "P146",
+        "itemClass": "PLUMB-LOT",
+        "purchaseUnit": "EACH",
+        "vendorId": "BA0024083",
+        "vendorName": "By Cocoon LTD",
+        "status": "approved"
+      }
+    }
+  ],
+  "results": [
+    {
+      "inventoryId": "PBSET01-GM",
+      "jobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e",
+      "status": "succeeded",
+      "itemClass": "PLUMB-LOT",
+      "priceClass": "P146",
+      "vendorIds": [
+        "BA0024083"
+      ]
+    },
+    {
+      "inventoryId": "BOX02-L-316",
+      "jobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2",
+      "status": "succeeded",
+      "itemClass": "PLUMB-LOT",
+      "priceClass": "P146",
+      "vendorIds": [
+        "BA0024083"
+      ]
+    },
+    {
+      "inventoryId": "PB SET01.1 INOX",
+      "jobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6",
+      "status": "succeeded",
+      "itemClass": "PLUMB-LOT",
+      "priceClass": "P146",
+      "vendorIds": [
+        "BA0024083"
+      ]
+    }
+  ]
+}

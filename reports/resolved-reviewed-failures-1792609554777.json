@@ -1,0 +1,2216 @@
+{
+  "plannedAt": "2026-10-21T19:05:54.777Z",
+  "plan": [
+    {
+      "job": {
+        "id": "c573596f-ddc4-4b5c-b08b-7806017aa482",
+        "vendorId": "service_fusion",
+        "type": "ERP_PUT_SALES_INVOICE",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "payload": {
+            "custom": {
+              "Document": {
+                "UsrExtRefNbr": {
+                  "value": "38556656"
+                }
+              }
+            },
+            "Details": [
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 88
+                },
+                "LineNbr": {
+                  "value": 1
+                },
+                "UnitPrice": {
+                  "value": 88
+                },
+                "InventoryID": {
+                  "value": "INS-U/C FRIDGE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Sub Zero Under Counter Refrigerator"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 82.5
+                },
+                "LineNbr": {
+                  "value": 2
+                },
+                "UnitPrice": {
+                  "value": 82.5
+                },
+                "InventoryID": {
+                  "value": "INS-UNDERCOUNTERREFERATPANEL"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Under Counter Refrigerator Panel (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 20
+                },
+                "LineNbr": {
+                  "value": 3
+                },
+                "UnitPrice": {
+                  "value": 20
+                },
+                "InventoryID": {
+                  "value": "INS-TRIPCHARGESALTLAKECOUNTY"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Trip Charge - Salt Lake County (this is a per-day charge)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 27.5
+                },
+                "LineNbr": {
+                  "value": 4
+                },
+                "UnitPrice": {
+                  "value": 27.5
+                },
+                "InventoryID": {
+                  "value": "INS-CUSTOMHANDLE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Custom Handle"
+                }
+              }
+            ],
+            "CustomerID": {
+              "value": "BA0012702"
+            },
+            "IsTaxValid": {
+              "value": true
+            },
+            "TaxDetails": [],
+            "Description": {
+              "value": "Service Fusion Install Invoice"
+            },
+            "ExternalRef": {
+              "value": "38556656"
+            }
+          }
+        },
+        "result": {
+          "name": "Error",
+          "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "status": 500,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "responseBody": {
+            "message": "An error has occurred.",
+            "stackTrace": "   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\r\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\r\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\r\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\r\n   at lambda_method(Closure , Object , Object[] )\r\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()",
+            "exceptionType": "PX.Data.PXInvalidOperationException",
+            "innerException": {
+              "message": "An error has occurred.",
+              "stackTrace": "   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\r\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\r\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\r\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\r\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)",
+              "exceptionType": "System.Reflection.TargetInvocationException",
+              "innerException": {
+                "message": "An error has occurred.",
+                "stackTrace": "   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\r\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\r\n   at PX.Data.PXSelectBase`1.Insert(Table item)\r\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\r\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)",
+                "exceptionType": "PX.Data.PXException",
+                "innerException": {
+                  "message": "An error has occurred.",
+                  "stackTrace": "   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\r\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\r\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\r\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\r\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\r\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)",
+                  "exceptionType": "System.NullReferenceException",
+                  "exceptionMessage": "Object reference not set to an instance of an object."
+                },
+                "exceptionMessage": "An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object.."
+              },
+              "exceptionMessage": "Exception has been thrown by the target of an invocation."
+            },
+            "exceptionMessage": "Operation failed"
+          },
+          "responseText": "{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "retriesExhausted": false
+        },
+        "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+        "createdAt": "2026-10-16T05:01:01.239Z",
+        "updatedAt": "2026-10-16T05:01:02.431Z"
+      },
+      "reason": "Credit-hold invoice issue subsequently addressed; same reference successfully created INV138750",
+      "replacementJobId": "5b2845dc-94c6-48f4-96e0-47cd4d2739c7"
+    },
+    {
+      "job": {
+        "id": "23e76b6e-b93c-4e39-802e-1105ccbb8702",
+        "vendorId": "service_fusion",
+        "type": "ERP_PUT_SALES_INVOICE",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "payload": {
+            "custom": {
+              "Document": {
+                "UsrExtRefNbr": {
+                  "value": "38556656"
+                }
+              }
+            },
+            "Details": [
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 88
+                },
+                "LineNbr": {
+                  "value": 1
+                },
+                "UnitPrice": {
+                  "value": 88
+                },
+                "InventoryID": {
+                  "value": "INS-U/C FRIDGE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Sub Zero Under Counter Refrigerator"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 82.5
+                },
+                "LineNbr": {
+                  "value": 2
+                },
+                "UnitPrice": {
+                  "value": 82.5
+                },
+                "InventoryID": {
+                  "value": "INS-UNDERCOUNTERREFERATPANEL"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Under Counter Refrigerator Panel (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 20
+                },
+                "LineNbr": {
+                  "value": 3
+                },
+                "UnitPrice": {
+                  "value": 20
+                },
+                "InventoryID": {
+                  "value": "INS-TRIPCHARGESALTLAKECOUNTY"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Trip Charge - Salt Lake County (this is a per-day charge)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 27.5
+                },
+                "LineNbr": {
+                  "value": 4
+                },
+                "UnitPrice": {
+                  "value": 27.5
+                },
+                "InventoryID": {
+                  "value": "INS-CUSTOMHANDLE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Custom Handle"
+                }
+              }
+            ],
+            "CustomerID": {
+              "value": "BA0012702"
+            },
+            "IsTaxValid": {
+              "value": true
+            },
+            "TaxDetails": [],
+            "Description": {
+              "value": "Service Fusion Install Invoice"
+            },
+            "ExternalRef": {
+              "value": "38556656"
+            }
+          }
+        },
+        "result": {
+          "name": "Error",
+          "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "status": 500,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "responseBody": {
+            "message": "An error has occurred.",
+            "stackTrace": "   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\r\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\r\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\r\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\r\n   at lambda_method(Closure , Object , Object[] )\r\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()",
+            "exceptionType": "PX.Data.PXInvalidOperationException",
+            "innerException": {
+              "message": "An error has occurred.",
+              "stackTrace": "   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\r\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\r\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\r\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\r\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)",
+              "exceptionType": "System.Reflection.TargetInvocationException",
+              "innerException": {
+                "message": "An error has occurred.",
+                "stackTrace": "   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\r\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\r\n   at PX.Data.PXSelectBase`1.Insert(Table item)\r\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\r\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)",
+                "exceptionType": "PX.Data.PXException",
+                "innerException": {
+                  "message": "An error has occurred.",
+                  "stackTrace": "   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\r\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\r\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\r\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\r\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\r\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)",
+                  "exceptionType": "System.NullReferenceException",
+                  "exceptionMessage": "Object reference not set to an instance of an object."
+                },
+                "exceptionMessage": "An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object.."
+              },
+              "exceptionMessage": "Exception has been thrown by the target of an invocation."
+            },
+            "exceptionMessage": "Operation failed"
+          },
+          "responseText": "{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "retriesExhausted": false
+        },
+        "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+        "createdAt": "2026-10-17T05:00:56.355Z",
+        "updatedAt": "2026-10-17T05:00:57.455Z"
+      },
+      "reason": "Credit-hold invoice issue subsequently addressed; same reference successfully created INV138750",
+      "replacementJobId": "5b2845dc-94c6-48f4-96e0-47cd4d2739c7"
+    },
+    {
+      "job": {
+        "id": "02d0d568-dee4-43a7-adfd-abe55652306a",
+        "vendorId": "service_fusion",
+        "type": "ERP_PUT_SALES_INVOICE",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "payload": {
+            "custom": {
+              "Document": {
+                "UsrExtRefNbr": {
+                  "value": "38556656"
+                }
+              }
+            },
+            "Details": [
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 88
+                },
+                "LineNbr": {
+                  "value": 1
+                },
+                "UnitPrice": {
+                  "value": 88
+                },
+                "InventoryID": {
+                  "value": "INS-U/C FRIDGE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Sub Zero Under Counter Refrigerator"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 82.5
+                },
+                "LineNbr": {
+                  "value": 2
+                },
+                "UnitPrice": {
+                  "value": 82.5
+                },
+                "InventoryID": {
+                  "value": "INS-UNDERCOUNTERREFERATPANEL"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Under Counter Refrigerator Panel (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 20
+                },
+                "LineNbr": {
+                  "value": 3
+                },
+                "UnitPrice": {
+                  "value": 20
+                },
+                "InventoryID": {
+                  "value": "INS-TRIPCHARGESALTLAKECOUNTY"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Trip Charge - Salt Lake County (this is a per-day charge)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 27.5
+                },
+                "LineNbr": {
+                  "value": 4
+                },
+                "UnitPrice": {
+                  "value": 27.5
+                },
+                "InventoryID": {
+                  "value": "INS-CUSTOMHANDLE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Custom Handle"
+                }
+              }
+            ],
+            "CustomerID": {
+              "value": "BA0012702"
+            },
+            "IsTaxValid": {
+              "value": true
+            },
+            "TaxDetails": [],
+            "Description": {
+              "value": "Service Fusion Install Invoice"
+            },
+            "ExternalRef": {
+              "value": "38556656"
+            }
+          }
+        },
+        "result": {
+          "name": "Error",
+          "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "status": 500,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "responseBody": {
+            "message": "An error has occurred.",
+            "stackTrace": "   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\r\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\r\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\r\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\r\n   at lambda_method(Closure , Object , Object[] )\r\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()",
+            "exceptionType": "PX.Data.PXInvalidOperationException",
+            "innerException": {
+              "message": "An error has occurred.",
+              "stackTrace": "   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\r\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\r\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\r\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\r\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)",
+              "exceptionType": "System.Reflection.TargetInvocationException",
+              "innerException": {
+                "message": "An error has occurred.",
+                "stackTrace": "   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\r\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\r\n   at PX.Data.PXSelectBase`1.Insert(Table item)\r\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\r\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)",
+                "exceptionType": "PX.Data.PXException",
+                "innerException": {
+                  "message": "An error has occurred.",
+                  "stackTrace": "   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\r\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\r\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\r\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\r\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\r\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)",
+                  "exceptionType": "System.NullReferenceException",
+                  "exceptionMessage": "Object reference not set to an instance of an object."
+                },
+                "exceptionMessage": "An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object.."
+              },
+              "exceptionMessage": "Exception has been thrown by the target of an invocation."
+            },
+            "exceptionMessage": "Operation failed"
+          },
+          "responseText": "{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "retriesExhausted": false
+        },
+        "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+        "createdAt": "2026-10-18T05:00:21.764Z",
+        "updatedAt": "2026-10-18T05:00:26.142Z"
+      },
+      "reason": "Credit-hold invoice issue subsequently addressed; same reference successfully created INV138750",
+      "replacementJobId": "5b2845dc-94c6-48f4-96e0-47cd4d2739c7"
+    },
+    {
+      "job": {
+        "id": "1f633675-25e8-4a7c-a223-a7db5ecca376",
+        "vendorId": "service_fusion",
+        "type": "ERP_PUT_SALES_INVOICE",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "payload": {
+            "custom": {
+              "Document": {
+                "UsrExtRefNbr": {
+                  "value": "38556656"
+                }
+              }
+            },
+            "Details": [
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 88
+                },
+                "LineNbr": {
+                  "value": 1
+                },
+                "UnitPrice": {
+                  "value": 88
+                },
+                "InventoryID": {
+                  "value": "INS-U/C FRIDGE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Sub Zero Under Counter Refrigerator"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 82.5
+                },
+                "LineNbr": {
+                  "value": 2
+                },
+                "UnitPrice": {
+                  "value": 82.5
+                },
+                "InventoryID": {
+                  "value": "INS-UNDERCOUNTERREFERATPANEL"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Under Counter Refrigerator Panel (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 20
+                },
+                "LineNbr": {
+                  "value": 3
+                },
+                "UnitPrice": {
+                  "value": 20
+                },
+                "InventoryID": {
+                  "value": "INS-TRIPCHARGESALTLAKECOUNTY"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Trip Charge - Salt Lake County (this is a per-day charge)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 27.5
+                },
+                "LineNbr": {
+                  "value": 4
+                },
+                "UnitPrice": {
+                  "value": 27.5
+                },
+                "InventoryID": {
+                  "value": "INS-CUSTOMHANDLE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Custom Handle"
+                }
+              }
+            ],
+            "CustomerID": {
+              "value": "BA0012702"
+            },
+            "IsTaxValid": {
+              "value": true
+            },
+            "TaxDetails": [],
+            "Description": {
+              "value": "Service Fusion Install Invoice"
+            },
+            "ExternalRef": {
+              "value": "38556656"
+            }
+          }
+        },
+        "result": {
+          "name": "Error",
+          "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "status": 500,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "responseBody": {
+            "message": "An error has occurred.",
+            "stackTrace": "   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\r\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\r\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\r\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\r\n   at lambda_method(Closure , Object , Object[] )\r\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()",
+            "exceptionType": "PX.Data.PXInvalidOperationException",
+            "innerException": {
+              "message": "An error has occurred.",
+              "stackTrace": "   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\r\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\r\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\r\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\r\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)",
+              "exceptionType": "System.Reflection.TargetInvocationException",
+              "innerException": {
+                "message": "An error has occurred.",
+                "stackTrace": "   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\r\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\r\n   at PX.Data.PXSelectBase`1.Insert(Table item)\r\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\r\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)",
+                "exceptionType": "PX.Data.PXException",
+                "innerException": {
+                  "message": "An error has occurred.",
+                  "stackTrace": "   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\r\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\r\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\r\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\r\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\r\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)",
+                  "exceptionType": "System.NullReferenceException",
+                  "exceptionMessage": "Object reference not set to an instance of an object."
+                },
+                "exceptionMessage": "An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object.."
+              },
+              "exceptionMessage": "Exception has been thrown by the target of an invocation."
+            },
+            "exceptionMessage": "Operation failed"
+          },
+          "responseText": "{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "retriesExhausted": false
+        },
+        "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+        "createdAt": "2026-10-19T05:00:22.807Z",
+        "updatedAt": "2026-10-19T05:00:45.519Z"
+      },
+      "reason": "Credit-hold invoice issue subsequently addressed; same reference successfully created INV138750",
+      "replacementJobId": "5b2845dc-94c6-48f4-96e0-47cd4d2739c7"
+    },
+    {
+      "job": {
+        "id": "9bd1b493-7931-4c52-8d41-081d1091c5ab",
+        "vendorId": "service_fusion",
+        "type": "ERP_PUT_SALES_INVOICE",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "payload": {
+            "custom": {
+              "Document": {
+                "UsrExtRefNbr": {
+                  "value": "38556656"
+                }
+              }
+            },
+            "Details": [
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 88
+                },
+                "LineNbr": {
+                  "value": 1
+                },
+                "UnitPrice": {
+                  "value": 88
+                },
+                "InventoryID": {
+                  "value": "INS-U/C FRIDGE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Sub Zero Under Counter Refrigerator"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 82.5
+                },
+                "LineNbr": {
+                  "value": 2
+                },
+                "UnitPrice": {
+                  "value": 82.5
+                },
+                "InventoryID": {
+                  "value": "INS-UNDERCOUNTERREFERATPANEL"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Under Counter Refrigerator Panel (handle installation will be extra)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 20
+                },
+                "LineNbr": {
+                  "value": 3
+                },
+                "UnitPrice": {
+                  "value": 20
+                },
+                "InventoryID": {
+                  "value": "INS-TRIPCHARGESALTLAKECOUNTY"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Trip Charge - Salt Lake County (this is a per-day charge)"
+                }
+              },
+              {
+                "Qty": {
+                  "value": 1
+                },
+                "Amount": {
+                  "value": 27.5
+                },
+                "LineNbr": {
+                  "value": 4
+                },
+                "UnitPrice": {
+                  "value": 27.5
+                },
+                "InventoryID": {
+                  "value": "INS-CUSTOMHANDLE"
+                },
+                "TaxCategory": {
+                  "value": "EXEMPT"
+                },
+                "TransactionDescr": {
+                  "value": "Custom Handle"
+                }
+              }
+            ],
+            "CustomerID": {
+              "value": "BA0012702"
+            },
+            "IsTaxValid": {
+              "value": true
+            },
+            "TaxDetails": [],
+            "Description": {
+              "value": "Service Fusion Install Invoice"
+            },
+            "ExternalRef": {
+              "value": "38556656"
+            }
+          }
+        },
+        "result": {
+          "name": "Error",
+          "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "status": 500,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "responseBody": {
+            "message": "An error has occurred.",
+            "stackTrace": "   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\r\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\r\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\r\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\r\n   at lambda_method(Closure , Object , Object[] )\r\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()",
+            "exceptionType": "PX.Data.PXInvalidOperationException",
+            "innerException": {
+              "message": "An error has occurred.",
+              "stackTrace": "   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\r\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\r\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\r\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\r\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\r\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)",
+              "exceptionType": "System.Reflection.TargetInvocationException",
+              "innerException": {
+                "message": "An error has occurred.",
+                "stackTrace": "   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\r\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\r\n   at PX.Data.PXSelectBase`1.Insert(Table item)\r\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\r\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\r\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)",
+                "exceptionType": "PX.Data.PXException",
+                "innerException": {
+                  "message": "An error has occurred.",
+                  "stackTrace": "   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\r\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\r\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\r\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\r\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\r\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\r\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)",
+                  "exceptionType": "System.NullReferenceException",
+                  "exceptionMessage": "Object reference not set to an instance of an object."
+                },
+                "exceptionMessage": "An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object.."
+              },
+              "exceptionMessage": "Exception has been thrown by the target of an invocation."
+            },
+            "exceptionMessage": "Operation failed"
+          },
+          "responseText": "{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+          "retriesExhausted": false
+        },
+        "error": "SalesInvoice PUT failed: 500 Internal Server Error {\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Operation failed\",\"exceptionType\":\"PX.Data.PXInvalidOperationException\",\"stackTrace\":\"   at PX.Api.ContractBased.EntityService.CreateOrUpdate(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError, Boolean isPatch)\\r\\n   at PX.Api.ContractBased.EntityService.Put(ISystemContract systemContract, String version, String name, EntityImpl entity, CbOperationContext operationContext, Boolean throwOnError)\\r\\n   at PX.Api.ContractBased.AspNetCore.CbEndpointFeatureServiceExtensions.Put(IEntityService entityService, ICbEndpointFeature feature, EntityImpl entity, CbOperationContext operationContext)\\r\\n   at PX.Api.ContractBased.WebApi.Controllers.EntityController.PutEntity(EntityImpl entity, String select, String filter, String expand, String custom)\\r\\n   at lambda_method(Closure , Object , Object[] )\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__13.MoveNext()\\r\\n--- End of stack trace from previous location where exception was thrown ---\\r\\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\\r\\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextExceptionFilterAsync>d__24.MoveNext()\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Exception has been thrown by the target of an invocation.\",\"exceptionType\":\"System.Reflection.TargetInvocationException\",\"stackTrace\":\"   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)\\r\\n   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)\\r\\n   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\r\\n   at PX.Api.ContractBased.EntityExportContextBuilder.<>c__DisplayClass90_1.<FindImplementations>b__3(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessLocateByNoteIdCommand(SyCommand cmd, SyView view, Boolean invokeCommand)\\r\\n   at PX.Api.SyImportProcessor.SyStep.ProcessCommand(SyCommand cmd, Boolean& needCommit)\\r\\n   at PX.Api.SyImportProcessor.ExportTableHelper.ExportTable(CancellationToken token)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"An error occurred during processing of the field InventoryID: Object reference not set to an instance of an object..\",\"exceptionType\":\"PX.Data.PXException\",\"stackTrace\":\"   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\\r\\n   at PX.Data.PXCache`1.Insert(Object data, Boolean bypassinterceptor)\\r\\n   at PX.Data.PXSelectBase`1.Insert(Table item)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.InsertInvoiceDirectLine(ARTran tran)\\r\\n   at PX.Objects.DefaultEndpointImpl.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\\r\\n   at PX.Objects.EndpointAdapters.DefaultEndpointImpl22.SalesInvoiceDetail_Insert(PXGraph graph, EntityImpl entity, EntityImpl targetEntity)\",\"innerException\":{\"message\":\"An error has occurred.\",\"exceptionMessage\":\"Object reference not set to an instance of an object.\",\"exceptionType\":\"System.NullReferenceException\",\"stackTrace\":\"   at PX.Objects.AR.ARInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Objects.SO.SOInvoiceEntry.ARTran_AccountID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)\\r\\n   at PX.Data.PXCache.OnFieldDefaulting(String name, Object row, Object& newValue)\\r\\n   at PX.Data.PXCache`1.SetDefaultExt(Object data, String fieldName, Object value)\\r\\n   at PX.Objects.AR.ARInvoiceEntry.ARTran_InventoryID_FieldUpdated(PXCache sender, PXFieldUpdatedEventArgs e)\\r\\n   at PX.Data.PXFieldUpdated.Invoke(PXCache sender, PXFieldUpdatedEventArgs args)\\r\\n   at PX.Data.PXCache.OnFieldUpdated(String name, Object row, Object oldValue, Boolean externalCall)\\r\\n   at PX.Data.PXCache`1.FillWithValues(TNode copy, TNode& item)\"}}}}",
+        "createdAt": "2026-10-20T05:01:52.623Z",
+        "updatedAt": "2026-10-20T05:01:53.385Z"
+      },
+      "reason": "Credit-hold invoice issue subsequently addressed; same reference successfully created INV138750",
+      "replacementJobId": "5b2845dc-94c6-48f4-96e0-47cd4d2739c7"
+    },
+    {
+      "job": {
+        "id": "03913b53-4594-47b6-8a6b-b8e5d66e521a",
+        "vendorId": "service_fusion",
+        "type": "ERP_PUT_SALES_INVOICE",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "payload": {
+            "custom": {
+              "Document": {
+                "UsrExtRefNbr": {
+                  "value": "38556720"
+                }
+              }
+            },
+            "Details": [
+              {
+                "Qty": {
+                  "value": 2
+                },
+                "Amount": {
+                  "value": 28
+                },
+                "LineNbr": {
+                  "value": 1
+                },
+                "Location": {
+                  "value": "INSTALL"
+                },
+                "UnitPrice": {
+                  "value": 14
+                },
+                "InventoryID": {
+                  "value": "21-55472SS"
+                },
+                "TaxCategory": {
+                  "value": "TAXABLE"
+                },
+                "WarehouseID": {
+                  "value": "SALT LAKE INSTALL"
+                },
+                "TransactionDescr": {
+                  "value": "Arrow Industries 3/8 stainless dishwasher line w/ elbow"
+                }
+              }
+            ],
+            "CustomerID": {
+              "value": "BA0011071"
+            },
+            "IsTaxValid": {
+              "value": true
+            },
+            "LocationID": {
+              "value": "HERRIMAN"
+            },
+            "TaxDetails": [
+              {
+                "TaxID": {
+                  "value": "SLC"
+                },
+                "TaxRate": {
+                  "value": 7.64
+                },
+                "TaxAmount": {
+                  "value": 2.14
+                },
+                "TaxableAmount": {
+                  "value": 28
+                }
+              }
+            ],
+            "Description": {
+              "value": "Service Fusion Install Invoice"
+            },
+            "ExternalRef": {
+              "value": "38556720"
+            }
+          }
+        },
+        "result": {
+          "name": "Error",
+          "error": "SalesInvoice PUT failed: 422 Unprocessable Entity {\"id\":\"f3c79fe4-0ccd-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'AR Invoice/Memo' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":30.14},\"Balance\":{\"value\":30.14},\"CashDiscount\":{\"value\":0.0},\"CreatedDate\":{\"value\":\"2026-10-21T00:04:29.8861724-05:00\"},\"CreditHold\":{\"value\":false},\"Currency\":{\"value\":\"USD\"},\"CustomerID\":{\"value\":\"BA0011071\"},\"CustomerOrder\":{},\"Date\":{\"value\":\"2026-10-21T00:00:00-05:00\"},\"Description\":{\"value\":\"Service Fusion Install Invoice\"},\"Details\":[{\"id\":\"fac79fe4-0ccd-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4000\"},\"Amount\":{\"value\":28.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Sales\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"21-55472SS\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":1},\"Location\":{\"value\":\"INSTALL\"},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"fac79fe4-0ccd-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":2.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0000\"},\"TaxCategory\":{\"value\":\"TAXABLE\"},\"TransactionDescr\":{\"value\":\"Arrow Industries 3/8 stainless dishwasher line w/ elbow\"},\"UnitPrice\":{\"value\":14.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/fac79fe4-0ccd-f111-9fe1-6045bda28239/{filename}\"}}],\"DetailTotal\":{\"value\":28.0},\"DiscountTotal\":{\"value\":0.0},\"DueDate\":{\"value\":\"2026-10-21T00:00:00-05:00\"},\"ExternalRef\":{\"value\":\"38556720\"},\"FreightPrice\":{\"value\":0.0},\"Hold\":{\"value\":true},\"IsTaxValid\":{\"value\":true},\"LastModifiedDate\":{\"value\":\"2026-10-21T00:04:29.8861724-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-21T00:04:29.8861724-05:00\"},\"LocationID\":{\"value\":\"HERRIMAN\",\"error\":\"Location 'HERRIMAN  ' cannot be found in the system.\"},\"PaymentTotal\":{\"value\":0.0},\"Project\":{\"value\":\"X\"},\"ReferenceNbr\":{\"value\":\"<NEW>\"},\"ShipToAddressOverride\":{\"value\":false},\"ShipToContactOverride\":{\"value\":false},\"Status\":{\"value\":\"On Hold\"},\"TaxCalcMode\":{\"value\":\"Tax Settings\"},\"TaxDetails\":[{\"id\":\"f1abb7a1-ad54-4a14-bf04-1edab495c81f\",\"rowNumber\":1,\"note\":null,\"TaxableAmount\":{\"value\":28.00},\"TaxAmount\":{\"value\":2.14},\"TaxID\":{\"value\":\"SLC\"},\"custom\":{}}],\"TaxTotal\":{\"value\":2.14},\"Type\":{\"value\":\"Invoice\"},\"custom\":{\"Document\":{\"UsrExtRefNbr\":{\"type\":\"CustomStringField\",\"value\":\"38556720\"}}},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/SalesInvoice/f3c79fe4-0ccd-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Document/f3c79fe4-0ccd-f111-9fe1-6045bda28239/{filename}\"}}",
+          "status": 422,
+          "attempt": 1,
+          "maxAttempts": 10,
+          "responseBody": {
+            "id": "f3c79fe4-0ccd-f111-9fe1-6045bda28239",
+            "Date": {
+              "value": "2026-10-21T00:00:00-05:00"
+            },
+            "Hold": {
+              "value": true
+            },
+            "Type": {
+              "value": "Invoice"
+            },
+            "note": {
+              "value": ""
+            },
+            "error": "Inserting  'AR Invoice/Memo' record raised at least one error. Please review the errors.",
+            "Amount": {
+              "value": 30.14
+            },
+            "Status": {
+              "value": "On Hold"
+            },
+            "_links": {
+              "self": "/entity/CustomEndpoint/24.200.001/SalesInvoice/f3c79fe4-0ccd-f111-9fe1-6045bda28239",
+              "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Document/f3c79fe4-0ccd-f111-9fe1-6045bda28239/{filename}"
+            },
+            "custom": {
+              "Document": {
+                "UsrExtRefNbr": {
+                  "type": "CustomStringField",
+                  "value": "38556720"
+                }
+              }
+            },
+            "Balance": {
+              "value": 30.14
+            },
+            "Details": [
+              {
+                "id": "fac79fe4-0ccd-f111-9fe1-6045bda28239",
+                "Qty": {
+                  "value": 2
+                },
+                "UOM": {
+                  "value": "EACH"
+                },
+                "note": {
+                  "value": ""
+                },
+                "Amount": {
+                  "value": 28
+                },
+                "NoteID": {
+                  "value": "fac79fe4-0ccd-f111-9fe1-6045bda28239"
+                },
+                "_links": {
+                  "files:put": "/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/fac79fe4-0ccd-f111-9fe1-6045bda28239/{filename}"
+                },
+                "custom": {},
+                "Account": {
+                  "value": "4000"
+                },
+                "LineNbr": {
+                  "value": 1
+                },
+                "BranchID": {
+                  "value": "BA0016568"
+                },
+                "CostCode": {},
+                "Location": {
+                  "value": "INSTALL"
+                },
+                "OrderNbr": {},
+                "OrderType": {},
+                "UnitPrice": {
+                  "value": 14
+                },
+                "rowNumber": 1,
+                "OrigInvNbr": {},
+                "SubAccount": {
+                  "value": "0000"
+                },
+                "Description": {
+                  "value": "Sales"
+                },
+                "InventoryID": {
+                  "value": "21-55472SS"
+                },
+                "ManualPrice": {
+                  "value": false
+                },
+                "OrigInvType": {},
+                "ProjectTask": {},
+                "ShipmentNbr": {},
+                "TaxCategory": {
+                  "value": "TAXABLE"
+                },
+                "WarehouseID": {
+                  "value": "SALT LAKE INSTALL"
+                },
+                "LotSerialNbr": {
+                  "value": ""
+                },
+                "OrderLineNbr": {},
+                "DiscountAmount": {
+                  "value": 0
+                },
+                "ExpirationDate": {},
+                "ManualDiscount": {
+                  "value": false
+                },
+                "OrigInvLineNbr": {},
+                "DiscountPercent": {
+                  "value": 0
+                },
+                "InventoryRefNbr": {},
+                "InventoryDocType": {},
+                "TransactionDescr": {
+                  "value": "Arrow Industries 3/8 stainless dishwasher line w/ elbow"
+                },
+                "CalculateDiscountsOnImport": {}
+              }
+            ],
+            "DueDate": {
+              "value": "2026-10-21T00:00:00-05:00"
+            },
+            "Project": {
+              "value": "X"
+            },
+            "Currency": {
+              "value": "USD"
+            },
+            "TaxTotal": {
+              "value": 2.14
+            },
+            "rowNumber": 1,
+            "CreditHold": {
+              "value": false
+            },
+            "CustomerID": {
+              "value": "BA0011071"
+            },
+            "IsTaxValid": {
+              "value": true
+            },
+            "LocationID": {
+              "error": "Location 'HERRIMAN  ' cannot be found in the system.",
+              "value": "HERRIMAN"
+            },
+            "TaxDetails": [
+              {
+                "id": "f1abb7a1-ad54-4a14-bf04-1edab495c81f",
+                "note": null,
+                "TaxID": {
+                  "value": "SLC"
+                },
+                "custom": {},
+                "TaxAmount": {
+                  "value": 2.14
+                },
+                "rowNumber": 1,
+                "TaxableAmount": {
+                  "value": 28
+                }
+              }
+            ],
+            "CreatedDate": {
+              "value": "2026-10-21T00:04:29.8861724-05:00"
+            },
+            "Description": {
+              "value": "Service Fusion Install Invoice"
+            },
+            "DetailTotal": {
+              "value": 28
+            },
+            "ExternalRef": {
+              "value": "38556720"
+            },
+            "TaxCalcMode": {
+              "value": "Tax Settings"
+            },
+            "CashDiscount": {
+              "value": 0
+            },
+            "FreightPrice": {
+              "value": 0
+            },
+            "PaymentTotal": {
+              "value": 0
+            },
+            "ReferenceNbr": {
+              "value": "<NEW>"
+            },
+            "CustomerOrder": {},
+            "DiscountTotal": {
+              "value": 0
+            },
+            "LastModifiedDate": {
+              "value": "2026-10-21T00:04:29.8861724-05:00"
+            },
+            "LastModifiedDateTime": {
+              "value": "2026-10-21T00:04:29.8861724-05:00"
+            },
+            "ShipToAddressOverride": {
+              "value": false
+            },
+            "ShipToContactOverride": {
+              "value": false
+            }
+          },
+          "responseText": "{\"id\":\"f3c79fe4-0ccd-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'AR Invoice/Memo' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":30.14},\"Balance\":{\"value\":30.14},\"CashDiscount\":{\"value\":0.0},\"CreatedDate\":{\"value\":\"2026-10-21T00:04:29.8861724-05:00\"},\"CreditHold\":{\"value\":false},\"Currency\":{\"value\":\"USD\"},\"CustomerID\":{\"value\":\"BA0011071\"},\"CustomerOrder\":{},\"Date\":{\"value\":\"2026-10-21T00:00:00-05:00\"},\"Description\":{\"value\":\"Service Fusion Install Invoice\"},\"Details\":[{\"id\":\"fac79fe4-0ccd-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4000\"},\"Amount\":{\"value\":28.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Sales\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"21-55472SS\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":1},\"Location\":{\"value\":\"INSTALL\"},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"fac79fe4-0ccd-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":2.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0000\"},\"TaxCategory\":{\"value\":\"TAXABLE\"},\"TransactionDescr\":{\"value\":\"Arrow Industries 3/8 stainless dishwasher line w/ elbow\"},\"UnitPrice\":{\"value\":14.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/fac79fe4-0ccd-f111-9fe1-6045bda28239/{filename}\"}}],\"DetailTotal\":{\"value\":28.0},\"DiscountTotal\":{\"value\":0.0},\"DueDate\":{\"value\":\"2026-10-21T00:00:00-05:00\"},\"ExternalRef\":{\"value\":\"38556720\"},\"FreightPrice\":{\"value\":0.0},\"Hold\":{\"value\":true},\"IsTaxValid\":{\"value\":true},\"LastModifiedDate\":{\"value\":\"2026-10-21T00:04:29.8861724-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-21T00:04:29.8861724-05:00\"},\"LocationID\":{\"value\":\"HERRIMAN\",\"error\":\"Location 'HERRIMAN  ' cannot be found in the system.\"},\"PaymentTotal\":{\"value\":0.0},\"Project\":{\"value\":\"X\"},\"ReferenceNbr\":{\"value\":\"<NEW>\"},\"ShipToAddressOverride\":{\"value\":false},\"ShipToContactOverride\":{\"value\":false},\"Status\":{\"value\":\"On Hold\"},\"TaxCalcMode\":{\"value\":\"Tax Settings\"},\"TaxDetails\":[{\"id\":\"f1abb7a1-ad54-4a14-bf04-1edab495c81f\",\"rowNumber\":1,\"note\":null,\"TaxableAmount\":{\"value\":28.00},\"TaxAmount\":{\"value\":2.14},\"TaxID\":{\"value\":\"SLC\"},\"custom\":{}}],\"TaxTotal\":{\"value\":2.14},\"Type\":{\"value\":\"Invoice\"},\"custom\":{\"Document\":{\"UsrExtRefNbr\":{\"type\":\"CustomStringField\",\"value\":\"38556720\"}}},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/SalesInvoice/f3c79fe4-0ccd-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Document/f3c79fe4-0ccd-f111-9fe1-6045bda28239/{filename}\"}}",
+          "retriesExhausted": false
+        },
+        "error": "SalesInvoice PUT failed: 422 Unprocessable Entity {\"id\":\"f3c79fe4-0ccd-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"error\":\"Inserting  'AR Invoice/Memo' record raised at least one error. Please review the errors.\",\"Amount\":{\"value\":30.14},\"Balance\":{\"value\":30.14},\"CashDiscount\":{\"value\":0.0},\"CreatedDate\":{\"value\":\"2026-10-21T00:04:29.8861724-05:00\"},\"CreditHold\":{\"value\":false},\"Currency\":{\"value\":\"USD\"},\"CustomerID\":{\"value\":\"BA0011071\"},\"CustomerOrder\":{},\"Date\":{\"value\":\"2026-10-21T00:00:00-05:00\"},\"Description\":{\"value\":\"Service Fusion Install Invoice\"},\"Details\":[{\"id\":\"fac79fe4-0ccd-f111-9fe1-6045bda28239\",\"rowNumber\":1,\"note\":{\"value\":\"\"},\"Account\":{\"value\":\"4000\"},\"Amount\":{\"value\":28.0},\"BranchID\":{\"value\":\"BA0016568\"},\"CalculateDiscountsOnImport\":{},\"CostCode\":{},\"Description\":{\"value\":\"Sales\"},\"DiscountAmount\":{\"value\":0.0},\"DiscountPercent\":{\"value\":0.0},\"ExpirationDate\":{},\"InventoryDocType\":{},\"InventoryID\":{\"value\":\"21-55472SS\"},\"InventoryRefNbr\":{},\"LineNbr\":{\"value\":1},\"Location\":{\"value\":\"INSTALL\"},\"LotSerialNbr\":{\"value\":\"\"},\"ManualDiscount\":{\"value\":false},\"ManualPrice\":{\"value\":false},\"NoteID\":{\"value\":\"fac79fe4-0ccd-f111-9fe1-6045bda28239\"},\"OrderLineNbr\":{},\"OrderNbr\":{},\"OrderType\":{},\"OrigInvLineNbr\":{},\"OrigInvNbr\":{},\"OrigInvType\":{},\"ProjectTask\":{},\"Qty\":{\"value\":2.0},\"ShipmentNbr\":{},\"SubAccount\":{\"value\":\"0000\"},\"TaxCategory\":{\"value\":\"TAXABLE\"},\"TransactionDescr\":{\"value\":\"Arrow Industries 3/8 stainless dishwasher line w/ elbow\"},\"UnitPrice\":{\"value\":14.0000},\"UOM\":{\"value\":\"EACH\"},\"WarehouseID\":{\"value\":\"SALT LAKE INSTALL\"},\"custom\":{},\"_links\":{\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Transactions/fac79fe4-0ccd-f111-9fe1-6045bda28239/{filename}\"}}],\"DetailTotal\":{\"value\":28.0},\"DiscountTotal\":{\"value\":0.0},\"DueDate\":{\"value\":\"2026-10-21T00:00:00-05:00\"},\"ExternalRef\":{\"value\":\"38556720\"},\"FreightPrice\":{\"value\":0.0},\"Hold\":{\"value\":true},\"IsTaxValid\":{\"value\":true},\"LastModifiedDate\":{\"value\":\"2026-10-21T00:04:29.8861724-05:00\"},\"LastModifiedDateTime\":{\"value\":\"2026-10-21T00:04:29.8861724-05:00\"},\"LocationID\":{\"value\":\"HERRIMAN\",\"error\":\"Location 'HERRIMAN  ' cannot be found in the system.\"},\"PaymentTotal\":{\"value\":0.0},\"Project\":{\"value\":\"X\"},\"ReferenceNbr\":{\"value\":\"<NEW>\"},\"ShipToAddressOverride\":{\"value\":false},\"ShipToContactOverride\":{\"value\":false},\"Status\":{\"value\":\"On Hold\"},\"TaxCalcMode\":{\"value\":\"Tax Settings\"},\"TaxDetails\":[{\"id\":\"f1abb7a1-ad54-4a14-bf04-1edab495c81f\",\"rowNumber\":1,\"note\":null,\"TaxableAmount\":{\"value\":28.00},\"TaxAmount\":{\"value\":2.14},\"TaxID\":{\"value\":\"SLC\"},\"custom\":{}}],\"TaxTotal\":{\"value\":2.14},\"Type\":{\"value\":\"Invoice\"},\"custom\":{\"Document\":{\"UsrExtRefNbr\":{\"type\":\"CustomStringField\",\"value\":\"38556720\"}}},\"_links\":{\"self\":\"/entity/CustomEndpoint/24.200.001/SalesInvoice/f3c79fe4-0ccd-f111-9fe1-6045bda28239\",\"files:put\":\"/entity/CustomEndpoint/24.200.001/files/PX.Objects.SO.SOInvoiceEntry/Document/f3c79fe4-0ccd-f111-9fe1-6045bda28239/{filename}\"}}",
+        "createdAt": "2026-10-21T05:04:29.140Z",
+        "updatedAt": "2026-10-21T05:04:31.850Z"
+      },
+      "reason": "User confirmed HERRIMAN resolved; same reference subsequently created INV138833",
+      "replacementJobId": "1ee51bd0-473f-4a2f-9bb7-1e053b56d496"
+    },
+    {
+      "job": {
+        "id": "069daf8f-9bb6-4278-a16c-daa8cc5f7fe2",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotFoundError",
+          "error": "No manufacturer mapping exists for 'Cocoon' (normalized: 'COCOON')",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "No manufacturer mapping exists for 'Cocoon' (normalized: 'COCOON')",
+        "createdAt": "2026-10-21T16:09:21.174Z",
+        "updatedAt": "2026-10-21T16:09:21.457Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "7d67fb96-2d0a-4f91-b8f0-543be7ef8b6f",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:09:21.973Z",
+        "updatedAt": "2026-10-21T16:09:22.249Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "3fad3139-bf6b-4556-ae04-73201f1e08c9",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:10:19.528Z",
+        "updatedAt": "2026-10-21T16:10:19.811Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    },
+    {
+      "job": {
+        "id": "70f4ca27-39dd-4858-90b6-65b896d71043",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:15:32.568Z",
+        "updatedAt": "2026-10-21T16:15:32.843Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "ea215f53-6007-4fb2-8ebe-52a40c12428b",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:15:33.290Z",
+        "updatedAt": "2026-10-21T16:15:33.562Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "f254722c-aae0-4107-a1e0-3730432653ef",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:15:33.858Z",
+        "updatedAt": "2026-10-21T16:15:34.131Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    },
+    {
+      "job": {
+        "id": "e333d775-d1de-413c-bfb9-48453e467393",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:15:47.044Z",
+        "updatedAt": "2026-10-21T16:15:47.367Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "06e9ef0b-e3f8-4945-9d3b-f339949af50e",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:15:47.812Z",
+        "updatedAt": "2026-10-21T16:15:48.098Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "2c1ab9e3-86df-4bd1-80d3-004267ae8e05",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:15:48.572Z",
+        "updatedAt": "2026-10-21T16:15:48.856Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    },
+    {
+      "job": {
+        "id": "40aea3ad-e2b8-4210-a834-786a76983402",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:17:33.316Z",
+        "updatedAt": "2026-10-21T16:17:33.607Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "d1c4abc9-17b5-4ed3-82ef-2eb87b60fd9a",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:17:33.987Z",
+        "updatedAt": "2026-10-21T16:17:34.269Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "f36e5636-e6ac-4981-8826-32b48be2ec45",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:17:34.592Z",
+        "updatedAt": "2026-10-21T16:17:34.873Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    },
+    {
+      "job": {
+        "id": "c831e0a1-7ccb-43a0-890c-e369dec4f526",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:17:49.941Z",
+        "updatedAt": "2026-10-21T16:17:50.218Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "479c9990-e572-472a-9137-ea79506d935e",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:17:50.749Z",
+        "updatedAt": "2026-10-21T16:17:51.035Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "98cc02ed-f276-42e2-b9b9-f8f33d6a3bb8",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:17:51.509Z",
+        "updatedAt": "2026-10-21T16:17:51.787Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    },
+    {
+      "job": {
+        "id": "e552bb5f-e85b-40da-bad4-74c01dc1f51b",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:18:03.533Z",
+        "updatedAt": "2026-10-21T16:18:03.799Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "62168e3d-95ef-4c88-b332-3d7aa164d201",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:18:04.074Z",
+        "updatedAt": "2026-10-21T16:18:04.347Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "9a4b2dfc-61b2-4508-a6e6-5103b892d1ed",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:18:04.780Z",
+        "updatedAt": "2026-10-21T16:18:05.076Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    },
+    {
+      "job": {
+        "id": "64c7f9ad-0eeb-43bc-9d4c-f7670dd49cec",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:18:21.254Z",
+        "updatedAt": "2026-10-21T16:18:21.532Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "67083928-291f-4c9c-bcb0-3783c56fe5b9",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:18:22.005Z",
+        "updatedAt": "2026-10-21T16:18:22.279Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "530be72d-ecd2-4cda-a936-e24d724db123",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:18:22.729Z",
+        "updatedAt": "2026-10-21T16:18:23.007Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    },
+    {
+      "job": {
+        "id": "4e84093f-6d00-4b37-8ded-1d38d39a11fe",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:19:25.278Z",
+        "updatedAt": "2026-10-21T16:19:25.550Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "7e23d12e-a3ea-4d92-8c0b-4bd030c026d8",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:19:25.986Z",
+        "updatedAt": "2026-10-21T16:19:26.274Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "91dadc42-e302-4127-83ca-3f1124bd5611",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:19:26.703Z",
+        "updatedAt": "2026-10-21T16:19:26.990Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    },
+    {
+      "job": {
+        "id": "a41b44e7-28f9-48d0-aca9-567c02e3ee1f",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:19:44.690Z",
+        "updatedAt": "2026-10-21T16:19:44.968Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "cc8e68d9-cf35-4123-8942-2b9be2051ccc",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:19:45.372Z",
+        "updatedAt": "2026-10-21T16:19:45.647Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "f13b4ddd-b310-4140-9574-0d07b2bcd868",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:19:46.154Z",
+        "updatedAt": "2026-10-21T16:19:46.428Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    },
+    {
+      "job": {
+        "id": "2e57bea9-97f0-491b-971a-3f604fee3dc5",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Wall Mounted Basin Mixer With Spout - Gun Metal"
+          },
+          "InventoryID": {
+            "value": "PBSET01-GM"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:20:02.204Z",
+        "updatedAt": "2026-10-21T16:20:02.499Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "c5762a24-5f91-4ca6-a882-ed5161d44c5e"
+    },
+    {
+      "job": {
+        "id": "483fd4f6-8c7d-4ded-a141-a3ec706f4cf7",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "Rough - Left Outlet"
+          },
+          "InventoryID": {
+            "value": "BOX02-L-316"
+          },
+          "DefaultPrice": {
+            "value": 0
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:20:02.945Z",
+        "updatedAt": "2026-10-21T16:20:03.255Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "00809b90-dfeb-4692-bc97-3e1f86b179f2"
+    },
+    {
+      "job": {
+        "id": "2310012b-e56c-4668-89e8-f85cf0bb0821",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 0
+          },
+          "Description": {
+            "value": "COCOON Pb Wall Mount Basin Mixer with 180mm Spout SKU: PB SET01.1 INOX"
+          },
+          "InventoryID": {
+            "value": "PB SET01.1 INOX"
+          },
+          "DefaultPrice": {
+            "value": 1006
+          },
+          "manufacturer": "Cocoon"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Cocoon' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:20:03.731Z",
+        "updatedAt": "2026-10-21T16:20:04.002Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "64a32b5a-e3f3-407f-ae4f-23c344305bb6"
+    }
+  ],
+  "applied": true
+}

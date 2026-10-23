@@ -29,6 +29,8 @@ function fakeClient(params: {
     putPayload: null as Record<string, unknown> | null,
   };
   const client: DeliveryTenDayConfirmationAcumaticaClient = {
+    fetchDeliverySalesOrderFull: async (number, type) => [{ OrderType: { value: type }, OrderNbr: { value: number },
+      Status: { value: "Open" }, Terms: { value: "PP" }, Totals: { UnpaidBalance: { value: "0.00" } } }],
     fetchDeliveryTenDayConfirmationStates: async () => {
       calls.fetch += 1;
       return calls.fetch > 1 ? params.verificationStates ?? params.states : params.states;

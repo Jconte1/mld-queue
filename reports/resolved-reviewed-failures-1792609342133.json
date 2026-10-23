@@ -1,0 +1,438 @@
+{
+  "plannedAt": "2026-10-21T19:02:22.133Z",
+  "plan": [
+    {
+      "job": {
+        "id": "8458899a-77d6-4702-b97e-73d8dce86048",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 139
+          },
+          "Description": {
+            "value": "Non-Duct Kit For Hbn1 36\" Built-In"
+          },
+          "InventoryID": {
+            "value": "HARKBN36"
+          },
+          "DefaultPrice": {
+            "value": 159
+          },
+          "manufacturer": "Best Hoods"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotFoundError",
+          "error": "No manufacturer mapping exists for 'Best Hoods' (normalized: 'BEST HOODS')",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "No manufacturer mapping exists for 'Best Hoods' (normalized: 'BEST HOODS')",
+        "createdAt": "2026-10-20T21:06:51.222Z",
+        "updatedAt": "2026-10-20T21:06:51.547Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "0c03683c-4f24-4b18-bc74-7e4c54087a89"
+    },
+    {
+      "job": {
+        "id": "6237bfaf-a210-4f9b-9d68-0579d9321626",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 139
+          },
+          "Description": {
+            "value": "Non-Duct Kit For Hbn1 36\" Built-In"
+          },
+          "InventoryID": {
+            "value": "HARKBN36"
+          },
+          "DefaultPrice": {
+            "value": 159
+          },
+          "manufacturer": "Best Hoods"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Best Hoods' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Best Hoods' is not approved (status: pending)",
+        "createdAt": "2026-10-20T21:07:39.763Z",
+        "updatedAt": "2026-10-20T21:07:40.031Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "0c03683c-4f24-4b18-bc74-7e4c54087a89"
+    },
+    {
+      "job": {
+        "id": "8db0bf9d-6aae-480c-8e94-f1a369804342",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotFoundError",
+          "error": "No manufacturer mapping exists for 'Zip HydroTap' (normalized: 'ZIP HYDROTAP')",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "No manufacturer mapping exists for 'Zip HydroTap' (normalized: 'ZIP HYDROTAP')",
+        "createdAt": "2026-10-21T16:09:20.458Z",
+        "updatedAt": "2026-10-21T16:09:20.779Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    },
+    {
+      "job": {
+        "id": "a7bfe71c-9777-462f-9ae0-bd36ff8517b7",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:15:31.756Z",
+        "updatedAt": "2026-10-21T16:15:32.105Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    },
+    {
+      "job": {
+        "id": "e5ae6e05-7b77-40f6-a4e7-e7c7f575bbc6",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:15:46.262Z",
+        "updatedAt": "2026-10-21T16:15:46.567Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    },
+    {
+      "job": {
+        "id": "b016576b-cde6-46df-a7de-bd76df7c7739",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:17:32.544Z",
+        "updatedAt": "2026-10-21T16:17:32.834Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    },
+    {
+      "job": {
+        "id": "aa578340-dbd4-4870-bb53-37de0d8db6c9",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:17:49.143Z",
+        "updatedAt": "2026-10-21T16:17:49.506Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    },
+    {
+      "job": {
+        "id": "c67336a6-57c4-4ab8-bc8a-a6be808c39c1",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:18:02.779Z",
+        "updatedAt": "2026-10-21T16:18:03.047Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    },
+    {
+      "job": {
+        "id": "2d0b5fd9-0802-4ee0-84c4-10469a04937a",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:18:20.319Z",
+        "updatedAt": "2026-10-21T16:18:20.926Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    },
+    {
+      "job": {
+        "id": "6b9f0b26-a4b8-4426-af1a-4b2664cc5c77",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:19:24.549Z",
+        "updatedAt": "2026-10-21T16:19:24.834Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    },
+    {
+      "job": {
+        "id": "1f3ea2ed-bd44-4c4a-a066-91c335a27a77",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:19:43.970Z",
+        "updatedAt": "2026-10-21T16:19:44.241Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    },
+    {
+      "job": {
+        "id": "718bb386-cd12-4045-be61-81a8d959b6b1",
+        "vendorId": "specbooks",
+        "type": "CREATE_STOCK_ITEM",
+        "status": "failed",
+        "entityKey": null,
+        "payload": {
+          "MSRP": {
+            "value": 2555.1
+          },
+          "Description": {
+            "value": "Celsius Plus Boiling, Chilled, Sparkling For Residential And Small Commercial Applications With All In One Tap / Faucet, Tap Only - Nickel"
+          },
+          "InventoryID": {
+            "value": "01048875"
+          },
+          "DefaultPrice": {
+            "value": 2839
+          },
+          "manufacturer": "Zip HydroTap"
+        },
+        "result": {
+          "name": "ManufacturerMappingNotApprovedError",
+          "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+          "attempt": 1,
+          "maxAttempts": 10,
+          "retriesExhausted": false
+        },
+        "error": "Manufacturer mapping for 'Zip HydroTap' is not approved (status: pending)",
+        "createdAt": "2026-10-21T16:20:01.448Z",
+        "updatedAt": "2026-10-21T16:20:01.805Z"
+      },
+      "reason": "Approved manufacturer alias; replacement stock creation verified in Acumatica",
+      "replacementJobId": "730cfc90-a694-4900-9f1f-84356ddaff28"
+    }
+  ],
+  "applied": true
+}
