@@ -1,5 +1,6 @@
 import { env } from "./env";
-import { DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS } from "./deliveryContactOptInFields";
+import { DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS, CURRENT_DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS,
+  normalizeDeliveryContactOptInRow, deliveryContactOptInWritePayload } from "./deliveryContactOptInFields";
 import { SALES_ORDER_CONTACT_BACKFILL_EXCLUDED_ORDER_TYPES } from "./salesOrderContactBackfill";
 
 type TokenResponse = {
@@ -458,6 +459,7 @@ export class AcumaticaClient {
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
   private tokenExpiry: number | null = null;
+  private deliveryContactUsesCurrentAttributes = true;
 
   private get entityBase(): string {
     return `${env.acumaticaBaseUrl}/entity/${env.acumaticaEndpointName}/${env.acumaticaEndpointVersion}`;
@@ -1586,12 +1588,22 @@ export class AcumaticaClient {
     const contactIdValue = /^\d+$/.test(id) ? id : odataString(id);
     const query = new URLSearchParams({
       $filter: `ContactID eq ${contactIdValue}`,
-      $top: "1",
-      $custom: DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS,
+      $top: "2",
+      $custom: CURRENT_DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS,
     });
-    const url = `${this.deliveryEntityBase}/Contact?${query.toString()}`;
-
-    return toRows(await this.request<unknown>(url, { method: "GET" }));
+    try {
+      const rows = toRows(await this.request<unknown>(`${this.deliveryEntityBase}/Contact?${query.toString()}`, { method: "GET" }));
+      this.deliveryContactUsesCurrentAttributes = true;
+      return rows.map(normalizeDeliveryContactOptInRow);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (!/Contact_Attribute(?:TEXTCON|PHONECON|EMAILCON).*not found in the data set/i.test(message)) throw error;
+      const legacyQuery = new URLSearchParams({ $filter: `ContactID eq ${contactIdValue}`, $top: "2",
+        $custom: DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS });
+      const rows = toRows(await this.request<unknown>(`${this.deliveryEntityBase}/Contact?${legacyQuery.toString()}`, { method: "GET" }));
+      this.deliveryContactUsesCurrentAttributes = false;
+      return rows.map(normalizeDeliveryContactOptInRow);
+    }
   }
 
   async fetchSalesOrderContactBackfillCandidateKeys(params: {
@@ -1708,15 +1720,7 @@ export class AcumaticaClient {
     const id = String(contactId || "").trim();
     if (!id) return [];
 
-    const contactIdValue = /^\d+$/.test(id) ? id : odataString(id);
-    const query = new URLSearchParams({
-      $filter: `ContactID eq ${contactIdValue}`,
-      $select: "ContactID",
-      $top: "2",
-      $custom: DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS,
-    });
-    const url = `${this.deliveryEntityBase}/Contact?${query.toString()}`;
-    const rows = toRows(await this.request<unknown>(url, { method: "GET" }));
+    const rows = await this.fetchDeliveryContactByContactId(id);
 
     return rows.map((row) => ({
       contactId: getAcumaticaFieldValue(row, "ContactID"),
@@ -1729,6 +1733,7 @@ export class AcumaticaClient {
   async putDeliveryContactOptInAttributes(
     payload: Record<string, unknown>
   ): Promise<{ status: number; body: unknown }> {
+    payload = deliveryContactOptInWritePayload(payload, this.deliveryContactUsesCurrentAttributes);
     const token = await this.getToken();
     const endpointName =
       process.env.ACUMATICA_CONTACT_OPT_IN_WRITE_ENDPOINT_NAME?.trim() ||
