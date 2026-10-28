@@ -7,6 +7,11 @@ function value(record: Record<string, unknown>, name: string): unknown {
   return raw && typeof raw === "object" && "value" in raw ? (raw as { value: unknown }).value : raw;
 }
 
+function attribute(order: Record<string, unknown>, name: string): unknown {
+  const document = (order.custom as { Document?: Record<string, unknown> } | undefined)?.Document;
+  return document ? value(document, name) : undefined;
+}
+
 export async function readFreshDeliveryPaymentBalance(
   client: DeliveryPaymentBalanceClient, orderType: string, orderNumber: string, deliveryDate?: string
 ) {
@@ -34,5 +39,11 @@ export async function readFreshDeliveryPaymentBalance(
       Number(value(line, "OpenQty")) > 0)) throw new Error("fresh_payment_delivery_changed");
   }
   return { unpaidBalance: Number(text), paymentTerms: terms,
+    contactId: String(value(order, "ContactID") ?? "").trim(),
+    confirmVia: String(attribute(order, "AttributeCONFIRMVIA") ?? "").trim(),
+    confirmWith: String(attribute(order, "AttributeCONFIRMWTH") ?? "").trim(),
+    oneWeekConfirmedExposed: typeof attribute(order, "AttributeONEWEEKCON") === "boolean" ||
+      ["true", "false", "1", "0"].includes(String(attribute(order, "AttributeONEWEEKCON") ?? "").trim().toLowerCase()),
+    oneWeekConfirmed: ["true", "1"].includes(String(attribute(order, "AttributeONEWEEKCON") ?? "").trim().toLowerCase()),
     isPrepayment: ["PIF", "PP", "PPP", "PPT"].includes(terms), checkedAt: new Date().toISOString() };
 }

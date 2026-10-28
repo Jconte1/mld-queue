@@ -1,4 +1,5 @@
 import { readFreshDeliveryPaymentBalance, type DeliveryPaymentBalanceClient } from "./deliveryPaymentBalance";
+import { verifyDeliveryPaymentWrite } from "./deliveryPaymentWriteEligibility";
 
 export const DELIVERY_PREPAYMENT_HOLD_REASON = "payment_not_received_by_deadline" as const;
 
@@ -21,6 +22,7 @@ export type DeliveryPrepaymentHoldState = {
 };
 
 export type DeliveryPrepaymentHoldAcumaticaClient = DeliveryPaymentBalanceClient & {
+  fetchDeliveryContactByContactId?: (id: string) => Promise<Record<string, unknown>[]>;
   fetchDeliveryPrepaymentHoldStates(
     orderNumber: string,
     orderType: string
@@ -174,7 +176,8 @@ function resultBase(params: {
 export async function processDeliveryPrepaymentHoldJob(
   payload: Record<string, unknown> | undefined,
   acumaticaClient: DeliveryPrepaymentHoldAcumaticaClient,
-  envSource: EnvSource = process.env
+  envSource: EnvSource = process.env,
+  verifyEligibility = verifyDeliveryPaymentWrite,
 ) {
   const normalized = normalizeDeliveryPrepaymentHoldPayload(payload);
   const effectiveDryRun = normalized.dryRun || envDryRunEnabled(envSource);
@@ -234,6 +237,11 @@ export async function processDeliveryPrepaymentHoldJob(
   if (!freshPayment.isPrepayment || freshPayment.unpaidBalance <= 2) {
     return { status: "skipped", reason: "payment_cleared_at_write", wouldWrite: false, freshPayment };
   }
+  if (freshPayment.oneWeekConfirmed || !freshPayment.confirmVia || !freshPayment.confirmWith) {
+    return { status: "skipped", reason: freshPayment.oneWeekConfirmed ? "one_week_confirmation_already_true"
+      : "six_week_confirmation_incomplete", wouldWrite: false, freshPayment };
+  }
+  if (!freshPayment.oneWeekConfirmedExposed) return { status: "skipped", reason: "one_week_confirmation_field_not_exposed", wouldWrite: false, freshPayment };
   const states = await acumaticaClient.fetchDeliveryPrepaymentHoldStates(
     normalized.orderNumber,
     normalized.orderType
@@ -286,6 +294,8 @@ export async function processDeliveryPrepaymentHoldJob(
   }
 
   if (isAlreadyOnHold(current)) {
+    const eligibility = await verifyEligibility(acumaticaClient, freshPayment, normalized, "hold", envSource);
+    if (!eligibility.eligible) return { status: "skipped", reason: eligibility.reason, wouldWrite: false, freshPayment };
     return {
       status: "already_on_hold",
       freshPayment,
@@ -308,7 +318,11 @@ export async function processDeliveryPrepaymentHoldJob(
   }
 
   const acumaticaPayload = buildDeliveryPrepaymentHoldAcumaticaPayload(normalized);
+  let putStarted = false;
   try {
+    const eligibility = await verifyEligibility(acumaticaClient, freshPayment, normalized, "hold", envSource);
+    if (!eligibility.eligible) return { status: "skipped", reason: eligibility.reason, wouldWrite: false, freshPayment };
+    putStarted = true;
     const putResult = await acumaticaClient.putDeliveryPrepaymentHold(acumaticaPayload);
     const verificationStates = await acumaticaClient.fetchDeliveryPrepaymentHoldStates(
       normalized.orderNumber,
@@ -367,8 +381,8 @@ export async function processDeliveryPrepaymentHoldJob(
   } catch (error) {
     return {
       status: "failed",
-      reason: "acumatica_error",
-      wouldWrite: true,
+      reason: putStarted ? "acumatica_error" : "eligibility_check_failed",
+      wouldWrite: putStarted,
       ...resultBase({
         payload: normalized,
         envSource,

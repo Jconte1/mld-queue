@@ -4,12 +4,17 @@ import { join } from "node:path";
 import {
   buildDeliveryTenDayConfirmationAcumaticaPayload,
   normalizeDeliveryTenDayConfirmationPayload,
-  processDeliveryTenDayConfirmationJob,
+  processDeliveryTenDayConfirmationJob as processActualJob,
   type DeliveryTenDayConfirmationAcumaticaClient,
   type DeliveryTenDayConfirmationState,
 } from "../src/lib/deliveryTenDayConfirmation";
 
 const ROOT = join(process.cwd(), "..");
+
+const processDeliveryTenDayConfirmationJob = (payload: Parameters<typeof processActualJob>[0],
+  client: Parameters<typeof processActualJob>[1], env?: Parameters<typeof processActualJob>[2]) =>
+  processActualJob({ ...payload, sourceInterval: payload?.sourceInterval ?? "DAY_10" }, client, env,
+    async () => ({ eligible: true, reason: "isolated_test_eligibility" }));
 
 function assert(condition: unknown, message: string, failures: string[]) {
   if (!condition) failures.push(message);

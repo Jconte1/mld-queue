@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
-import { processDeliveryPrepaymentHoldJob } from "../src/lib/deliveryPrepaymentHold";
-import { processDeliveryTenDayConfirmationJob } from "../src/lib/deliveryTenDayConfirmation";
+import { processDeliveryPrepaymentHoldJob as actualHold } from "../src/lib/deliveryPrepaymentHold";
+import { processDeliveryTenDayConfirmationJob as actualConfirmation } from "../src/lib/deliveryTenDayConfirmation";
+const allow = async () => ({ eligible: true, reason: "isolated_test_eligibility" });
+const processDeliveryPrepaymentHoldJob = (p: Parameters<typeof actualHold>[0], c: Parameters<typeof actualHold>[1], e: Parameters<typeof actualHold>[2]) => actualHold(p, c, e, allow);
+const processDeliveryTenDayConfirmationJob = (p: Parameters<typeof actualConfirmation>[0], c: Parameters<typeof actualConfirmation>[1], e: Parameters<typeof actualConfirmation>[2]) => actualConfirmation({ ...p, sourceInterval: "DAY_10" }, c, e, allow);
 
 function client(balance: unknown, terms = "PP") {
   const calls = { reads: 0, holds: 0, confirmations: 0 };
@@ -9,6 +12,7 @@ function client(balance: unknown, terms = "PP") {
       calls.reads++;
       return [{ OrderType: { value: "SO" }, OrderNbr: { value: "TEST" }, Status: { value: "Open" },
         Terms: { value: terms }, Totals: { UnpaidBalance: { value: balance } },
+        custom: { Document: { AttributeCONFIRMVIA: { value: "WEB" }, AttributeCONFIRMWTH: { value: "Customer" }, AttributeONEWEEKCON: { value: false } } },
         Details: [{ RequestedOn: { value: "2030-01-15" }, OpenQty: { value: 1 } }] }];
     },
     fetchDeliveryPrepaymentHoldStates: async () => [{ orderType: "SO", orderNumber: "TEST",

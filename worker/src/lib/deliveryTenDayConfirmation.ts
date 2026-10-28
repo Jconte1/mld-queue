@@ -1,4 +1,5 @@
 import { readFreshDeliveryPaymentBalance, type DeliveryPaymentBalanceClient } from "./deliveryPaymentBalance";
+import { verifyDeliveryPaymentWrite } from "./deliveryPaymentWriteEligibility";
 
 export const DELIVERY_TEN_DAY_CONFIRMATION_REASON = "delivery_group_cleared" as const;
 
@@ -20,6 +21,7 @@ export type DeliveryTenDayConfirmationState = {
 };
 
 export type DeliveryTenDayConfirmationAcumaticaClient = DeliveryPaymentBalanceClient & {
+  fetchDeliveryContactByContactId?: (id: string) => Promise<Record<string, unknown>[]>;
   fetchDeliveryTenDayConfirmationStates(
     orderNumber: string,
     orderType: string
@@ -179,7 +181,8 @@ function resultBase(params: {
 export async function processDeliveryTenDayConfirmationJob(
   payload: Record<string, unknown> | undefined,
   acumaticaClient: DeliveryTenDayConfirmationAcumaticaClient,
-  envSource: EnvSource = process.env
+  envSource: EnvSource = process.env,
+  verifyEligibility = verifyDeliveryPaymentWrite,
 ) {
   const normalized = normalizeDeliveryTenDayConfirmationPayload(payload);
   const effectiveDryRun = normalized.dryRun || envDryRunEnabled(envSource);
@@ -199,6 +202,10 @@ export async function processDeliveryTenDayConfirmationJob(
         current: null,
       }),
     };
+  }
+
+  if (!["DAY_14", "DAY_12", "DAY_10"].includes(normalized.sourceInterval ?? "")) {
+    return { status: "refused", reason: "clearance_source_not_allowed", wouldWrite: false };
   }
 
   const freshPayment = await readFreshDeliveryPaymentBalance(acumaticaClient,
@@ -281,7 +288,11 @@ export async function processDeliveryTenDayConfirmationJob(
     normalized,
     current.id
   );
+  let putStarted = false;
   try {
+    const eligibility = await verifyEligibility(acumaticaClient, freshPayment, normalized, "clearance", envSource);
+    if (!eligibility.eligible) return { status: "refused", reason: eligibility.reason, wouldWrite: false, freshPayment };
+    putStarted = true;
     const putResult = await acumaticaClient.putDeliveryTenDayConfirmation(acumaticaPayload);
     const verificationStates = await acumaticaClient.fetchDeliveryTenDayConfirmationStates(
       normalized.orderNumber,
@@ -336,8 +347,8 @@ export async function processDeliveryTenDayConfirmationJob(
   } catch (error) {
     return {
       status: "failed",
-      reason: "acumatica_error",
-      wouldWrite: true,
+      reason: putStarted ? "acumatica_error" : "eligibility_check_failed",
+      wouldWrite: putStarted,
       ...resultBase({
         payload: normalized,
         envSource,

@@ -1,13 +1,19 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { jobFailureStatus } from "../src/lib/jobFailureStatus";
 
 import {
   buildDeliveryPrepaymentHoldAcumaticaPayload,
   DELIVERY_PREPAYMENT_HOLD_REASON,
   normalizeDeliveryPrepaymentHoldPayload,
-  processDeliveryPrepaymentHoldJob,
+  processDeliveryPrepaymentHoldJob as processActualJob,
   type DeliveryPrepaymentHoldState,
 } from "../src/lib/deliveryPrepaymentHold";
+
+const processDeliveryPrepaymentHoldJob = (payload: Parameters<typeof processActualJob>[0],
+  client: Parameters<typeof processActualJob>[1], env?: Parameters<typeof processActualJob>[2]) =>
+  processActualJob(payload, client, env,
+    async () => ({ eligible: true, reason: "isolated_test_eligibility" }));
 
 function assert(value: boolean, message: string) {
   if (!value) throw new Error(message);
@@ -37,7 +43,8 @@ function assertThrows(fn: () => unknown, message: string) {
 class MockAcumaticaClient {
   async fetchDeliverySalesOrderFull(number: string, type: string) {
     return [{ OrderType: { value: type }, OrderNbr: { value: number }, Status: { value: "Open" },
-      Terms: { value: "PP" }, Totals: { UnpaidBalance: { value: "100.00" } } }];
+      Terms: { value: "PP" }, Totals: { UnpaidBalance: { value: "100.00" } },
+      custom: { Document: { AttributeCONFIRMVIA: { value: "WEB" }, AttributeCONFIRMWTH: { value: "Customer" }, AttributeONEWEEKCON: { value: false } } } }];
   }
   states: DeliveryPrepaymentHoldState[];
   statesAfterPut: DeliveryPrepaymentHoldState[];
@@ -164,7 +171,8 @@ async function main() {
   assertIncludes(workerSwitch, "Unsupported job type", "unknown job types fail cleanly");
   assertIncludes(workerSwitch, "status: \"succeeded\"", "worker persists succeeded status");
   assertIncludes(workerSwitch, "result: toPrismaJsonValue(result)", "worker persists serializable result");
-  assertIncludes(workerSwitch, "status: \"failed\"", "worker persists failed status");
+  assertIncludes(workerSwitch, "status: jobFailureStatus(jobType, error)", "worker persists classified failure status");
+  assertEqual(jobFailureStatus("ERP_UPDATE_DELIVERY_PREPAYMENT_HOLD", new Error("test")), "failed", "hold errors remain failures");
   assertIncludes(workerSwitch, "error: message.slice(0, MAX_STORED_ERROR_CHARS)", "worker persists bounded error message");
   assertIncludes(envExample, "ACUMATICA_PREPAYMENT_HOLD_WRITE_ENABLED=false", "write env doc");
   assertIncludes(envExample, "ACUMATICA_PREPAYMENT_HOLD_DRY_RUN=true", "dry-run env doc");
