@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { withSpecbooksRequest, traceStage, tracePayload, traceRequestError } from "@/lib/specbooksRequestTrace";
 import { assertSpecbooksApiKey } from "@/lib/auth";
 import { env } from "@/lib/env";
 import { assertRouteWithinRateLimit } from "@/lib/rateLimit";
@@ -10,17 +11,21 @@ import {
   parseJsonObjectBodyWithLimit,
 } from "@/lib/validation";
 
-export async function POST(req: Request) {
+async function createOpportunity(req: Request) {
   try {
     assertSpecbooksApiKey(req);
 
     const idempotencyKey = req.headers.get("Idempotency-Key")?.trim() || null;
 
+    traceStage("validation");
     const { parsed } = env.specbooksOpportunityPassthrough
       ? await parseJsonObjectBodyWithLimit(req, { requireNonEmpty: true })
       : await parseJsonBodyWithLimit(req, createOpportunitySchema);
 
+    tracePayload(parsed);
+    traceStage("rate_limit");
     await assertRouteWithinRateLimit("specbooks", "CREATE_OPPORTUNITY");
+    traceStage("enqueue");
 
     let jobId: string;
     if (idempotencyKey) {
@@ -43,9 +48,12 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ jobId }, { status: 202 });
   } catch (error) {
+    traceRequestError(error);
     if (error instanceof Response) {
       return error;
     }
     return NextResponse.json({ error: "Failed to enqueue job" }, { status: 500 });
   }
 }
+
+export const POST = withSpecbooksRequest("CREATE_OPPORTUNITY", createOpportunity);

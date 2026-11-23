@@ -1,3 +1,5 @@
+import { requestContext } from "./requestContext";
+
 type LogLevel = "info" | "warn" | "error";
 
 export function log(level: LogLevel, message: string, meta: Record<string, unknown> = {}): void {
@@ -5,6 +7,7 @@ export function log(level: LogLevel, message: string, meta: Record<string, unkno
     level,
     message,
     timestamp: new Date().toISOString(),
+    ...requestContext.getStore(),
     ...meta
   };
 

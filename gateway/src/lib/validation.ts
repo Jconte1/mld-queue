@@ -1,5 +1,6 @@
 ﻿import { z } from "zod";
 import { env } from "@/lib/env";
+import { traceValidationFailure } from "@/lib/specbooksRequestTrace";
 
 type BodyResult<T> = { parsed: T; raw: string };
 
@@ -108,6 +109,7 @@ export async function parseJsonBodyWithLimit<T>(req: Request, schema: z.Schema<T
   const bytes = Buffer.byteLength(raw, "utf8");
 
   if (bytes > env.maxRequestBytes) {
+    traceValidationFailure("payload_too_large");
     throw new Response(JSON.stringify({ error: "Payload too large" }), {
       status: 413,
       headers: { "content-type": "application/json" }
@@ -118,6 +120,7 @@ export async function parseJsonBodyWithLimit<T>(req: Request, schema: z.Schema<T
   try {
     json = raw ? JSON.parse(raw) : {};
   } catch {
+    traceValidationFailure("invalid_json");
     throw new Response(JSON.stringify({ error: "Invalid JSON" }), {
       status: 400,
       headers: { "content-type": "application/json" }
@@ -126,6 +129,7 @@ export async function parseJsonBodyWithLimit<T>(req: Request, schema: z.Schema<T
 
   const result = schema.safeParse(json);
   if (!result.success) {
+    traceValidationFailure("schema_validation", result.error.issues);
     throw new Response(
       JSON.stringify({
         error: "Validation failed",
@@ -149,6 +153,7 @@ export async function parseJsonObjectBodyWithLimit(
   const bytes = Buffer.byteLength(raw, "utf8");
 
   if (bytes > env.maxRequestBytes) {
+    traceValidationFailure("payload_too_large");
     throw new Response(JSON.stringify({ error: "Payload too large" }), {
       status: 413,
       headers: { "content-type": "application/json" }
@@ -159,6 +164,7 @@ export async function parseJsonObjectBodyWithLimit(
   try {
     json = raw ? JSON.parse(raw) : {};
   } catch {
+    traceValidationFailure("invalid_json");
     throw new Response(JSON.stringify({ error: "Invalid JSON" }), {
       status: 400,
       headers: { "content-type": "application/json" }
@@ -166,6 +172,7 @@ export async function parseJsonObjectBodyWithLimit(
   }
 
   if (!json || Array.isArray(json) || typeof json !== "object") {
+    traceValidationFailure("body_not_object");
     throw new Response(JSON.stringify({ error: "Validation failed", issues: [{ path: "", message: "Body must be a JSON object" }] }), {
       status: 400,
       headers: { "content-type": "application/json" }
@@ -174,6 +181,7 @@ export async function parseJsonObjectBodyWithLimit(
 
   const parsed = json as Record<string, unknown>;
   if (options?.requireNonEmpty && Object.keys(parsed).length === 0) {
+    traceValidationFailure("empty_object");
     throw new Response(JSON.stringify({ error: "Validation failed", issues: [{ path: "", message: "At least one field is required" }] }), {
       status: 400,
       headers: { "content-type": "application/json" }

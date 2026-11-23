@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
+import { withSpecbooksRequest, traceStage, tracePayload, traceRequestError } from "@/lib/specbooksRequestTrace";
 import { assertSpecbooksApiKey } from "@/lib/auth";
 import { assertRouteWithinRateLimit } from "@/lib/rateLimit";
 import { enqueueJob, findRecentReusableStockItemJob } from "@/lib/jobs";
 
 const maxStockItemBatchSize = Number(process.env.MAX_STOCK_ITEM_BATCH_SIZE ?? 25);
 // 
-export async function GET(req: Request, { params }: { params: Promise<{ inventoryId: string }> }) {
+async function getStockItem(req: Request, { params }: { params: Promise<{ inventoryId: string }> }) {
   try {
     assertSpecbooksApiKey(req);
 
+    traceStage("validation");
     const { inventoryId } = await params;
     const { searchParams } = new URL(req.url);
     const inventoryIdsQuery = String(searchParams.get("inventoryIds") || "");
@@ -23,6 +25,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ inventor
     // When inventoryIds query is supplied, treat it as authoritative and do not
     // include the path placeholder token (for example "/ignored?...").
     const ids = Array.from(new Set(idsFromQuery.length ? idsFromQuery : idsFromPath));
+    tracePayload({ inventoryIds: ids });
     if (!ids.length) {
       return NextResponse.json({ error: "inventoryId is required" }, { status: 400 });
     }
@@ -33,13 +36,16 @@ export async function GET(req: Request, { params }: { params: Promise<{ inventor
       );
     }
 
+    traceStage("rate_limit");
     await assertRouteWithinRateLimit("specbooks", "GET_STOCK_ITEM");
+    traceStage("dedupe_lookup");
 
     const reusable = await findRecentReusableStockItemJob(ids);
     if (reusable) {
       return NextResponse.json({ jobId: reusable.jobId }, { status: 202 });
     }
 
+    traceStage("enqueue");
     const { jobId } = await enqueueJob({
       type: "GET_STOCK_ITEM",
       payload: { inventoryIds: ids },
@@ -48,9 +54,12 @@ export async function GET(req: Request, { params }: { params: Promise<{ inventor
 
     return NextResponse.json({ jobId }, { status: 202 });
   } catch (error) {
+    traceRequestError(error);
     if (error instanceof Response) {
       return error;
     }
     return NextResponse.json({ error: "Failed to enqueue job" }, { status: 500 });
   }
 }
+
+export const GET = withSpecbooksRequest("GET_STOCK_ITEM", getStockItem);
