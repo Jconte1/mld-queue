@@ -1,4 +1,5 @@
 import { env } from "./env";
+import { log } from "./logger";
 import { DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS, CURRENT_DELIVERY_CONTACT_OPT_IN_CUSTOM_FIELDS,
   normalizeDeliveryContactOptInRow, deliveryContactOptInWritePayload } from "./deliveryContactOptInFields";
 import { SALES_ORDER_CONTACT_BACKFILL_EXCLUDED_ORDER_TYPES } from "./salesOrderContactBackfill";
@@ -749,6 +750,77 @@ export class AcumaticaClient {
       )
     );
     if (!ids.length) return [];
+    if (ids.length === 1) return this.getStockItemsSequential(ids);
+
+    const chunks: string[][] = [];
+    let chunk: string[] = [];
+    for (const id of ids) {
+      const next = [...chunk, id];
+      if (chunk.length && (next.length > 25 || this.stockItemBatchQuery(next).length > 1800)) {
+        chunks.push(chunk);
+        chunk = [];
+      }
+      chunk.push(id);
+    }
+    if (chunk.length) chunks.push(chunk);
+
+    const allRows: Record<string, unknown>[] = [];
+    const seen = new Set<string>();
+    for (const batch of chunks) {
+      let rowsById: Record<string, unknown>[][];
+      try {
+        if (this.stockItemBatchQuery(batch).length > 1800) throw new Error("query_length");
+        const url = `${this.stockItemEntityBase}/${env.acumaticaStockItemEntity}?${this.stockItemBatchQuery(batch)}`;
+        const payload = await this.request<unknown>(url, { method: "GET" });
+        if (!Array.isArray(payload)) throw new Error("invalid_response_shape");
+        const candidates = new Set(batch.flatMap(id => [id, stockItemMatchKey(id)]));
+        if (payload.length > candidates.size) throw new Error("possible_truncation_or_duplicates");
+        const rows = payload as Record<string, unknown>[];
+        if (rows.some(row => !row || typeof row !== "object" || !getStockItemRowId(row) ||
+          !batch.some(id => stockItemMatchKey(getStockItemRowId(row)!) === stockItemMatchKey(id)))) {
+          throw new Error("unexpected_inventory_id");
+        }
+        rowsById = batch.map(id => {
+          const exact = rows.filter(row => getStockItemRowId(row)!.trim().toUpperCase() === id);
+          const matches = exact.length ? exact : rows.filter(row =>
+            stockItemMatchKey(getStockItemRowId(row)!) === stockItemMatchKey(id));
+          if (matches.length > 1) throw new Error("ambiguous_inventory_id");
+          // A collection response numbers rows across the batch; the old per-item lookup starts at one.
+          return matches.map(row => typeof row.rowNumber === "number" ? { ...row, rowNumber: 1 } : row);
+        });
+        log("info", "stock_item_batch_lookup", { requestedCount: batch.length, returnedCount: rows.length });
+      } catch (error) {
+        log("warn", "stock_item_batch_lookup_fallback", {
+          requestedCount: batch.length,
+          errorName: error instanceof Error ? error.name : "UnknownError",
+          status: (error as { status?: number })?.status,
+        });
+        // Preserve endpoint-specific direct-key and legacy filter behavior if bulk retrieval is unsafe.
+        const rows = await this.getStockItemsSequential(batch, true) as Record<string, unknown>[];
+        rowsById = [rows];
+      }
+      for (let index = 0; index < rowsById.length; index++) {
+        for (const row of rowsById[index]) {
+          const rowId = getAcumaticaFieldValue(row, "AcumaticaInventoryID") ?? getStockItemRowId(row) ?? JSON.stringify(row);
+          if (seen.has(rowId)) continue;
+          seen.add(rowId);
+          allRows.push(rowsById.length === batch.length
+            ? normalizeStockItemRowForRequestedId(row, batch[index]) : row);
+        }
+      }
+    }
+    return allRows;
+  }
+
+  private stockItemBatchQuery(ids: string[]): string {
+    const candidates = [...new Set(ids.flatMap(id => [id, stockItemMatchKey(id)]))];
+    return new URLSearchParams({
+      "$filter": candidates.map(id => `InventoryID eq '${quoteForOData(id)}'`).join(" or "),
+      "$top": String(candidates.length + 1),
+    }).toString();
+  }
+
+  private async getStockItemsSequential(ids: string[], allowMissing = ids.length > 1): Promise<unknown> {
     const allRows: Record<string, unknown>[] = [];
     const seen = new Set<string>();
 
@@ -760,7 +832,7 @@ export class AcumaticaClient {
       } catch (error) {
         // Multi-item lookup is used for existence checks. Missing items should
         // not fail the entire request; we return only found rows.
-        if (error instanceof StockItemNotFoundError && ids.length > 1) {
+        if (error instanceof StockItemNotFoundError && allowMissing) {
           continue;
         }
         throw error;
