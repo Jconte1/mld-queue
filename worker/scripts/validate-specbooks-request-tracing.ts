@@ -30,7 +30,7 @@ async function main() {
     const { GET: itemClass } = await import("../../gateway/src/app/api/specbooks/item-classes/[itemClassId]/route");
     const { GET: itemClasses } = await import("../../gateway/src/app/api/specbooks/item-classes/route");
     const { GET: getOpportunity, PATCH: updateOpportunity } = await import("../../gateway/src/app/api/specbooks/opportunities/[opportunityId]/route");
-    const { withSpecbooksRequest, traceStage } = await import("../../gateway/src/lib/specbooksRequestTrace");
+    const { withSpecbooksRequest, traceStage, traceJobPoll } = await import("../../gateway/src/lib/specbooksRequestTrace");
     const originals = {
       create: prisma.job.create, findMany: prisma.job.findMany,
       findUnique: prisma.job.findUnique, rate: prisma.rateLimitWindow.upsert,
@@ -101,6 +101,30 @@ async function main() {
         type: pollJob.type, status: pollJob.status, result: pollJob.result, error: pollJob.error,
         createdAt: pollJob.createdAt, updatedAt: pollJob.updatedAt })));
       assert(events.some(event => event.message === "gateway_job_polled" && event.jobId === "test-job" && event.returnedItemCount === 1));
+      const pollOffset = events.length;
+      for (let i = 0; i < 100; i++) {
+        await poll(request("/api/specbooks/jobs/test-job"), { params: Promise.resolve({ jobId: "test-job" }) });
+      }
+      assert.equal(events.length, pollOffset, "Repeated fast successful polls must not flood logs");
+      traceJobPoll("test-job", { ...pollJob, status: "failed" });
+      assert.equal(events.length, pollOffset + 1, "A changed job state must always be logged");
+      assert.equal(events.at(-1)?.suppressedPollCount, 100);
+      const originalNow = Date.now;
+      try {
+        const later = originalNow() + 31000;
+        Date.now = () => later;
+        traceJobPoll("test-job", { ...pollJob, status: "failed" });
+        assert.equal(events.length, pollOffset + 2, "Unchanged states need periodic summaries");
+      } finally {
+        Date.now = originalNow;
+      }
+      prisma.job.findUnique = (async () => null) as any;
+      for (let i = 0; i < 3; i++) {
+        assert.equal((await poll(request("/api/specbooks/jobs/missing"), { params: Promise.resolve({ jobId: "missing" }) })).status, 404);
+      }
+      assert.equal(events.filter(event => event.message === "gateway_request_finished" && event.httpStatus === 404).length, 3,
+        "HTTP errors must not be sampled or suppressed");
+      prisma.job.findUnique = (async () => pollJob) as any;
       assert.equal((await customer(request("/api/specbooks/customers/test"), { params: Promise.resolve({ customerId: "test" }) })).status, 202);
       assert.equal((await contact(request("/api/specbooks/contacts/test"), { params: Promise.resolve({ contactId: "test" }) })).status, 202);
       assert.equal((await itemClass(request("/api/specbooks/item-classes/test"), { params: Promise.resolve({ itemClassId: "test" }) })).status, 202);
@@ -129,6 +153,12 @@ async function main() {
       });
       await abortRoute(new Request("https://test.invalid/", { signal: controller.signal }));
       assert(events.some(event => event.message === "gateway_request_aborted" && event.requestId));
+      const slow = withSpecbooksRequest("POLL_JOB", async () => {
+        await new Promise(resolve => setTimeout(resolve, 2100));
+        return Response.json({ ok: true });
+      });
+      await slow(request("/api/specbooks/jobs/test-slow"));
+      assert(events.some(event => event.message === "gateway_request_slow" && event.thresholdMs === 2000));
       const logs = JSON.stringify(events);
       for (const secret of ["test-secret-api-key", "sensitive-product-description", "sensitive-manufacturer", "sensitive-project-name", "sensitive-database-credential", "postgresql://"]) {
         assert(!logs.includes(secret), `Logs leaked ${secret}`);
@@ -146,7 +176,7 @@ async function main() {
     console.error = originalError;
     ServiceBusClient.prototype.createSender = originalCreateSender;
   }
-  console.log("PASS: actual routes, unchanged responses, auth/validation/413/429/500 logging, enqueue correlation, polling, 15 concurrent contexts, abort tracing, and sensitive-data exclusion; no live DB/queue/ERP requests");
+  console.log("PASS: unchanged API responses, error/abort/slow-request tracing, 100 duplicate polls suppressed, state changes and heartbeat retained, HTTP errors unsuppressed, concurrent context isolation, sensitive-data exclusion; no live DB/queue/ERP requests");
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });

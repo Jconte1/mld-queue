@@ -10,6 +10,7 @@ the API status, response body, headers, job payload, or queue behavior.
    Include warning/error events, not only informational enqueue messages. Account for
    the difference between the portal's local timestamps and the JSON UTC timestamp.
 2. Find `gateway_request_started` for the relevant operation. Follow its `requestId`.
+   Fast successful job polls omit start/finish events; use the aggregated poll outcomes below.
    `correlationId` and `vercelRequestId` are included when valid incoming headers exist.
    Each HTTP request gets its own generated ID; this is not a shared workflow ID.
 3. Read `gateway_request_finished`: `httpStatus`, total handler `durationMs`, and `stage`.
@@ -51,8 +52,14 @@ or response payloads, customer names, prices, or raw exception messages. Treat f
 job IDs, and log access as sensitive operational data. Existing legacy events retain their
 previous fields; this change is not a comprehensive redaction audit of all logging.
 
-Polling creates a start, poll-outcome, and finish event per request. Monitor Vercel log volume
-and retention during testing. This uses Vercel's existing log retention, not a new audit table.
+Fast HTTP 200 polling requests do not produce per-request start/finish events. Poll outcomes
+are logged on first observation, a changed state/update, and at most once every 30 seconds
+for an unchanged job within one warm instance. `suppressedPollCount` summarizes repeats.
+Multiple Vercel instances/cold starts may each emit their own summary. The in-memory cache
+is limited to 1,000 jobs and is not a distributed audit store. HTTP errors and aborts remain
+unsuppressed; a poll handler still running after two seconds emits `gateway_request_slow`.
+Non-poll requests retain full start/finish tracing. This uses Vercel's existing log retention,
+not a new audit table. Monitor log volume and retention during testing.
 Check the deployed commit and log availability before starting a controlled reproduction.
 No database migration, worker image rebuild, or additional environment variable is required.
 

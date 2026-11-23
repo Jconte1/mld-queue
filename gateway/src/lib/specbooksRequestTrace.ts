@@ -2,6 +2,10 @@ import { createHash, randomUUID } from "node:crypto";
 import { log } from "./logger";
 import { requestContext, type RequestTrace } from "./requestContext";
 
+const pollSummaries = new Map<string, { signature: string; loggedAt: number; suppressed: number }>();
+const POLL_SUMMARY_INTERVAL_MS = 30_000;
+const MAX_POLL_SUMMARIES = 1_000;
+
 function safeId(value: string | null): string | undefined {
   return value && /^[a-zA-Z0-9:_.;=/-]{1,200}$/.test(value) ? value : undefined;
 }
@@ -62,6 +66,17 @@ export function traceJobPoll(jobId: string, job: {
   type: string; status: string; createdAt: Date; updatedAt: Date; result: unknown;
 } | null): void {
   const result = job?.result as { name?: unknown; status?: unknown } | null;
+  const now = Date.now();
+  const signature = JSON.stringify([job?.status, job?.updatedAt.toISOString(), result?.name, result?.status]);
+  const previous = pollSummaries.get(jobId);
+  if (previous?.signature === signature && now - previous.loggedAt < POLL_SUMMARY_INTERVAL_MS) {
+    previous.suppressed++;
+    return;
+  }
+  // Best-effort aggregation within one warm instance; never persist or alter polling results.
+  pollSummaries.delete(jobId);
+  pollSummaries.set(jobId, { signature, loggedAt: now, suppressed: 0 });
+  if (pollSummaries.size > MAX_POLL_SUMMARIES) pollSummaries.delete(pollSummaries.keys().next().value!);
   log("info", "gateway_job_polled", {
     jobId, found: Boolean(job), jobType: job?.type, jobStatus: job?.status,
     jobAgeMs: job ? Date.now() - job.createdAt.getTime() : undefined,
@@ -69,6 +84,7 @@ export function traceJobPoll(jobId: string, job: {
     returnedItemCount: Array.isArray(job?.result) ? job.result.length : undefined,
     resultName: safeId(typeof result?.name === "string" ? result.name : null),
     resultStatus: typeof result?.status === "number" ? result.status : undefined,
+    suppressedPollCount: previous?.suppressed ?? 0,
   });
 }
 
@@ -90,24 +106,31 @@ export function withSpecbooksRequest<T extends unknown[]>(
     };
     return requestContext.run(trace, async () => {
       const startedAt = Date.now();
-      log("info", "gateway_request_started");
+      const isPoll = operation === "POLL_JOB";
+      if (!isPoll) log("info", "gateway_request_started");
+      const slowTimer = isPoll ? setTimeout(() => {
+        log("warn", "gateway_request_slow", { durationMs: Date.now() - startedAt, thresholdMs: 2000 });
+      }, 2000) : undefined;
       const aborted = () => requestContext.run(trace, () =>
         log("warn", "gateway_request_aborted", { durationMs: Date.now() - startedAt }));
       request.signal.addEventListener("abort", aborted, { once: true });
       if (request.signal.aborted) aborted();
       try {
         const response = await handler(request, ...args);
-        log(response.status >= 500 ? "error" : response.status >= 400 ? "warn" : "info",
-          "gateway_request_finished", {
-            httpStatus: response.status, durationMs: Date.now() - startedAt,
-            requestAborted: request.signal.aborted,
-          });
+        if (!isPoll || response.status >= 400 || Date.now() - startedAt >= 2000) {
+          log(response.status >= 500 ? "error" : response.status >= 400 ? "warn" : "info",
+            "gateway_request_finished", {
+              httpStatus: response.status, durationMs: Date.now() - startedAt,
+              requestAborted: request.signal.aborted,
+            });
+        }
         return response;
       } catch (error) {
         traceRequestError(error);
         log("error", "gateway_request_unhandled", { durationMs: Date.now() - startedAt });
         throw error;
       } finally {
+        if (slowTimer) clearTimeout(slowTimer);
         request.signal.removeEventListener("abort", aborted);
       }
     });
